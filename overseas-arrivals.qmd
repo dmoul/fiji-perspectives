@@ -2,7 +2,7 @@
 
 Among the PICTs, tourism is a significant source of foreign currency and local employment. The COVID-19 pandemic shut down most overseas travel, and as of 2022 annual numbers did not returned to pre-pandemic trends. Overseas visitors include sea and air arrivals. It includes excursionists/same-day-visitors i.e. visitors from cruise ships.
 
-Fiji is second, behind only Guam in number of overseas arrivals. Are U.S. active military personnel included in Guam's numbers? If so then Fiji would be first in yearly non-military visitors: people traveling for holiday, work, or visiting friends and family.
+Fiji is second, behind only Guam in number of overseas arrivals. Are U.S. active military personnel included in Guam's numbers? If so then Fiji would be first in yearly non-military visitors: mainly people traveling for holiday, work, or visiting friends and family.
 
 ```{r}
 #| label: setup
@@ -53,6 +53,7 @@ Most PICTs experienced a positive trend in annual visitors until the COVID-19 pa
 
 ```{r}
 #| label: fig-overseas-visitors
+#| fig-cap: "Annual overseas visitors"
 #| fig-width: 10
 #| fig-height: 10
 
@@ -81,6 +82,7 @@ There are many ways one could compare the overseas visitors numbers among PICTs.
 
 ```{r}
 #| label: fig-overseas-visitors-scaled-2
+#| fig-cap:  "Annual overseas visitor trends: four views"
 #| fig-width: 12
 #| fig-height: 10
 

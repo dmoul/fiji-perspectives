@@ -139,7 +139,7 @@ sst_yearly_avg <- dta |>
 
 ```
 
-Linear regression of daily max and min temperatures provide a useful way to characterize the decadal trends since 1985.
+Linear regressions of daily max and min temperatures provide a useful way to characterize the decadal trends since 1985.
 
 ```{r}
 #| label: fig-fiji-no-escape
@@ -337,6 +337,8 @@ dta |>
 
 <br>
 
+The ribbon plot in @fig-fiji-alert-days-ribbon shows the alert level every day from 1985 through May 2024.
+
 ```{r}
 #| label: fig-fiji-alert-days-ribbon
 #| fig-cap: "Daily sea surface temperature ribbon 1985-2024"
@@ -381,6 +383,8 @@ dta |>
 ```
 
 <br>
+
+@fig-alert-days-comparison-spinechart presents the same data summarized by year and count of each alert category.
 
 ```{r}
 #| label: fig-alert-days-comparison-spinechart
@@ -449,6 +453,8 @@ dta_for_plot |>
 ```
 
 <br>
+
+Since most of the stress days occur in the first five months of the year, it's eye-opening in @fig-alert-days-comparison-spinechart-first-five-months to see how few non-stress days are occuring during these months.
 
 ```{r}
 #| label: fig-alert-days-comparison-spinechart-first-five-months

@@ -22,8 +22,7 @@ theme_set(theme_light() +
 
 options(scipen = 5)
 
-sf_use_s2(FALSE)
-# following https://github.com/r-spatial/sf/issues/2366
+sf_use_s2(FALSE) # following https://github.com/r-spatial/sf/issues/2366
 
 my_caption <- "Plot: Daniel Moul; data: UNEP-WCMC, WorldFish Centre, WRI, TNC (2021) and Open Street Map"
 
@@ -180,7 +179,7 @@ I make use of data from *Global distribution of warm-water coral reefs, compiled
 
 ```{r}
 #| label: fig-top-reef-info-sources
-#| fig-cap: "Top source of global reef data"
+#| fig-cap: "Top sources of global reef data"
 #| message: false
 #| warning: false
 
@@ -221,7 +220,7 @@ dta_for_plot |>
 
 <br>
 
-The "Global distribution of warm-water coral reefs" dataset draws most of it's data from the Millennium Coral Reef Mapping Project. The third-most common source was unique to Fiji: *Exposed Reefs* - Fiji Lands Information System, Department of Lands and Survey (Ministry of Lands, Mineral Resources & Environment for Fiji).
+The "Global distribution of warm-water coral reefs" dataset draws most of it's data from the Millennium Coral Reef Mapping Project. The third-most common source was unique to Fiji: *Exposed Reefs* - Fiji Lands Information System, Department of Lands and Survey (Ministry of Lands, Mineral Resources & Environment for Fiji).^[I was not able to find *Exposed Reefs* online.]
 
 ```{r}
 #| label: tbl-top-reef-data

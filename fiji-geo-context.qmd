@@ -143,7 +143,7 @@ The the land area and Exclusive Economic Zone (EEZ) in the surrounding ocean var
 
 ```{r}
 #| label: fig-area
-#| fig-cap: "my caption"
+#| fig-cap: "Fiji is among the fortunate PICTs with an EEZ of more than 1M km2"
 #| fig-width: 8
 #| fig-height: 6
 
@@ -190,7 +190,7 @@ Some PICTs don't rise much above sea level, others are mountainous.
 
 ```{r}
 #| label: fig-height-above-sea-level
-#| fig-cap: "my caption"
+#| fig-cap: "Fiji is among the most mountainous PICTs"
 #| fig-width: 8
 #| fig-height: 6
 
