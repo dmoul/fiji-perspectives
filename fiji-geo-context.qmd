@@ -250,7 +250,7 @@ knitr::include_graphics(here("images/fiji-zoomed-out-nowcoast-satellite-2024-06-
 
 <br>
 
-Most visitors coming for a holiday to Fiji fly into Nadi airport on the western side of Viti Levu and stay nearby, since this area generally has the best weather, picturesque South Seas islands, and is easily accessible. The Mamanucas are the island group closest to Nadi, further north are the Yasawas.
+Most visitors coming for a holiday to Fiji arrive at Nadi airport on the western side of Viti Levu and stay nearby, since this area generally has the best weather, picturesque South Seas islands, and is easily accessible. The Mamanucas are the island group closest to Nadi, further north are the Yasawas.
 
 Since my travels include the Yasawas, I will focus on the area between Nadi and the Yasawas.
 

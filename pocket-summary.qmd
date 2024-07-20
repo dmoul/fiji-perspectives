@@ -1,8 +1,6 @@
-# Pocket summary and comparisons
+# Pocket summary comparisons among PICTs
 
-The Pacific Community makes available "pocket summary" statistics on the Pacific Data Hub:
-
-> The pocket summary presents a consolidated view of a set of key figures for Pacific island countries and territories (PICTs).^[Pocket summary (latest available value per year). Identifier: SPC:DF_POCKET(3.0), Modified: 2023-12-20, Temporal Coverage From: 2000-01-01, Temporal Coverage To: 2023-12-31, Publisher Name: SPC <https://pacificdata.org/data/dataset/pocket-summary-latest-available-value-per-year-df-pocket> Downloaded 2024-06-16]
+The Pacific Community makes available "pocket summary" statistics on the Pacific Data Hub.^[The pocket summary presents a consolidated view of a set of key figures for Pacific island countries and territories (PICTs). Pocket summary (latest available value per year). Identifier: SPC:DF_POCKET(3.0), Modified: 2023-12-20, Temporal Coverage From: 2000-01-01, Temporal Coverage To: 2023-12-31, Publisher Name: SPC <https://pacificdata.org/data/dataset/pocket-summary-latest-available-value-per-year-df-pocket> Downloaded 2024-06-16]
 
 ```{r}
 #| label: setup
@@ -124,11 +122,11 @@ d_pop_and_density |>
 
 <br>
 
-## Birth and death d_rates
+## Birth and death rates
 
 ```{r}
 #| label: fig-birth-death-d_rates
-#| fig-cap: "Crude birth and death d_rates"
+#| fig-cap: "Crude birth and death rates"
 #| fig-width: 8
 #| fig-height: 6
 
@@ -178,7 +176,7 @@ d_rates |>
 
 ## Life expectancy at birth
 
-Among PICTs life expectancy varies considerably, and changes since 2000 have not been universally positive (even before considering the impact of COVID-19).
+Among PICTs life expectancy varies considerably, and changes since 2000 have not been universally positive--even before considering the impact of COVID-19.
 
 ```{r}
 #| label: fig-life-expectancy-birth-distribution
