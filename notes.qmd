@@ -1,0 +1,115 @@
+# Notes
+
+
+## Map basics
+
+### OSM and OSM
+
+[OpenStreetMap](https://www.openstreetmap.org/) data is (C) OpenStreetMap Contributors. [OpenSeaMap](https://map.openseamap.org) ([description](https://map.openseamap.org/legend.php?lang=en&page=help-website)) uses data from OpenStreetMap and other sources.
+
+
+### GEBCO gridded bathymetic
+
+The General Bathymetric Chart of the Oceans (GEBCO) <https://www.gebco.net/about_us/overview/>
+
+GEBCO_22_Jun_2024_4b31746b7734.zip downloaded 2024-06-22 from https://download.gebco.net
+
+
+## Global distribution of coral reefs
+
+https://pacificdata.org/data/dataset/global-distribution-of-coral-reefs
+
+https://data.unep-wcmc.org/datasets/1
+
+LAST PAGE UPDATE: 15/02/23
+
+This dataset shows the global distribution of coral reefs in tropical and subtropical regions. It is the most comprehensive global dataset of warm-water coral reefs to date, acting as a foundation baseline map for future, more detailed, work. This dataset was compiled from a number of sources by UNEP World Conservation Monitoring Centre (UNEP-WCMC) and the WorldFish Centre, in collaboration with WRI (World Resources Institute) and TNC (The Nature Conservancy). Data sources include the Millennium Coral Reef Mapping Project (IMaRS-USF and IRD 2005, IMaRS-USF 2005) and the World Atlas of Coral Reefs (Spalding et al. 2001).
+
+UNEP-WCMC, WorldFish Centre, WRI, TNC (2021). Global distribution of warm-water coral reefs, compiled from multiple sources including the Millennium Coral Reef Mapping Project. Version 4.1. Includes contributions from IMaRS-USF and IRD (2005), IMaRS-USF (2005) and Spalding et al. (2001). Cambridge (UK): UN Environment World Conservation Monitoring Centre. Data DOI: https://doi.org/10.34892/t2wk-5t34
+
+### Citations for the separate entities
+
+IMaRS-USF (Institute for Marine Remote Sensing-University of South Florida) (2005). Millennium Coral Reef Mapping Project. Unvalidated maps. These maps are unendorsed by IRD, but were further interpreted by UNEP World Conservation Monitoring Centre. Cambridge (UK): UNEP World Conservation Monitoring Centre
+
+IMaRS-USF, IRD (Institut de Recherche pour le Developpement) (2005). Millennium Coral Reef Mapping Project. Validated maps. Cambridge (UK): UNEP World Conservation Monitoring Centre
+
+Spalding MD, Ravilious C, Green EP (2001). World Atlas of Coral Reefs. Berkeley (California, USA): The University of California Press. 436 pp.
+
+### USE CONSTRAINTS
+
+UNEP-WCMC General Data License.
+
+For commercial use, please contact business-support@unep-wcmc.org.
+
+----
+
+Metadata link points to file WCMC_008_Global_Distribution_of_Coral_Reefs.pdf
+
+Factsheet link points to https://biodiversitya-z.org/content/warm-water-coral-reef also warm-water-coral-reef-factsheet.pdf
+
+
+## Risk of coral bleaching: NOAA Coral Reef Watch
+
+Plots of a number of island nations: <https://coralreefwatch.noaa.gov/product/vs/timeseries/melanesia.php#fiji>
+
+Data download <https://coralreefwatch.noaa.gov/product/vs/data/fiji.txt>
+
+Description for Daily 5km Regional Virtual Stations, Time Series Data, and Graphs (Updated June 8, 2020*) <https://coralreefwatch.noaa.gov/product/vs/description.php#ascii>
+
+
+## StatsFiji
+
+https://www.statsfiji.gov.fj
+
+https://www.statsfiji.gov.fj/images/documents/Fiji_MICS_2021/Fiji_MICS_2021_Fact_Sheet_-_Preliminary_Report.pdf
+
+
+## Fiji Ocean Policy 2020-2030
+
+Citation: Fiji Ministry of Economy. (2021). Republic of Fiji National Ocean Policy 2020-2030. Suva, Fiji: Ministry of Economy. 70 p.
+
+Available from https://fijiclimatechangeportal.gov.fj/ppss/republic-of-fiji-national-ocean-policy-2020-2030/
+
+Specifically: http://fijiclimatechangeportal.gov.fj/wp-content/uploads/2021/01/Fiji_NationalOceansPolicy_2020.pdf
+
+
+## Not used
+
+### PopGIS3 Fiji
+
+http://fiji.popgis.spc.int/#bbox=21562,8526695,1053531,882426&c=indicator&i=d2_pop2017.t_pop&t=A07&view=map6
+
+2017 Census by Division
+
+
+### All SDG data for Fiji
+
+https://pacificdata.org/data/dataset/sdg-country-package-for-fiji-dv-sdg-fj
+
+URL: https://stats-sdmx-disseminate.pacificdata.org/rest/data/SPC,DF_SDG,3.0/..FJ........?dimensionAtObservation=AllDimensions&format=csv
+
+Dataset description:
+This is a subset of Sustainable Development Goals (all) Contains available data on Pacific Sustainable Development Indicators selected by the region and endorsed by Forum Leaders in the...
+Source: SDG country package for Fiji
+
+
+Identifier	DV_SDG_FJ
+Modified	2024-05-03
+DCAT Type	Dataset
+Source	https://stats.pacificdata.org/vis?dq=A..FJ._T._T._T._T._T._T._Z._T&pd=2010%2C&frequency=A&lc=en&df[ds]=SPC2&df[id]=DF_SDG&df[ag]=SPC&df[vs]=3.0
+Publisher Name	SPC
+
+https://stats.pacificdata.org/vis?dq=A..FJ._T._T._T._T._T._T._Z._T&pd=2010%2C&frequency=A&lc=en&df[ds]=SPC2&df[id]=DF_SDG&df[ag]=SPC&df[vs]=3.0&ly[rs]=INDICATOR&ly[rw]=GEO_PICT%2CTIME_PERIOD&to[TIME_PERIOD]=false&lb=bt
+
+
+### pouluation.un.org
+
+https://population.un.org/wpp/
+
+Data portal looks interesting: https://population.un.org/dataportal/ (but it's slow / didn't return data in some cases)
+
+Referenced from https://database.earth/population/fiji
+
+https://population.un.org/wpp/Download/Standard/MostUsed/ downloaded 2024-06-21
+
+<br>

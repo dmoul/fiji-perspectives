@@ -1,0 +1,38 @@
+project:
+  type: book
+
+book:
+  title: "Perspectives of Fiji from open data sets"
+  author: "Daniel Moul"
+  cover-image: "./images/Children-of-Nasauvakarua-village-fjijclimatehcangeportal.jpg"
+  date: "2024-06-29"
+  page-footer: 
+    center: "Copyright 2024 by [Daniel Moul](https://dmoul.github.io). License: [CC-BY 4.0](http://creativecommons.org/licenses/by/4.0/)"
+    background: dark
+  chapters:
+    - "index.qmd"
+    - part: "Natural world"
+      chapters:
+        - "fiji-geo-context.qmd"
+        # - "bathemetry.qmd"
+        - "reefs.qmd"
+        - "coral-bleaching-watch.qmd"
+        # - "explore-water-temp.qmd"
+    - part: "Human dynamics"
+      chapters:
+        - "pocket-summary.qmd"
+        - "overseas-arrivals.qmd"
+        # - "kava.qmd"
+        - "notes.qmd"
+
+# bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+    code-fold: true
+    number-sections: true
+    code-summary: "Show the code"
+
+execute:
+  freeze: auto  # re-render only when source changes

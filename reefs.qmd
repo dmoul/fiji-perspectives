@@ -1,0 +1,483 @@
+# Reefs
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+
+library(here)
+library(tidyverse)
+library(janitor)
+library(scales)
+library(glue)
+library(sf)
+library(osmdata)
+library(patchwork)
+library(gt)
+
+theme_set(theme_light() +
+            theme(panel.grid.major = element_blank(),
+                  panel.grid.minor = element_blank(),
+                  plot.title = element_text(size = rel(2))))
+
+options(scipen = 5)
+
+sf_use_s2(FALSE)
+# following https://github.com/r-spatial/sf/issues/2366
+
+my_caption <- "Plot: Daniel Moul; data: UNEP-WCMC, WorldFish Centre, WRI, TNC (2021) and Open Street Map"
+
+```
+
+Fiji has extensive reefs: mostly fringing reefs with some barrier reefs and coral mounds, and still fewer atolls, the latter mostly in the Lau group in the east of the country's waters.^[<https://www.taylorfrancis.com/chapters/mono/10.1201/9781003287339-15/atolls-fiji-walter-goldberg-eugene-rankey> ]
+
+```{r}
+#| label: get-global-reef-and-osm-data
+
+fname <- here("data/raw/global-dist-coral/14_001_WCMC008_CoralReefs2021_v4_1/01_Data")
+
+d_raw <- st_read(dsn = fname,
+                 layer = "WCMC008_CoralReef2021_Py_v4_1",
+                 quiet = TRUE)
+
+d_raw_metadata <- st_read(dsn = fname,
+                 layer = "Metadata_CoralReefs",
+                 quiet = TRUE)
+
+# st_layers(fname)
+
+# SE: -19.260603, -178.323144 # But don't want to cross 180°
+# NW
+
+xmin = 176.75
+ymin = -19.260603
+xmax = 179.999
+ymax = -16
+
+my_bbox_fj <- c(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax)
+
+my_proposed_bbox <- matrix(c(xmin, ymin, xmax, ymax),
+                           byrow = FALSE, nrow = 2, ncol = 2, dimnames = list(c("x", "y"), c("min", "max"))
+)
+# my_proposed_bbox <- matrix(c(177.020806, -17.816854, 178.107928, -16.648403),
+#                            byrow = FALSE, nrow = 2, ncol = 2, dimnames = list(c("x", "y"), c("min", "max"))
+# )
+
+
+# fj_coastline_fname <- here("data/processed/fj_coastline.rds")
+# 
+# if(!file.exists(fj_coastline_fname)) {
+#   
+#   fj_coastline <- my_bbox_fj |>
+#     opq()%>%
+#     add_osm_feature(key = "natural", 
+#                     value = c("coastline")) %>%
+#     osmdata_sf()
+#   
+#   write_rds(fj_coastline, fj_coastline_fname)
+#   
+# } else {
+#   
+#   fj_coastline <- read_rds(fj_coastline_fname)
+#   
+# }
+
+fj_coastline <- my_bbox_fj %>% # my_proposed_bbox %>%
+  opq() %>%
+  add_osm_feature(key = "natural", 
+                  value = c("coastline")) %>%
+  osmdata_sf()
+
+fj_islands <- my_bbox_fj %>% #my_proposed_bbox %>%
+  opq() %>%
+  add_osm_feature(key = "place",
+                  value = c("island")) %>%
+  osmdata_sf()
+# plot(fj_islands$osm_multipolygons$geometry)
+
+xmin = 176
+ymin = -16.5
+xmax = 177.75
+ymax = -17.75
+
+my_bbox_fj_yasawas <- c(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax)
+
+# fj_coastline_yasawas_fname <- here("data/processed/fj_coastline_yasawas.rds")
+
+# if(!file.exists(fj_coastline_yasawas_fname)) {
+#   
+#   fj_coastline_yasawas <- my_bbox_fj_yasawas |>
+#     opq()%>%
+#     add_osm_feature(key = "natural", 
+#                     value = c("coastline")) %>%
+#     osmdata_sf()
+#   
+#   write_rds(fj_coastline_yasawas, fj_coastline_yasawas_fname)
+#   
+# } else {
+#   
+#   fj_coastline_yasawas <- read_rds(fj_coastline_yasawas_fname)
+#   
+# }
+
+fj_coastline_yasawas <- my_bbox_fj_yasawas |>
+  opq()%>%
+  add_osm_feature(key = "natural", 
+                  value = c("coastline")) %>%
+  osmdata_sf()
+
+fj_islands_yasawas <- my_bbox_fj_yasawas |> 
+  opq()%>%
+  add_osm_feature(key = "place",
+                  value = c("island")) %>%
+  osmdata_sf()
+
+```
+
+```{r}
+#| label: fig-fiji-reefs
+#| fig-cap: "Fiji reefs"
+#| fig-height: 10
+#| fig-width: 10
+#| warning: false
+#| message: false
+#| column: page-right
+
+dta_for_plot <- d_raw |>
+  st_crop(my_bbox_fj)
+
+plot_alpha <- 0.3
+
+dta_for_plot |>
+  ggplot() +
+  geom_sf(data = fj_islands$osm_multipolygons,
+          color = "brown", fill = "brown", linewidth = 0.001, alpha = plot_alpha) +
+  geom_sf(data = fj_islands$osm_polygons,
+          color = "brown", fill = "brown", size = 0.001, alpha = plot_alpha) +
+  geom_sf(data = fj_coastline$osm_polygons,
+          color = "brown", fill = NA, linewidth = 0.001, alpha = plot_alpha) +
+  geom_sf(fill = "goldenrod", color = "goldenrod", alpha = 0.3) +
+  coord_sf(xlim = my_bbox_fj[c(1, 3)], # min & max of x values
+           ylim = my_bbox_fj[c(2, 4)]) +
+  scale_x_continuous(expand = expansion(mult = c(0,0))) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  theme(panel.background = element_rect(fill = alpha("lightblue", 0.15))) + # "#0000CD33")) +
+  labs(
+    title = "Reefs in most of Fiji",
+    subtitle = "Fiji west of 180°",
+    x = NULL,
+    y = NULL,
+    caption = my_caption
+  )
+
+```
+
+<br>
+
+I make use of data from *Global distribution of warm-water coral reefs, compiled from multiple sources including the Millennium Coral Reef Mapping Project*, a recently published effort to curate a good data set of warm water coral reefs world-wide:
+
+> This dataset was compiled from a number of sources by UNEP World Conservation Monitoring Centre (UNEP-WCMC) and the WorldFish Centre, in collaboration with WRI (World Resources Institute) and TNC (The Nature Conservancy).^[UNEP-WCMC, WorldFish Centre, WRI, TNC (2021). Global distribution of warm-water coral reefs, compiled from multiple sources including the Millennium Coral Reef Mapping Project. Version 4.1. Includes contributions from IMaRS-USF and IRD (2005), IMaRS-USF (2005) and Spalding et al. (2001). Cambridge (UK): UN Environment World Conservation Monitoring Centre. Data DOI: <https://doi.org/10.34892/t2wk-5t34> and <https://data.unep-wcmc.org/datasets/1> ]
+
+```{r}
+#| label: fig-top-reef-info-sources
+#| fig-cap: "Top source of global reef data"
+#| message: false
+#| warning: false
+
+dta_for_plot <- d_raw |>
+  st_drop_geometry() |>
+  count(METADATA_I) |>
+  mutate(METADATA_I = factor(METADATA_I),
+         METADATA_I = fct_lump_min(METADATA_I, min = 200, w = n),
+         SOURCE_ID = as.character(METADATA_I)
+         ) |>
+  filter(METADATA_I != "Other") |>
+  left_join(d_raw_metadata |>
+              select(SOURCE_ID, DC_TITLE) |>
+              mutate(SOURCE_ID = as.character(SOURCE_ID)),
+            by = "SOURCE_ID") |>
+  mutate(source_desc = str_wrap(glue("{SOURCE_ID}: {DC_TITLE}"), 40),
+         source_desc = fct_reorder(source_desc, n))
+  
+n_sources <- nrow(dta_for_plot)
+
+dta_for_plot |>
+  ggplot() +
+  geom_col(aes(x = n, y = source_desc),
+           fill = "firebrick", alpha = 0.3) +
+  geom_text(aes(x = n + 100, y = source_desc, label = n),
+            hjust = 0) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.1))) +
+  theme(plot.title.position = "plot" # "#0000CD33")) +
+  ) +
+  labs(
+    title = glue("Top {n_sources} sources of reef information"),
+    x = "Count of sources",
+    y = NULL,
+    caption = my_caption
+  )
+
+```
+
+<br>
+
+The "Global distribution of warm-water coral reefs" dataset draws most of it's data from the Millennium Coral Reef Mapping Project. The third-most common source was unique to Fiji: *Exposed Reefs* - Fiji Lands Information System, Department of Lands and Survey (Ministry of Lands, Mineral Resources & Environment for Fiji).
+
+```{r}
+#| label: tbl-top-reef-data
+
+dta_for_plot |>
+  arrange(desc(n)) |>
+  select(SOURCE_ID, FREQ = n) |>
+  left_join(d_raw_metadata |>
+              select(SOURCE_ID, DC_TITLE, DESCRIPTIO, CITATION, PUB_DATE) |>
+              mutate(SOURCE_ID = as.character(SOURCE_ID)),
+            by = "SOURCE_ID") |>
+  rename(DESCRIPTION = DESCRIPTIO) |>
+  gt() |>
+  tab_header(md("**Top 6 sources**")) |>
+  tab_options(table.font.size = 10)
+
+```
+
+<br>
+
+Zooming into the area between the Yasawas and northwestern Viti Levu, one can see fringing reefs, barrier reefs, and coral mounds.
+
+```{r}
+#| label: fig-fiji-reefs-yasawas
+#| fig-cap: "Fiji reefs in the Yasawas and Mamanucas"
+#| fig-height: 10
+#| fig-width: 10
+#| warning: false
+#| message: false
+#| column: page-right
+
+dta_for_plot <- d_raw |>
+  st_crop(my_bbox_fj_yasawas)
+
+dta_for_plot |>
+  ggplot() +
+  geom_sf(data = fj_coastline_yasawas$osm_points,
+          color = "darkgrey",
+          size = 0.001) +
+  geom_sf(data = fj_coastline_yasawas$osm_polygons,
+          color = "darkgrey", 
+          fill = "darkgrey",
+          size = 0.001) +
+  geom_sf(data = fj_islands_yasawas$osm_polygons,
+          color = "darkgrey", 
+          fill = "darkgrey",
+          size = 0.001) +
+  
+  geom_sf(fill = "firebrick", color = "firebrick", alpha = 0.3) +
+  scale_x_continuous(expand = expansion(mult = c(0,0))) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  theme(panel.background = element_rect(fill = alpha("lightblue", 0.15))) + # "#0000CD33")) +
+  labs(
+    title = "Fiji reefs in the Yasawas and Mamanucas",
+    x = NULL,
+    y = NULL,
+    caption = my_caption
+  )
+
+```
+
+<br>
+
+Many reefs are named and considered traditionally associated with specific land-owning family groups (mataqali). In Fiji all land below high tide and all ocean area are considered publicly accessible.
+
+```{r}
+#| label: fig-fiji-reefs-yasawas-with-names
+#| fig-cap: "Fiji reefs in the Yasawas and Mamanucas with reef names"
+#| fig-height: 10
+#| fig-width: 10
+#| warning: false
+#| message: false
+#| column: page-right
+
+dta_for_plot |>
+  ggplot() +
+  geom_sf(data = fj_coastline_yasawas$osm_points,
+          color = "darkgrey",
+          size = 0.001) +
+  geom_sf(data = fj_coastline_yasawas$osm_polygons,
+          color = "darkgrey", 
+          fill = "darkgrey",
+          size = 0.001) +
+  geom_sf(data = fj_islands_yasawas$osm_polygons,
+          color = "darkgrey", 
+          fill = "darkgrey",
+          size = 0.001) +
+  geom_sf(fill = "firebrick", color = "firebrick", alpha = 0.3) +
+  geom_sf_text(aes(label = if_else(NAME != "Not Reported",
+                                   NAME,
+                                   NA)), 
+                   size = 2, color = "black",
+               check_overlap = TRUE,
+               na.rm = TRUE) +
+  scale_x_continuous(expand = expansion(mult = c(0,0))) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  theme(panel.background = element_rect(fill = alpha("lightblue", 0.15))) + # "#0000CD33")) +
+  labs(
+    title = "Fiji reefs in the Yasawas and Mamanucas",
+    subtitle = "With reef names (overlaping names omitted)",
+    x = NULL,
+    y = NULL,
+    caption = my_caption
+  )
+
+```
+
+<br>
+
+Zooming in still further, Nacula is the island in the Yasawas where the resort I'm visiting is located.
+
+```{r}
+#| label: fig-fiji-reefs-yasawas-nacula
+#| fig-cap: "Fiji reefs around Nacula in the Yasawas. Reef data from Global Reef Distribution. Other data from Open Streat Map."
+#| fig-height: 10
+#| fig-width: 10
+#| warning: false
+#| message: false
+#| column: page-right
+
+# NW: -16.828005, 177.313155
+# SE: -16.951690, 177.488593
+xmin = 177.313155
+ymin = -16.828005
+xmax = 177.488593
+ymax = -16.951690
+
+my_bbox_fj_nacula <- c(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax)
+
+d_nacula_places <- my_bbox_fj_nacula |>
+  opq()%>%
+  add_osm_features(
+    features = list(
+      "place" = "village",
+      "leisure" = "resort",
+      "tourism" ="hotel",
+      "office" = "government",
+      "landuse" = "residential"
+    )
+  ) %>%
+  osmdata_sf()
+  
+dta_for_plot  |>
+  st_crop(my_bbox_fj_nacula) |>
+  ggplot() +
+  geom_sf(data = fj_coastline_yasawas$osm_points |>
+            st_crop(my_bbox_fj_nacula),
+          color = "darkgrey",
+          size = 0.001) +
+  geom_sf(data = fj_coastline_yasawas$osm_polygons |>
+            st_crop(my_bbox_fj_nacula),
+          color = "darkgrey", 
+          fill = "darkgrey",
+          size = 0.001) +
+  geom_sf(data = fj_islands_yasawas$osm_polygons |>
+            st_crop(my_bbox_fj_nacula),
+          color = "darkgrey", 
+          fill = "darkgrey",
+          size = 0.001) +
+  geom_sf(data = d_nacula_places$osm_polygons |>
+            st_crop(my_bbox_fj_nacula),
+          color = "blue", shape = 15,
+          size = 2) +
+  geom_sf_text(data = d_nacula_places$osm_points |>
+                 st_crop(my_bbox_fj_nacula),
+               aes(label = name),
+               color = "black", hjust = 0,
+               size = 3) +
+  geom_sf(fill = "firebrick", color = "firebrick", alpha = 0.3) +
+  scale_x_continuous(expand = expansion(mult = c(0,0))) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  theme(panel.background = element_rect(fill = alpha("lightblue", 0.15))) + # "#0000CD33")) +
+  labs(
+    title = "Fiji reefs around Nacula island in the Yasawas",
+    subtitle = "Reef data from Global Reef Distribution, other from OSM",
+    x = NULL,
+    y = NULL,
+    caption = my_caption
+  )
+
+```
+
+<br>
+
+As one might expect, a project with the goal of collecting Global Reef Distribution data provides higher resolution and likely more accurate data (@fig-fiji-reefs-yasawas-nacula above) compared to what's available from the Open Street Map (@fig-fiji-reefs-yasawas-nacula-osm below). Nonetheless, it's impressive to me that OSM has this much data about Fiji.
+
+```{r}
+#| label: fig-fiji-reefs-yasawas-nacula-osm
+#| fig-cap: "Fiji reefs around Nacula in the Yasawas. All data from Open Streat Map."
+#| fig-height: 10
+#| fig-width: 10
+#| warning: false
+#| message: false
+#| column: page-right
+
+# NW: -16.828005, 177.313155
+# SE: -16.951690, 177.488593
+xmin = 177.313155
+ymin = -16.828005
+xmax = 177.488593
+ymax = -16.951690
+
+my_bbox_fj_nacula <- c(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax)
+
+reefs <- my_bbox_fj_nacula |>
+  opq() %>%
+  add_osm_features(
+    features = list(
+      "natural" = "reef",
+      "sub_sea" = "reef"
+    )) %>%
+  osmdata_sf()
+
+ggplot() +
+  geom_sf(data = fj_coastline_yasawas$osm_points |>
+            st_crop(my_bbox_fj_nacula),
+          color = "darkgrey",
+          size = 0.001) +
+  geom_sf(data = fj_coastline_yasawas$osm_polygons |>
+            st_crop(my_bbox_fj_nacula),
+          color = "darkgrey", 
+          fill = "darkgrey",
+          size = 0.001) +
+  geom_sf(data = fj_islands_yasawas$osm_polygons |>
+            st_crop(my_bbox_fj_nacula),
+          color = "darkgrey", 
+          fill = "darkgrey",
+          size = 0.001) +
+  geom_sf(data = reefs$osm_multipolygons |>
+            st_shift_longitude() |>
+            st_crop(my_bbox_fj_nacula),
+          color = "firebrick", fill = "firebrick", alpha = 0.3) +
+  geom_sf(data = reefs$osm_points |>
+            st_shift_longitude() |>
+            st_crop(my_bbox_fj_nacula),
+          color = "firebrick", size = 0.01, alpha = 0.3) +
+  geom_sf(data = d_nacula_places$osm_polygons |>
+            st_crop(my_bbox_fj_nacula),
+          color = "blue", shape = 15,
+          size = 2) +
+  geom_sf_text(data = d_nacula_places$osm_points |>
+                 st_crop(my_bbox_fj_nacula),
+               aes(label = name),
+               color = "black", hjust = 0,
+               size = 3) +
+  scale_x_continuous(expand = expansion(mult = c(0,0))) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  theme(panel.background = element_rect(fill = alpha("lightblue", 0.15))) + # "#0000CD33")) +
+  labs(
+    title = "Fiji reefs around Nacula island in the Yasawas",
+    subtitle = "Data from Open Street Map",
+    x = NULL,
+    y = NULL,
+    caption = my_caption
+  )
+
+```
+
+<br>
