@@ -2,16 +2,19 @@
 
 Warmer temperatures stress coral and can lead to bleaching events.
 Corals can recover from occasional bleaching events, but not when
-they are too frequent, or their onset is too fast, or the temperature 
-goes too high or stays high too long \[***citation
-needed***\]. "... ambient water temperatures as little as 1 to 2 °C
+they are too frequent, or the temperature 
+goes too high or stays high too long.[^coral-bleaching-watch-6] "... ambient water temperatures as little as 1 to 2 °C
 above a coral's tolerance level, indicated by summer monthly mean
-temperatures, can cause coral bleaching"[^coral-bleaching-watch-1]
+temperatures, can cause coral bleaching".[^coral-bleaching-watch-1]
 
 [^coral-bleaching-watch-1]: Methodology, Product Description, and Data
     Availability of NOAA Coral Reef Watch's Version 3.1 Daily Global 5km
     Satellite Coral Bleaching Heat Stress Monitoring Products
     <https://coralreefwatch.noaa.gov/product/5km/methodology.php>
+    
+[^coral-bleaching-watch-6]: The world’s corals are bleaching. Here’s why and 
+    what it means for the ocean’s future. UN Environment Programme. 06 JUN 2024.
+    <https://www.unep.org/news-and-stories/story/worlds-corals-are-bleaching-heres-why-and-what-it-means-oceans-future>
 
 > First observed in the early 1980s, mass coral bleaching (whereby
 > corals bleach over a wide area that can span tens, hundreds, or even
