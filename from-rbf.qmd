@@ -1,0 +1,51 @@
+# From RBF
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+#| eval: false
+
+source(here::here("scripts/load-libraries.R"))
+
+# run once; needed for ne_countries(... scale = "large")
+# remotes::install_github("ropensci/rnaturalearthhires")
+
+source(here::here("scripts/prepare-who-data.R"))
+
+theme_set(theme_light() +
+            theme(panel.grid.major = element_blank(),
+                  panel.grid.minor = element_blank(),
+                  plot.title = element_text(size = rel(2))))
+
+```
+
+TODO: Analyze and plot data in data/from-rbf
+
+Source: Reserve Bank of Fiji
+
+Consumer price index yearly 1991 - 2023 downloaded 2024-08-06 from 
+https://www.rbf.gov.fj/wp-content/uploads/2024/08/Copy-of-7.1-Consumer-Price-Index.xlsx
+
+Wages and Salary Earnings downloaded 2024-08-06 from https://www.rbf.gov.fj/wp-content/uploads/2020/03/7.2-Wages-and-Salary-Earnings.xlsx
+
+https://www.rbf.gov.fj/category/chart-book/
+
+Tourist statistics downloaded 2024-08-06 from
+https://www.rbf.gov.fj/wp-content/uploads/2024/08/5.3-Tourist-Statistics.xlsx
+
+Visitors Arrivals: By Country of Residence downloaded 2024-08-06 from
+https://www.rbf.gov.fj/wp-content/uploads/2024/08/5.4-Visitors-Arrivals-Number-by-Country-of-Residence.xlsx
+
+Hotel Statistics downloaded 2024-08-06 from
+https://www.rbf.gov.fj/wp-content/uploads/2024/08/5.5-Hotel-Statistics.xlsx
+
+Tourism Earnings downloaded 2024-08-06 from
+https://www.rbf.gov.fj/wp-content/uploads/2024/08/8.5-Tourism-Earnings.xlsx
+
+
+Personal Remittances downloaded 2024-08-06 from
+https://www.rbf.gov.fj/wp-content/uploads/2024/08/8.6-Personal-Remittances.xlsx
+
+Direction of Trade by Major Trading Partner Countries downloaded 2024-08-06 from
+https://www.rbf.gov.fj/wp-content/uploads/2024/08/8.4-Direction-of-Trade-by-Major-Trading-Partner.xlsx
