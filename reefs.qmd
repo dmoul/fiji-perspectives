@@ -5,15 +5,19 @@
 #| message: false
 #| warning: false
 
-library(here)
-library(tidyverse)
-library(janitor)
-library(scales)
-library(glue)
-library(sf)
-library(osmdata)
-library(patchwork)
-library(gt)
+# library(here)
+# library(tidyverse)
+# library(janitor)
+# library(scales)
+# library(glue)
+# library(sf)
+# library(osmdata)
+# library(patchwork)
+# library(gt)
+
+source(here::here("scripts/load-libraries.R"))
+
+source(here::here("scripts/prepare-osm-data.R"))
 
 theme_set(theme_light() +
             theme(panel.grid.major = element_blank(),
@@ -31,7 +35,7 @@ my_caption <- "Plot: Daniel Moul; data: UNEP-WCMC, WorldFish Centre, WRI, TNC (2
 Fiji has extensive reefs: mostly fringing reefs with some barrier reefs and coral mounds, and still fewer atolls, the latter mostly in the Lau group in the east of the country's waters.^[<https://www.taylorfrancis.com/chapters/mono/10.1201/9781003287339-15/atolls-fiji-walter-goldberg-eugene-rankey> ]
 
 ```{r}
-#| label: get-global-reef-and-osm-data
+#| label: get-global-reef-data
 
 fname <- here("data/raw/global-dist-coral/14_001_WCMC008_CoralReefs2021_v4_1/01_Data")
 
@@ -48,88 +52,88 @@ d_raw_metadata <- st_read(dsn = fname,
 # SE: -19.260603, -178.323144 # But don't want to cross 180°
 # NW
 
-xmin = 176.75
-ymin = -19.260603
-xmax = 179.999
-ymax = -16
-
-my_bbox_fj <- c(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax)
-
-my_proposed_bbox <- matrix(c(xmin, ymin, xmax, ymax),
-                           byrow = FALSE, nrow = 2, ncol = 2, dimnames = list(c("x", "y"), c("min", "max"))
-)
-# my_proposed_bbox <- matrix(c(177.020806, -17.816854, 178.107928, -16.648403),
+# xmin = 176.75
+# ymin = -19.260603
+# xmax = 179.999
+# ymax = -16
+# 
+# my_bbox_fj <- c(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax)
+# 
+# my_proposed_bbox <- matrix(c(xmin, ymin, xmax, ymax),
 #                            byrow = FALSE, nrow = 2, ncol = 2, dimnames = list(c("x", "y"), c("min", "max"))
 # )
-
-
-# fj_coastline_fname <- here("data/processed/fj_coastline.rds")
+# # my_proposed_bbox <- matrix(c(177.020806, -17.816854, 178.107928, -16.648403),
+# #                            byrow = FALSE, nrow = 2, ncol = 2, dimnames = list(c("x", "y"), c("min", "max"))
+# # )
 # 
-# if(!file.exists(fj_coastline_fname)) {
-#   
-#   fj_coastline <- my_bbox_fj |>
-#     opq()%>%
-#     add_osm_feature(key = "natural", 
-#                     value = c("coastline")) %>%
-#     osmdata_sf()
-#   
-#   write_rds(fj_coastline, fj_coastline_fname)
-#   
-# } else {
-#   
-#   fj_coastline <- read_rds(fj_coastline_fname)
-#   
-# }
-
-fj_coastline <- my_bbox_fj %>% # my_proposed_bbox %>%
-  opq() %>%
-  add_osm_feature(key = "natural", 
-                  value = c("coastline")) %>%
-  osmdata_sf()
-
-fj_islands <- my_bbox_fj %>% #my_proposed_bbox %>%
-  opq() %>%
-  add_osm_feature(key = "place",
-                  value = c("island")) %>%
-  osmdata_sf()
-# plot(fj_islands$osm_multipolygons$geometry)
-
-xmin = 176
-ymin = -16.5
-xmax = 177.75
-ymax = -17.75
-
-my_bbox_fj_yasawas <- c(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax)
-
-# fj_coastline_yasawas_fname <- here("data/processed/fj_coastline_yasawas.rds")
-
-# if(!file.exists(fj_coastline_yasawas_fname)) {
-#   
-#   fj_coastline_yasawas <- my_bbox_fj_yasawas |>
-#     opq()%>%
-#     add_osm_feature(key = "natural", 
-#                     value = c("coastline")) %>%
-#     osmdata_sf()
-#   
-#   write_rds(fj_coastline_yasawas, fj_coastline_yasawas_fname)
-#   
-# } else {
-#   
-#   fj_coastline_yasawas <- read_rds(fj_coastline_yasawas_fname)
-#   
-# }
-
-fj_coastline_yasawas <- my_bbox_fj_yasawas |>
-  opq()%>%
-  add_osm_feature(key = "natural", 
-                  value = c("coastline")) %>%
-  osmdata_sf()
-
-fj_islands_yasawas <- my_bbox_fj_yasawas |> 
-  opq()%>%
-  add_osm_feature(key = "place",
-                  value = c("island")) %>%
-  osmdata_sf()
+# 
+# # fj_coastline_fname <- here("data/processed/fj_coastline.rds")
+# # 
+# # if(!file.exists(fj_coastline_fname)) {
+# #   
+# #   fj_coastline <- my_bbox_fj |>
+# #     opq()%>%
+# #     add_osm_feature(key = "natural", 
+# #                     value = c("coastline")) %>%
+# #     osmdata_sf()
+# #   
+# #   write_rds(fj_coastline, fj_coastline_fname)
+# #   
+# # } else {
+# #   
+# #   fj_coastline <- read_rds(fj_coastline_fname)
+# #   
+# # }
+# 
+# fj_coastline <- my_bbox_fj %>% # my_proposed_bbox %>%
+#   opq() %>%
+#   add_osm_feature(key = "natural", 
+#                   value = c("coastline")) %>%
+#   osmdata_sf()
+# 
+# fj_islands <- my_bbox_fj %>% #my_proposed_bbox %>%
+#   opq() %>%
+#   add_osm_feature(key = "place",
+#                   value = c("island")) %>%
+#   osmdata_sf()
+# # plot(fj_islands$osm_multipolygons$geometry)
+# 
+# xmin = 176
+# ymin = -16.5
+# xmax = 177.75
+# ymax = -17.75
+# 
+# my_bbox_fj_yasawas <- c(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax)
+# 
+# # fj_coastline_yasawas_fname <- here("data/processed/fj_coastline_yasawas.rds")
+# 
+# # if(!file.exists(fj_coastline_yasawas_fname)) {
+# #   
+# #   fj_coastline_yasawas <- my_bbox_fj_yasawas |>
+# #     opq()%>%
+# #     add_osm_feature(key = "natural", 
+# #                     value = c("coastline")) %>%
+# #     osmdata_sf()
+# #   
+# #   write_rds(fj_coastline_yasawas, fj_coastline_yasawas_fname)
+# #   
+# # } else {
+# #   
+# #   fj_coastline_yasawas <- read_rds(fj_coastline_yasawas_fname)
+# #   
+# # }
+# 
+# fj_coastline_yasawas <- my_bbox_fj_yasawas |>
+#   opq()%>%
+#   add_osm_feature(key = "natural", 
+#                   value = c("coastline")) %>%
+#   osmdata_sf()
+# 
+# fj_islands_yasawas <- my_bbox_fj_yasawas |> 
+#   opq()%>%
+#   add_osm_feature(key = "place",
+#                   value = c("island")) %>%
+#   osmdata_sf()
 
 ```
 
@@ -149,11 +153,11 @@ plot_alpha <- 0.3
 
 dta_for_plot |>
   ggplot() +
-  geom_sf(data = fj_islands$osm_multipolygons,
+  geom_sf(data = islands$osm_multipolygons,
           color = "brown", fill = "brown", linewidth = 0.001, alpha = plot_alpha) +
-  geom_sf(data = fj_islands$osm_polygons,
+  geom_sf(data = islands$osm_polygons,
           color = "brown", fill = "brown", size = 0.001, alpha = plot_alpha) +
-  geom_sf(data = fj_coastline$osm_polygons,
+  geom_sf(data = coastline$osm_polygons,
           color = "brown", fill = NA, linewidth = 0.001, alpha = plot_alpha) +
   geom_sf(fill = "goldenrod", color = "goldenrod", alpha = 0.3) +
   coord_sf(xlim = my_bbox_fj[c(1, 3)], # min & max of x values
@@ -253,18 +257,18 @@ Zooming into the area between the Yasawas and northwestern Viti Levu, one can se
 #| column: page-right
 
 dta_for_plot <- d_raw |>
-  st_crop(my_bbox_fj_yasawas)
+  st_crop(my_bbox_yasawas)
 
 dta_for_plot |>
   ggplot() +
-  geom_sf(data = fj_coastline_yasawas$osm_points,
+  geom_sf(data = coastline_yasawas$osm_points,
           color = "darkgrey",
           size = 0.001) +
-  geom_sf(data = fj_coastline_yasawas$osm_polygons,
+  geom_sf(data = coastline_yasawas$osm_polygons,
           color = "darkgrey", 
           fill = "darkgrey",
           size = 0.001) +
-  geom_sf(data = fj_islands_yasawas$osm_polygons,
+  geom_sf(data = islands_yasawas$osm_polygons,
           color = "darkgrey", 
           fill = "darkgrey",
           size = 0.001) +
@@ -297,14 +301,14 @@ Many reefs are named and considered traditionally associated with specific land-
 
 dta_for_plot |>
   ggplot() +
-  geom_sf(data = fj_coastline_yasawas$osm_points,
+  geom_sf(data = coastline_yasawas$osm_points,
           color = "darkgrey",
           size = 0.001) +
-  geom_sf(data = fj_coastline_yasawas$osm_polygons,
+  geom_sf(data = coastline_yasawas$osm_polygons,
           color = "darkgrey", 
           fill = "darkgrey",
           size = 0.001) +
-  geom_sf(data = fj_islands_yasawas$osm_polygons,
+  geom_sf(data = islands_yasawas$osm_polygons,
           color = "darkgrey", 
           fill = "darkgrey",
           size = 0.001) +
@@ -341,51 +345,51 @@ Zooming in still further, Nacula is the island in the Yasawas where the resort I
 #| message: false
 #| column: page-right
 
-# NW: -16.828005, 177.313155
-# SE: -16.951690, 177.488593
-xmin = 177.313155
-ymin = -16.828005
-xmax = 177.488593
-ymax = -16.951690
-
-my_bbox_fj_nacula <- c(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax)
-
-d_nacula_places <- my_bbox_fj_nacula |>
-  opq()%>%
-  add_osm_features(
-    features = list(
-      "place" = "village",
-      "leisure" = "resort",
-      "tourism" ="hotel",
-      "office" = "government",
-      "landuse" = "residential"
-    )
-  ) %>%
-  osmdata_sf()
+# # NW: -16.828005, 177.313155
+# # SE: -16.951690, 177.488593
+# xmin = 177.313155
+# ymin = -16.828005
+# xmax = 177.488593
+# ymax = -16.951690
+# 
+# my_bbox_fj_nacula <- c(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax)
+# 
+# d_nacula_places <- my_bbox_fj_nacula |>
+#   opq()%>%
+#   add_osm_features(
+#     features = list(
+#       "place" = "village",
+#       "leisure" = "resort",
+#       "tourism" ="hotel",
+#       "office" = "government",
+#       "landuse" = "residential"
+#     )
+#   ) %>%
+#   osmdata_sf()
   
 dta_for_plot  |>
-  st_crop(my_bbox_fj_nacula) |>
+  st_crop(my_bbox_nacula) |>
   ggplot() +
-  geom_sf(data = fj_coastline_yasawas$osm_points |>
-            st_crop(my_bbox_fj_nacula),
+  geom_sf(data = coastline_yasawas$osm_points |>
+            st_crop(my_bbox_nacula),
           color = "darkgrey",
           size = 0.001) +
-  geom_sf(data = fj_coastline_yasawas$osm_polygons |>
-            st_crop(my_bbox_fj_nacula),
+  geom_sf(data = coastline_yasawas$osm_polygons |>
+            st_crop(my_bbox_nacula),
           color = "darkgrey", 
           fill = "darkgrey",
           size = 0.001) +
-  geom_sf(data = fj_islands_yasawas$osm_polygons |>
-            st_crop(my_bbox_fj_nacula),
+  geom_sf(data = islands_yasawas$osm_polygons |>
+            st_crop(my_bbox_nacula),
           color = "darkgrey", 
           fill = "darkgrey",
           size = 0.001) +
-  geom_sf(data = d_nacula_places$osm_polygons |>
-            st_crop(my_bbox_fj_nacula),
+  geom_sf(data = nacula_places$osm_polygons |>
+            st_crop(my_bbox_nacula),
           color = "blue", shape = 15,
           size = 2) +
-  geom_sf_text(data = d_nacula_places$osm_points |>
-                 st_crop(my_bbox_fj_nacula),
+  geom_sf_text(data = nacula_places$osm_points |>
+                 st_crop(my_bbox_nacula),
                aes(label = name),
                color = "black", hjust = 0,
                size = 3) +
@@ -416,53 +420,35 @@ As one might expect, a project with the goal of collecting Global Reef Distribut
 #| message: false
 #| column: page-right
 
-# NW: -16.828005, 177.313155
-# SE: -16.951690, 177.488593
-xmin = 177.313155
-ymin = -16.828005
-xmax = 177.488593
-ymax = -16.951690
-
-my_bbox_fj_nacula <- c(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax)
-
-reefs <- my_bbox_fj_nacula |>
-  opq() %>%
-  add_osm_features(
-    features = list(
-      "natural" = "reef",
-      "sub_sea" = "reef"
-    )) %>%
-  osmdata_sf()
-
 ggplot() +
-  geom_sf(data = fj_coastline_yasawas$osm_points |>
-            st_crop(my_bbox_fj_nacula),
+  geom_sf(data = coastline_yasawas$osm_points |>
+            st_crop(my_bbox_nacula),
           color = "darkgrey",
           size = 0.001) +
-  geom_sf(data = fj_coastline_yasawas$osm_polygons |>
-            st_crop(my_bbox_fj_nacula),
+  geom_sf(data = coastline_yasawas$osm_polygons |>
+            st_crop(my_bbox_nacula),
           color = "darkgrey", 
           fill = "darkgrey",
           size = 0.001) +
-  geom_sf(data = fj_islands_yasawas$osm_polygons |>
-            st_crop(my_bbox_fj_nacula),
+  geom_sf(data = islands_yasawas$osm_polygons |>
+            st_crop(my_bbox_nacula),
           color = "darkgrey", 
           fill = "darkgrey",
           size = 0.001) +
-  geom_sf(data = reefs$osm_multipolygons |>
+  geom_sf(data = nacula_reefs$osm_multipolygons |>
             st_shift_longitude() |>
-            st_crop(my_bbox_fj_nacula),
+            st_crop(my_bbox_nacula),
           color = "firebrick", fill = "firebrick", alpha = 0.3) +
-  geom_sf(data = reefs$osm_points |>
+  geom_sf(data = nacula_reefs$osm_points |>
             st_shift_longitude() |>
-            st_crop(my_bbox_fj_nacula),
+            st_crop(my_bbox_nacula),
           color = "firebrick", size = 0.01, alpha = 0.3) +
-  geom_sf(data = d_nacula_places$osm_polygons |>
-            st_crop(my_bbox_fj_nacula),
+  geom_sf(data = nacula_places$osm_polygons |>
+            st_crop(my_bbox_nacula),
           color = "blue", shape = 15,
           size = 2) +
-  geom_sf_text(data = d_nacula_places$osm_points |>
-                 st_crop(my_bbox_fj_nacula),
+  geom_sf_text(data = nacula_places$osm_points |>
+                 st_crop(my_bbox_nacula),
                aes(label = name),
                color = "black", hjust = 0,
                size = 3) +

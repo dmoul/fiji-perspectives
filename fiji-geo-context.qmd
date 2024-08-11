@@ -5,26 +5,14 @@
 #| message: false
 #| warning: false
 
-library(here)
-library(tidyverse)
-library(janitor)
-library(scales)
-library(glue)
-library(sf)
-library(terra)
-# library(stars)
-# library(ncmeta)
-# library(units)
-library(osmdata)
-# library(rcartocolor)
-library(tidyterra) # for scale_*_hypso_tint_c()
-library(rnaturalearth) # for ne_countries()
-library(patchwork)
-library(ggrepel)
-library(gt)
+source(here::here("scripts/load-libraries.R"))
 
 # run once; needed for ne_countries(... scale = "large")
 # remotes::install_github("ropensci/rnaturalearthhires")
+
+source(here::here("scripts/prepare-who-data.R"))
+
+source(here::here("scripts/prepare-osm-data.R"))
 
 theme_set(theme_light() +
             theme(panel.grid.major = element_blank(),
@@ -269,28 +257,28 @@ knitr::include_graphics(here("images/fiji-yasawas-mamanuthas-nowcoast-satellite-
 The water in this area is relatively shallow and interspersed with reefs. To the northwest of the Yasawas the shelf drops off quickly.
 
 ```{r}
-#| label: define-osm-gebco-map-data
+#| label: define-gebco-map-data
 
-####### OSM data
-# proposed bbox (from manual selection on Google Maps)
-# SE corner: -17.816854, 178.107928
-# NW corner: -16.648403, 177.020806
-
-my_proposed_bbox <- matrix(c(177.020806, -17.816854, 178.107928, -16.648403),
-                           byrow = FALSE, nrow = 2, ncol = 2, dimnames = list(c("x", "y"), c("min", "max"))
-)
-
-coastline <- my_proposed_bbox |>
-  opq()%>%
-  add_osm_feature(key = "natural", 
-                  value = c("coastline")) %>%
-  osmdata_sf()
-
-islands <- my_proposed_bbox |> 
-  opq()%>%
-  add_osm_feature(key = "place",
-                  value = c("island")) %>%
-  osmdata_sf()
+# ####### OSM data
+# # proposed bbox (from manual selection on Google Maps)
+# # SE corner: -17.816854, 178.107928
+# # NW corner: -16.648403, 177.020806
+# 
+# my_proposed_bbox <- matrix(c(177.020806, -17.816854, 178.107928, -16.648403),
+#                            byrow = FALSE, nrow = 2, ncol = 2, dimnames = list(c("x", "y"), c("min", "max"))
+# )
+# 
+# coastline <- my_proposed_bbox |>
+#   opq()%>%
+#   add_osm_feature(key = "natural", 
+#                   value = c("coastline")) %>%
+#   osmdata_sf()
+# 
+# islands <- my_proposed_bbox |> 
+#   opq()%>%
+#   add_osm_feature(key = "place",
+#                   value = c("island")) %>%
+#   osmdata_sf()
 
 ###### GEBCO bathymetry grid2023
 
