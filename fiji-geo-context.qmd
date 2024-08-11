@@ -259,27 +259,6 @@ The water in this area is relatively shallow and interspersed with reefs. To the
 ```{r}
 #| label: define-gebco-map-data
 
-# ####### OSM data
-# # proposed bbox (from manual selection on Google Maps)
-# # SE corner: -17.816854, 178.107928
-# # NW corner: -16.648403, 177.020806
-# 
-# my_proposed_bbox <- matrix(c(177.020806, -17.816854, 178.107928, -16.648403),
-#                            byrow = FALSE, nrow = 2, ncol = 2, dimnames = list(c("x", "y"), c("min", "max"))
-# )
-# 
-# coastline <- my_proposed_bbox |>
-#   opq()%>%
-#   add_osm_feature(key = "natural", 
-#                   value = c("coastline")) %>%
-#   osmdata_sf()
-# 
-# islands <- my_proposed_bbox |> 
-#   opq()%>%
-#   add_osm_feature(key = "place",
-#                   value = c("island")) %>%
-#   osmdata_sf()
-
 ###### GEBCO bathymetry grid2023
 
 fj_file1 <- here("data/raw/GEBCO_22_Jun_2024_4b31746b7734/gebco_2023_n-16.6484_s-17.8168_w177.0208_e178.1079.tif")
@@ -309,13 +288,12 @@ bbox_spat <- ext(fj_bath_spatraster)
 #| fig-width: 10
 #| column: page-right
 
-plot_alpha <- 0.8 # 0.8
+plot_alpha <- 0.8
 
 ggplot() +
   geom_spatraster_contour_filled(data = fj_bath_spatraster |>
                                    select(-1),
                           breaks = c(1, 5, 25, 50, 75, 150, 300, 1000, 2000, 3000, 4000),
-                          # breaks = c(1, 5, 10, 15, 20, 25, 50, 75, 150, 300, 1000, 2000, 3000),
                           , alpha = plot_alpha,
                           na.rm = TRUE) +
   geom_sf(data = coastline$osm_points,
@@ -339,14 +317,14 @@ ggplot() +
   guides(fill = guide_legend(reverse = FALSE,
                              position = "inside",
                              ncol = 2)) +
-  theme(panel.background = element_rect(fill = "#F5DEB3"), # "#FFFACD99"), # Doesn't seem panel.background honors alpha suffix "99"
+  theme(panel.background = element_rect(fill = "#F5DEB3"), 
+        # "#FFFACD99"), # Doesn't seem panel.background honors alpha suffix "99"
         legend.position.inside = c(0.8, 0.15),
         axis.text = element_blank(),
         axis.ticks = element_blank()) +
   labs(
     title = "Bathymetry of the Yasawas, Mamanucas,\nand northwestern Viti Levu",
     subtitle = "Brown areas are land; cream-colored areas are shallows and reefs\nthat in some cases reach to sea level",
-    # subtitle = "and still may not be complete",
     caption = "Plot: Daniel Moul. Data: land masses from OSM, bathymetry from GEBCO Grid2023",
     fill = "Depth (m)"
   )

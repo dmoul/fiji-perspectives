@@ -370,8 +370,6 @@ dta |>
         panel.border = element_blank(),
         axis.ticks = element_blank()) +
   labs(
-    # title = "Fiji daily coral bleaching alert status 2005+",
-    # subtitle = "Through YTD 2024-06-07",
     title = "As sea surface temperatures increase in Fiji, there are fewer coral stress free days",
     subtitle = glue("Most coral bleaching stress days occur in first half of the year (southern hemisphere summer)", 
                     ",\nbut more are happening at the end of the year too as summer approaches.",

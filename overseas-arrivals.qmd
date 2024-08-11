@@ -1,4 +1,4 @@
-# Overseas visitors
+# Overseas arrivals
 
 Among the PICTs, tourism is a significant source of foreign currency and local employment. The COVID-19 pandemic shut down most overseas travel, and as of 2022 annual numbers did not returned to pre-pandemic trends. Overseas visitors include sea and air arrivals. It includes excursionists/same-day-visitors i.e. visitors from cruise ships.
 
@@ -9,15 +9,7 @@ Fiji is second, behind only Guam in number of overseas arrivals. Are U.S. active
 #| message: false
 #| warning: false
 
-library(here)
-library(tidyverse)
-library(janitor)
-library(scales)
-library(glue)
-library(sf)
-library(terra)
-library(tidyterra) # for scale_*_hypso_tint_c()
-library(patchwork)
+source(here::here("scripts/load-libraries.R"))
 
 theme_set(theme_light() +
             theme(panel.grid.major = element_blank(),

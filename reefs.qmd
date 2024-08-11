@@ -5,16 +5,6 @@
 #| message: false
 #| warning: false
 
-# library(here)
-# library(tidyverse)
-# library(janitor)
-# library(scales)
-# library(glue)
-# library(sf)
-# library(osmdata)
-# library(patchwork)
-# library(gt)
-
 source(here::here("scripts/load-libraries.R"))
 
 source(here::here("scripts/prepare-osm-data.R"))
@@ -46,94 +36,6 @@ d_raw <- st_read(dsn = fname,
 d_raw_metadata <- st_read(dsn = fname,
                  layer = "Metadata_CoralReefs",
                  quiet = TRUE)
-
-# st_layers(fname)
-
-# SE: -19.260603, -178.323144 # But don't want to cross 180°
-# NW
-
-# xmin = 176.75
-# ymin = -19.260603
-# xmax = 179.999
-# ymax = -16
-# 
-# my_bbox_fj <- c(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax)
-# 
-# my_proposed_bbox <- matrix(c(xmin, ymin, xmax, ymax),
-#                            byrow = FALSE, nrow = 2, ncol = 2, dimnames = list(c("x", "y"), c("min", "max"))
-# )
-# # my_proposed_bbox <- matrix(c(177.020806, -17.816854, 178.107928, -16.648403),
-# #                            byrow = FALSE, nrow = 2, ncol = 2, dimnames = list(c("x", "y"), c("min", "max"))
-# # )
-# 
-# 
-# # fj_coastline_fname <- here("data/processed/fj_coastline.rds")
-# # 
-# # if(!file.exists(fj_coastline_fname)) {
-# #   
-# #   fj_coastline <- my_bbox_fj |>
-# #     opq()%>%
-# #     add_osm_feature(key = "natural", 
-# #                     value = c("coastline")) %>%
-# #     osmdata_sf()
-# #   
-# #   write_rds(fj_coastline, fj_coastline_fname)
-# #   
-# # } else {
-# #   
-# #   fj_coastline <- read_rds(fj_coastline_fname)
-# #   
-# # }
-# 
-# fj_coastline <- my_bbox_fj %>% # my_proposed_bbox %>%
-#   opq() %>%
-#   add_osm_feature(key = "natural", 
-#                   value = c("coastline")) %>%
-#   osmdata_sf()
-# 
-# fj_islands <- my_bbox_fj %>% #my_proposed_bbox %>%
-#   opq() %>%
-#   add_osm_feature(key = "place",
-#                   value = c("island")) %>%
-#   osmdata_sf()
-# # plot(fj_islands$osm_multipolygons$geometry)
-# 
-# xmin = 176
-# ymin = -16.5
-# xmax = 177.75
-# ymax = -17.75
-# 
-# my_bbox_fj_yasawas <- c(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax)
-# 
-# # fj_coastline_yasawas_fname <- here("data/processed/fj_coastline_yasawas.rds")
-# 
-# # if(!file.exists(fj_coastline_yasawas_fname)) {
-# #   
-# #   fj_coastline_yasawas <- my_bbox_fj_yasawas |>
-# #     opq()%>%
-# #     add_osm_feature(key = "natural", 
-# #                     value = c("coastline")) %>%
-# #     osmdata_sf()
-# #   
-# #   write_rds(fj_coastline_yasawas, fj_coastline_yasawas_fname)
-# #   
-# # } else {
-# #   
-# #   fj_coastline_yasawas <- read_rds(fj_coastline_yasawas_fname)
-# #   
-# # }
-# 
-# fj_coastline_yasawas <- my_bbox_fj_yasawas |>
-#   opq()%>%
-#   add_osm_feature(key = "natural", 
-#                   value = c("coastline")) %>%
-#   osmdata_sf()
-# 
-# fj_islands_yasawas <- my_bbox_fj_yasawas |> 
-#   opq()%>%
-#   add_osm_feature(key = "place",
-#                   value = c("island")) %>%
-#   osmdata_sf()
 
 ```
 
@@ -344,28 +246,6 @@ Zooming in still further, Nacula is the island in the Yasawas where the resort I
 #| warning: false
 #| message: false
 #| column: page-right
-
-# # NW: -16.828005, 177.313155
-# # SE: -16.951690, 177.488593
-# xmin = 177.313155
-# ymin = -16.828005
-# xmax = 177.488593
-# ymax = -16.951690
-# 
-# my_bbox_fj_nacula <- c(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax)
-# 
-# d_nacula_places <- my_bbox_fj_nacula |>
-#   opq()%>%
-#   add_osm_features(
-#     features = list(
-#       "place" = "village",
-#       "leisure" = "resort",
-#       "tourism" ="hotel",
-#       "office" = "government",
-#       "landuse" = "residential"
-#     )
-#   ) %>%
-#   osmdata_sf()
   
 dta_for_plot  |>
   st_crop(my_bbox_nacula) |>

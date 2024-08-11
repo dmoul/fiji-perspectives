@@ -8,9 +8,6 @@
 
 source(here::here("scripts/load-libraries.R"))
 
-# run once; needed for ne_countries(... scale = "large")
-# remotes::install_github("ropensci/rnaturalearthhires")
-
 source(here::here("scripts/prepare-who-data.R"))
 
 theme_set(theme_light() +
@@ -42,7 +39,6 @@ https://www.rbf.gov.fj/wp-content/uploads/2024/08/5.5-Hotel-Statistics.xlsx
 
 Tourism Earnings downloaded 2024-08-06 from
 https://www.rbf.gov.fj/wp-content/uploads/2024/08/8.5-Tourism-Earnings.xlsx
-
 
 Personal Remittances downloaded 2024-08-06 from
 https://www.rbf.gov.fj/wp-content/uploads/2024/08/8.6-Personal-Remittances.xlsx
