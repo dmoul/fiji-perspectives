@@ -1,0 +1,207 @@
+# WHO indicators
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+
+source(here::here("scripts/load-libraries.R"))
+
+source(here::here("scripts/prepare-who-data.R"))
+
+theme_set(theme_light() +
+            theme(panel.background = element_blank(),
+                  panel.grid = element_blank(),
+                  panel.border = element_blank()))
+
+```
+
+## Healthy life expectancy at birth (HALE)
+
+```{r}
+hale |>
+  filter(spatial_dim %in% c("FJI", "USA")) |>
+  ggplot() +
+  geom_ribbon(aes(x = time_dim, ymin = low, ymax = high, fill = dim1),
+              alpha = 0.3) +
+  geom_line(aes(x = time_dim, y = numeric_value, color = dim1)) +
+  facet_wrap(~spatial_dim) +
+  labs(
+    title = "Fiji vs USA: Healthy life expectancy at birth (HALE)",
+    x = NULL,
+    y = "Age",
+    caption = "Daniel Moul. Source: WHO GHO"
+  )
+
+```
+
+<br>
+
+```{r}
+#| label: fig-hale-fiji-vs-wb-income-group
+#| fig-cap: "HALE: Fiji and World Bank income groups"
+#| fig-height: 6
+#| fig-width: 10
+
+dta_for_plot <- hale |>
+  filter(spatial_dim_type == "WORLDBANKINCOMEGROUP" | (spatial_dim_type == "COUNTRY" & spatial_dim == "FJI"),
+         dim1 == "SEX_BTSX") |>
+  mutate(spatial_dim = factor(spatial_dim, levels = c("WB_LI", "WB_LMI", "WB_UMI", "WB_HI", "FJI"))) |>
+  mutate(numeric_value_norm = numeric_value / numeric_value[time_dim == 2000],
+         low_norm = low / low[time_dim == 2000],
+         high_norm = high / high[time_dim == 2000],
+         .by = spatial_dim)
+
+p1 <- dta_for_plot |>
+  ggplot() +
+  geom_ribbon(aes(x = time_dim, ymin = low, ymax = high, fill = spatial_dim),
+              alpha = 0.3) +
+  geom_line(aes(x = time_dim, y = numeric_value, color = spatial_dim)) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
+  # facet_wrap(~spatial_dim) +
+  labs(
+    # title = glue("Fiji has not been improving in 'healthy life expectancy at birth' (HALE)",
+    #              "\ncompared to World Bank income groups"),
+    x = NULL,
+    y = "Age",
+    color = "Fiji and WB\nincome group",
+    fill = "Fiji and WB\nincome group",
+    # caption = "Daniel Moul. Source: WHO GHO"
+  )
+
+p2 <- dta_for_plot |>
+  ggplot() +
+  geom_ribbon(aes(x = time_dim, ymin = low_norm, ymax = high_norm, fill = spatial_dim),
+              alpha = 0.3) +
+  geom_line(aes(x = time_dim, y = numeric_value_norm, color = spatial_dim)) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
+  scale_y_continuous(labels = label_percent()) +
+  # facet_wrap(~spatial_dim) +
+  labs(
+    subtitle = "Year 2000 = 100%",
+    x = NULL,
+    y = "Relative improvement in age",
+    color = "Fiji and WB\nincome group",
+    fill = "Fiji and WB\nincome group"
+  )
+
+p1 + p2 +
+  plot_annotation(
+    title = glue("Fiji has not been improving in 'healthy life expectancy at birth' (HALE)",
+                 "\ncompared to World Bank income groups"),
+    subtitle = "Both sexes",
+    caption = "Daniel Moul. Source: WHO GHO"
+  ) +
+  plot_layout(guides = "collect")
+
+```
+
+<br>
+
+TODO: confirm which WB income group Fiji is in
+
+TODO: Plot other PICTs together with Fiji
+
+## Diabetes
+
+```{r}
+
+# Age-standardized death rates, diabetes mellitus, per 100,000
+
+diabetes_long <- diabetes |>
+  pivot_longer(cols = dim1,
+               #names_to = "sex",
+               values_to = "sex_value")
+
+diabetes_wide <- diabetes_long |>
+  pivot_wider(#cols = dim1,
+               names_from = sex_value,
+               values_from = numeric_value) |>
+  mutate(rank_val = rank(SEX_BTSX, ties.method = "max"),
+         spatial_dim_label = glue("{spatial_dim}: {rank_val}"),
+         spatial_dim_label = fct_reorder(spatial_dim_label, rank_val)) |>
+  mutate(pct_SEX_MLE = SEX_MLE / 1e5,
+         pct_SEX_FMLE = SEX_FMLE / 1e5,
+         pct_SEX_BTSX = SEX_BTSX / 1e5,)
+
+# why only 2004 data?
+
+```
+
+```{r}
+#| label: fig-diabetest
+#| fig-cap: "Diabetes 2004"
+#| fig-height: 16
+#| fig-width: 10
+
+rank_min <- min(diabetes_wide$rank_val)
+rank_max <- max(diabetes_wide$rank_val)
+
+diabetes_wide |>
+  ggplot() +
+  geom_errorbarh(aes(y = spatial_dim_label, xmin = SEX_MLE, , xmax = SEX_FMLE, color = parent_location),
+            linewidth = 0.1, height = 0, alpha = 0.8,
+            show.legend = FALSE) +
+  geom_point(aes(y = spatial_dim_label, x = SEX_BTSX, color = parent_location),
+            size = 1, alpha = 0.8,
+            show.legend = FALSE) +
+  geom_point(aes(y = spatial_dim_label, x = SEX_MLE, color = parent_location),
+            size = 3, alpha = 0.8, shape = "M",
+            show.legend = FALSE) +
+  geom_point(aes(y = spatial_dim_label, x = SEX_FMLE, color = parent_location),
+            size = 3, alpha = 0.8, shape = "F",
+            show.legend = FALSE) +
+  # scale_x_continuous(expand = expansion(mult = c(0, 0))) +
+  facet_wrap(~parent_location, scales = "free_y") +
+  theme(panel.grid.major.x = element_line(linewidth = 0.03)) +
+  labs(
+    title = glue("Age-standardized death rates, diabetes mellitus, per 100,000 people"),
+    subtitle = glue("With country rank lowest (1) to highest ({rank_max}) death rate",
+                    "\nShowing M, F, and both sexes (the later with a point)"),
+    x = NULL,
+    y = NULL,
+    caption = "Daniel Moul. Source: WHO GHO"
+  )
+
+```
+
+<br>
+
+```{r}
+diabetes_wide |>
+  left_join(ISO_3166_1,
+            by = join_by(spatial_dim == Alpha_3)
+  ) |>
+  select(country_code = spatial_dim, parent_location, Name, Official_name) |>
+  arrange(country_code) |>
+  mutate(idx = row_number()) |>
+  gt() |>
+  tab_options(table.font.size = 10) |>
+  sub_missing()
+
+```
+
+<br>
+
+## Other indicators of interest
+
+Data available
+
+* NCD_BMI_MEAN Mean BMI (kg/m²) (age-standardized estimate)
+* NCD_BMI_30A Prevalence of obesity among adults, BMI &GreaterEqual; 30 (age-standardized estimate) (%)
+* NCD_HYP_PREVALENCE_A Prevalence of hypertension among adults aged 30-79 years, age-standardized
+* WHS2_131 Age-standardized NCD mortality rate  (per 100 000 population)
+
+Data not available
+
+* WHS2_161 Age-standardized mortality rate by cause (per 100 000 population) - Cardiovascular
+* WHS2_160 Age-standardized mortality rate by cause (per 100 000 population) - Cancer
+
+<br>
+
+TODO: Add more visualizations here. Should any plots be functions instead?
+
+```{r}
+
+```
+

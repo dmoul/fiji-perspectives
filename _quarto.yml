@@ -14,7 +14,6 @@ book:
     - part: "Natural world"
       chapters:
         - "fiji-geo-context.qmd"
-        # - "bathemetry.qmd"
         - "reefs.qmd"
         - "coral-bleaching-watch.qmd"
         # - "explore-water-temp.qmd"
@@ -22,7 +21,8 @@ book:
       chapters:
         - "pocket-summary.qmd"
         - "overseas-arrivals.qmd"
-        # - "kava.qmd"
+        - "from-rbf.qmd"
+        - "who-indicators.qmd"
         - "notes.qmd"
 
 format:

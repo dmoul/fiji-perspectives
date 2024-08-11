@@ -1,0 +1,2547 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>who-hale</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="who-hale_files/libs/clipboard/clipboard.min.js"></script>
+<script src="who-hale_files/libs/quarto-html/quarto.js"></script>
+<script src="who-hale_files/libs/quarto-html/popper.min.js"></script>
+<script src="who-hale_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="who-hale_files/libs/quarto-html/anchor.min.js"></script>
+<link href="who-hale_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="who-hale_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="who-hale_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="who-hale_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="who-hale_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="who-hale" class="level1">
+<h1>who-hale</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"scripts/load-libraries.R"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'janitor'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    chisq.test, fisher.test</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>here() starts at /Users/jennifermoul/Documents/rprojects/fiji-perspectives</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'readr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:scales':
+
+    col_factor</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"scripts/prepare-who-data.R"</span>))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_light</span>() <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme</span>(<span class="at">panel.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">panel.border =</span> <span class="fu">element_blank</span>()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>hale <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(spatial_dim <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"FJI"</span>, <span class="st">"USA"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">x =</span> time_dim, <span class="at">ymin =</span> low, <span class="at">ymax =</span> high, <span class="at">fill =</span> dim1),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> time_dim, <span class="at">y =</span> numeric_value, <span class="at">color =</span> dim1)) <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>spatial_dim) <span class="sc">+</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Fiji vs USA: Healthy life expectancy at birth (HALE)"</span>,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Age"</span>,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Daniel Moul. Source: WHO GHO"</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="who-hale_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>dta_for_plot <span class="ot">&lt;-</span> hale <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(spatial_dim_type <span class="sc">==</span> <span class="st">"WORLDBANKINCOMEGROUP"</span> <span class="sc">|</span> (spatial_dim_type <span class="sc">==</span> <span class="st">"COUNTRY"</span> <span class="sc">&amp;</span> spatial_dim <span class="sc">==</span> <span class="st">"FJI"</span>),</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>         dim1 <span class="sc">==</span> <span class="st">"SEX_BTSX"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">spatial_dim =</span> <span class="fu">factor</span>(spatial_dim, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"WB_LI"</span>, <span class="st">"WB_LMI"</span>, <span class="st">"WB_UMI"</span>, <span class="st">"WB_HI"</span>, <span class="st">"FJI"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">numeric_value_norm =</span> numeric_value <span class="sc">/</span> numeric_value[time_dim <span class="sc">==</span> <span class="dv">2000</span>],</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">low_norm =</span> low <span class="sc">/</span> low[time_dim <span class="sc">==</span> <span class="dv">2000</span>],</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">high_norm =</span> high <span class="sc">/</span> high[time_dim <span class="sc">==</span> <span class="dv">2000</span>],</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">.by =</span> spatial_dim)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> dta_for_plot <span class="sc">|&gt;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">x =</span> time_dim, <span class="at">ymin =</span> low, <span class="at">ymax =</span> high, <span class="at">fill =</span> spatial_dim),</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> time_dim, <span class="at">y =</span> numeric_value, <span class="at">color =</span> spatial_dim)) <span class="sc">+</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))) <span class="sc">+</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># facet_wrap(~spatial_dim) +</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># title = glue("Fiji has not been improving in 'healthy life expectancy at birth' (HALE)",</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">#              "\ncompared to World Bank income groups"),</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Age"</span>,</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Fiji and WB</span><span class="sc">\n</span><span class="st">income group"</span>,</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Fiji and WB</span><span class="sc">\n</span><span class="st">income group"</span>,</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># caption = "Daniel Moul. Source: WHO GHO"</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> dta_for_plot <span class="sc">|&gt;</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">x =</span> time_dim, <span class="at">ymin =</span> low_norm, <span class="at">ymax =</span> high_norm, <span class="at">fill =</span> spatial_dim),</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> time_dim, <span class="at">y =</span> numeric_value_norm, <span class="at">color =</span> spatial_dim)) <span class="sc">+</span></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))) <span class="sc">+</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_percent</span>()) <span class="sc">+</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># facet_wrap(~spatial_dim) +</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Year 2000 = 100%"</span>,</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Relative improvement in age"</span>,</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Fiji and WB</span><span class="sc">\n</span><span class="st">income group"</span>,</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Fiji and WB</span><span class="sc">\n</span><span class="st">income group"</span></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(</span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">glue</span>(<span class="st">"Fiji has not been improving in 'healthy life expectancy at birth' (HALE)"</span>,</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"</span><span class="sc">\n</span><span class="st">compared to World Bank income groups"</span>),</span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Both sexes"</span>,</span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Daniel Moul. Source: WHO GHO"</span></span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-hale-fiji-vs-wb-income-group" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hale-fiji-vs-wb-income-group-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="who-hale_files/figure-html/fig-hale-fiji-vs-wb-income-group-1.png" class="img-fluid figure-img" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hale-fiji-vs-wb-income-group-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: HALE: Fiji and World Bank income groups
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>TODO: confirm which WB income group Fiji is in</p>
+<p>TODO: Plot other PICTs together with Fiji</p>
+<section id="diabetes" class="level2">
+<h2 class="anchored" data-anchor-id="diabetes">Diabetes</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Age-standardized death rates, diabetes mellitus, per 100,000</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>diabetes_long <span class="ot">&lt;-</span> diabetes <span class="sc">|&gt;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> dim1,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>               <span class="co">#names_to = "sex",</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"sex_value"</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>diabetes_wide <span class="ot">&lt;-</span> diabetes_long <span class="sc">|&gt;</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="co">#cols = dim1,</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_from =</span> sex_value,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_from =</span> numeric_value) <span class="sc">|&gt;</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rank_val =</span> <span class="fu">rank</span>(SEX_BTSX, <span class="at">ties.method =</span> <span class="st">"max"</span>),</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">spatial_dim_label =</span> <span class="fu">glue</span>(<span class="st">"{spatial_dim}: {rank_val}"</span>),</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">spatial_dim_label =</span> <span class="fu">fct_reorder</span>(spatial_dim_label, rank_val)) <span class="sc">|&gt;</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pct_SEX_MLE =</span> SEX_MLE <span class="sc">/</span> <span class="fl">1e5</span>,</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">pct_SEX_FMLE =</span> SEX_FMLE <span class="sc">/</span> <span class="fl">1e5</span>,</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">pct_SEX_BTSX =</span> SEX_BTSX <span class="sc">/</span> <span class="fl">1e5</span>,)</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co"># why only 2004 data?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>rank_min <span class="ot">&lt;-</span> <span class="fu">min</span>(diabetes_wide<span class="sc">$</span>rank_val)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>rank_max <span class="ot">&lt;-</span> <span class="fu">max</span>(diabetes_wide<span class="sc">$</span>rank_val)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>diabetes_wide <span class="sc">|&gt;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="fu">aes</span>(<span class="at">y =</span> spatial_dim_label, <span class="at">xmin =</span> SEX_MLE, , <span class="at">xmax =</span> SEX_FMLE, <span class="at">color =</span> parent_location),</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">linewidth =</span> <span class="fl">0.1</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> spatial_dim_label, <span class="at">x =</span> SEX_BTSX, <span class="at">color =</span> parent_location),</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> spatial_dim_label, <span class="at">x =</span> SEX_MLE, <span class="at">color =</span> parent_location),</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">shape =</span> <span class="st">"M"</span>,</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> spatial_dim_label, <span class="at">x =</span> SEX_FMLE, <span class="at">color =</span> parent_location),</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">shape =</span> <span class="st">"F"</span>,</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>            <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># scale_x_continuous(expand = expansion(mult = c(0, 0))) +</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>parent_location, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major.x =</span> <span class="fu">element_line</span>(<span class="at">linewidth =</span> <span class="fl">0.03</span>)) <span class="sc">+</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">glue</span>(<span class="st">"Age-standardized death rates, diabetes mellitus, per 100,000 people"</span>),</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">glue</span>(<span class="st">"With country rank lowest (1) to highest ({rank_max}) death rate"</span>,</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"</span><span class="sc">\n</span><span class="st">Showing M, F, and both sexes (the later with a point)"</span>),</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Daniel Moul. Source: WHO GHO"</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-diabetest" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-diabetest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="who-hale_files/figure-html/fig-diabetest-1.png" class="img-fluid figure-img" width="960">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-diabetest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Diabetes 2004
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><br></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>diabetes_wide <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(ISO_3166_1,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">join_by</span>(spatial_dim <span class="sc">==</span> Alpha_3)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">country_code =</span> spatial_dim, parent_location, Name, Official_name) <span class="sc">|&gt;</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(country_code) <span class="sc">|&gt;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">idx =</span> <span class="fu">row_number</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_options</span>(<span class="at">table.font.size =</span> <span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sub_missing</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="siedtymond" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#siedtymond table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#siedtymond thead, #siedtymond tbody, #siedtymond tfoot, #siedtymond tr, #siedtymond td, #siedtymond th {
+  border-style: none;
+}
+
+#siedtymond p {
+  margin: 0;
+  padding: 0;
+}
+
+#siedtymond .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 10px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#siedtymond .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#siedtymond .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#siedtymond .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#siedtymond .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#siedtymond .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#siedtymond .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#siedtymond .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#siedtymond .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#siedtymond .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#siedtymond .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#siedtymond .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#siedtymond .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#siedtymond .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#siedtymond .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#siedtymond .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#siedtymond .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#siedtymond .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#siedtymond .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#siedtymond .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#siedtymond .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#siedtymond .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#siedtymond .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#siedtymond .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#siedtymond .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#siedtymond .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#siedtymond .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#siedtymond .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#siedtymond .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#siedtymond .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#siedtymond .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#siedtymond .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#siedtymond .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#siedtymond .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#siedtymond .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#siedtymond .gt_left {
+  text-align: left;
+}
+
+#siedtymond .gt_center {
+  text-align: center;
+}
+
+#siedtymond .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#siedtymond .gt_font_normal {
+  font-weight: normal;
+}
+
+#siedtymond .gt_font_bold {
+  font-weight: bold;
+}
+
+#siedtymond .gt_font_italic {
+  font-style: italic;
+}
+
+#siedtymond .gt_super {
+  font-size: 65%;
+}
+
+#siedtymond .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#siedtymond .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#siedtymond .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#siedtymond .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#siedtymond .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#siedtymond .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#siedtymond .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#siedtymond .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#siedtymond div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="country_code" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">country_code</th>
+<th id="parent_location" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">parent_location</th>
+<th id="Name" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Name</th>
+<th id="Official_name" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Official_name</th>
+<th id="idx" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">idx</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">AFG</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Afghanistan</td>
+<td class="gt_row gt_left" headers="Official_name">Islamic Republic of Afghanistan</td>
+<td class="gt_row gt_right" headers="idx">1</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">AGO</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Angola</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Angola</td>
+<td class="gt_row gt_right" headers="idx">2</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">ALB</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Albania</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Albania</td>
+<td class="gt_row gt_right" headers="idx">3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">AND</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Andorra</td>
+<td class="gt_row gt_left" headers="Official_name">Principality of Andorra</td>
+<td class="gt_row gt_right" headers="idx">4</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">ARE</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">United Arab Emirates</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">ARG</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Argentina</td>
+<td class="gt_row gt_left" headers="Official_name">Argentine Republic</td>
+<td class="gt_row gt_right" headers="idx">6</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">ARM</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Armenia</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Armenia</td>
+<td class="gt_row gt_right" headers="idx">7</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">ATG</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Antigua and Barbuda</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">8</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">AUS</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Australia</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">9</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">AUT</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Austria</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Austria</td>
+<td class="gt_row gt_right" headers="idx">10</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">AZE</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Azerbaijan</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Azerbaijan</td>
+<td class="gt_row gt_right" headers="idx">11</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">BDI</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Burundi</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Burundi</td>
+<td class="gt_row gt_right" headers="idx">12</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">BEL</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Belgium</td>
+<td class="gt_row gt_left" headers="Official_name">Kingdom of Belgium</td>
+<td class="gt_row gt_right" headers="idx">13</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">BEN</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Benin</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Benin</td>
+<td class="gt_row gt_right" headers="idx">14</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">BFA</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Burkina Faso</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">15</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">BGD</td>
+<td class="gt_row gt_left" headers="parent_location">South-East Asia</td>
+<td class="gt_row gt_left" headers="Name">Bangladesh</td>
+<td class="gt_row gt_left" headers="Official_name">People's Republic of Bangladesh</td>
+<td class="gt_row gt_right" headers="idx">16</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">BGR</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Bulgaria</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Bulgaria</td>
+<td class="gt_row gt_right" headers="idx">17</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">BHR</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Bahrain</td>
+<td class="gt_row gt_left" headers="Official_name">Kingdom of Bahrain</td>
+<td class="gt_row gt_right" headers="idx">18</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">BHS</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Bahamas</td>
+<td class="gt_row gt_left" headers="Official_name">Commonwealth of the Bahamas</td>
+<td class="gt_row gt_right" headers="idx">19</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">BIH</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Bosnia and Herzegovina</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Bosnia and Herzegovina</td>
+<td class="gt_row gt_right" headers="idx">20</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">BLR</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Belarus</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Belarus</td>
+<td class="gt_row gt_right" headers="idx">21</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">BLZ</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Belize</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">22</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">BOL</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Bolivia, Plurinational State of</td>
+<td class="gt_row gt_left" headers="Official_name">Plurinational State of Bolivia</td>
+<td class="gt_row gt_right" headers="idx">23</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">BRA</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Brazil</td>
+<td class="gt_row gt_left" headers="Official_name">Federative Republic of Brazil</td>
+<td class="gt_row gt_right" headers="idx">24</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">BRB</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Barbados</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">25</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">BRN</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Brunei Darussalam</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">26</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">BTN</td>
+<td class="gt_row gt_left" headers="parent_location">South-East Asia</td>
+<td class="gt_row gt_left" headers="Name">Bhutan</td>
+<td class="gt_row gt_left" headers="Official_name">Kingdom of Bhutan</td>
+<td class="gt_row gt_right" headers="idx">27</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">BWA</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Botswana</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Botswana</td>
+<td class="gt_row gt_right" headers="idx">28</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">CAF</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Central African Republic</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">29</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">CAN</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Canada</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">30</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">CHE</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Switzerland</td>
+<td class="gt_row gt_left" headers="Official_name">Swiss Confederation</td>
+<td class="gt_row gt_right" headers="idx">31</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">CHL</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Chile</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Chile</td>
+<td class="gt_row gt_right" headers="idx">32</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">CHN</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">China</td>
+<td class="gt_row gt_left" headers="Official_name">People's Republic of China</td>
+<td class="gt_row gt_right" headers="idx">33</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">CIV</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Côte d'Ivoire</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Côte d'Ivoire</td>
+<td class="gt_row gt_right" headers="idx">34</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">CMR</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Cameroon</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Cameroon</td>
+<td class="gt_row gt_right" headers="idx">35</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">COD</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Congo, The Democratic Republic of the</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">36</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">COG</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Congo</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of the Congo</td>
+<td class="gt_row gt_right" headers="idx">37</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">COK</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Cook Islands</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">38</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">COL</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Colombia</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Colombia</td>
+<td class="gt_row gt_right" headers="idx">39</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">COM</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Comoros</td>
+<td class="gt_row gt_left" headers="Official_name">Union of the Comoros</td>
+<td class="gt_row gt_right" headers="idx">40</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">CPV</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Cabo Verde</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Cabo Verde</td>
+<td class="gt_row gt_right" headers="idx">41</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">CRI</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Costa Rica</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Costa Rica</td>
+<td class="gt_row gt_right" headers="idx">42</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">CUB</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Cuba</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Cuba</td>
+<td class="gt_row gt_right" headers="idx">43</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">CYP</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Cyprus</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Cyprus</td>
+<td class="gt_row gt_right" headers="idx">44</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">CZE</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Czechia</td>
+<td class="gt_row gt_left" headers="Official_name">Czech Republic</td>
+<td class="gt_row gt_right" headers="idx">45</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">DEU</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Germany</td>
+<td class="gt_row gt_left" headers="Official_name">Federal Republic of Germany</td>
+<td class="gt_row gt_right" headers="idx">46</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">DJI</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Djibouti</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Djibouti</td>
+<td class="gt_row gt_right" headers="idx">47</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">DMA</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Dominica</td>
+<td class="gt_row gt_left" headers="Official_name">Commonwealth of Dominica</td>
+<td class="gt_row gt_right" headers="idx">48</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">DNK</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Denmark</td>
+<td class="gt_row gt_left" headers="Official_name">Kingdom of Denmark</td>
+<td class="gt_row gt_right" headers="idx">49</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">DOM</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Dominican Republic</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">50</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">DZA</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Algeria</td>
+<td class="gt_row gt_left" headers="Official_name">People's Democratic Republic of Algeria</td>
+<td class="gt_row gt_right" headers="idx">51</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">ECU</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Ecuador</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Ecuador</td>
+<td class="gt_row gt_right" headers="idx">52</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">EGY</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Egypt</td>
+<td class="gt_row gt_left" headers="Official_name">Arab Republic of Egypt</td>
+<td class="gt_row gt_right" headers="idx">53</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">ERI</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Eritrea</td>
+<td class="gt_row gt_left" headers="Official_name">the State of Eritrea</td>
+<td class="gt_row gt_right" headers="idx">54</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">ESP</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Spain</td>
+<td class="gt_row gt_left" headers="Official_name">Kingdom of Spain</td>
+<td class="gt_row gt_right" headers="idx">55</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">EST</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Estonia</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Estonia</td>
+<td class="gt_row gt_right" headers="idx">56</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">ETH</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Ethiopia</td>
+<td class="gt_row gt_left" headers="Official_name">Federal Democratic Republic of Ethiopia</td>
+<td class="gt_row gt_right" headers="idx">57</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">FIN</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Finland</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Finland</td>
+<td class="gt_row gt_right" headers="idx">58</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">FJI</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Fiji</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Fiji</td>
+<td class="gt_row gt_right" headers="idx">59</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">FRA</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">France</td>
+<td class="gt_row gt_left" headers="Official_name">French Republic</td>
+<td class="gt_row gt_right" headers="idx">60</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">FSM</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Micronesia, Federated States of</td>
+<td class="gt_row gt_left" headers="Official_name">Federated States of Micronesia</td>
+<td class="gt_row gt_right" headers="idx">61</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">GAB</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Gabon</td>
+<td class="gt_row gt_left" headers="Official_name">Gabonese Republic</td>
+<td class="gt_row gt_right" headers="idx">62</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">GBR</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">United Kingdom</td>
+<td class="gt_row gt_left" headers="Official_name">United Kingdom of Great Britain and Northern Ireland</td>
+<td class="gt_row gt_right" headers="idx">63</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">GEO</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Georgia</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">64</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">GHA</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Ghana</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Ghana</td>
+<td class="gt_row gt_right" headers="idx">65</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">GIN</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Guinea</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Guinea</td>
+<td class="gt_row gt_right" headers="idx">66</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">GMB</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Gambia</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of the Gambia</td>
+<td class="gt_row gt_right" headers="idx">67</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">GNB</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Guinea-Bissau</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Guinea-Bissau</td>
+<td class="gt_row gt_right" headers="idx">68</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">GNQ</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Equatorial Guinea</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Equatorial Guinea</td>
+<td class="gt_row gt_right" headers="idx">69</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">GRC</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Greece</td>
+<td class="gt_row gt_left" headers="Official_name">Hellenic Republic</td>
+<td class="gt_row gt_right" headers="idx">70</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">GRD</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Grenada</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">71</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">GTM</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Guatemala</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Guatemala</td>
+<td class="gt_row gt_right" headers="idx">72</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">GUY</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Guyana</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Guyana</td>
+<td class="gt_row gt_right" headers="idx">73</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">HND</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Honduras</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Honduras</td>
+<td class="gt_row gt_right" headers="idx">74</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">HRV</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Croatia</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Croatia</td>
+<td class="gt_row gt_right" headers="idx">75</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">HTI</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Haiti</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Haiti</td>
+<td class="gt_row gt_right" headers="idx">76</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">HUN</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Hungary</td>
+<td class="gt_row gt_left" headers="Official_name">Hungary</td>
+<td class="gt_row gt_right" headers="idx">77</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">IDN</td>
+<td class="gt_row gt_left" headers="parent_location">South-East Asia</td>
+<td class="gt_row gt_left" headers="Name">Indonesia</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Indonesia</td>
+<td class="gt_row gt_right" headers="idx">78</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">IND</td>
+<td class="gt_row gt_left" headers="parent_location">South-East Asia</td>
+<td class="gt_row gt_left" headers="Name">India</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of India</td>
+<td class="gt_row gt_right" headers="idx">79</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">IRL</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Ireland</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">80</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">IRN</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Iran, Islamic Republic of</td>
+<td class="gt_row gt_left" headers="Official_name">Islamic Republic of Iran</td>
+<td class="gt_row gt_right" headers="idx">81</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">IRQ</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Iraq</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Iraq</td>
+<td class="gt_row gt_right" headers="idx">82</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">ISL</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Iceland</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Iceland</td>
+<td class="gt_row gt_right" headers="idx">83</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">ISR</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Israel</td>
+<td class="gt_row gt_left" headers="Official_name">State of Israel</td>
+<td class="gt_row gt_right" headers="idx">84</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">ITA</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Italy</td>
+<td class="gt_row gt_left" headers="Official_name">Italian Republic</td>
+<td class="gt_row gt_right" headers="idx">85</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">JAM</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Jamaica</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">86</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">JOR</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Jordan</td>
+<td class="gt_row gt_left" headers="Official_name">Hashemite Kingdom of Jordan</td>
+<td class="gt_row gt_right" headers="idx">87</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">JPN</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Japan</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">88</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">KAZ</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Kazakhstan</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Kazakhstan</td>
+<td class="gt_row gt_right" headers="idx">89</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">KEN</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Kenya</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Kenya</td>
+<td class="gt_row gt_right" headers="idx">90</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">KGZ</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Kyrgyzstan</td>
+<td class="gt_row gt_left" headers="Official_name">Kyrgyz Republic</td>
+<td class="gt_row gt_right" headers="idx">91</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">KHM</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Cambodia</td>
+<td class="gt_row gt_left" headers="Official_name">Kingdom of Cambodia</td>
+<td class="gt_row gt_right" headers="idx">92</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">KIR</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Kiribati</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Kiribati</td>
+<td class="gt_row gt_right" headers="idx">93</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">KNA</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Saint Kitts and Nevis</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">94</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">KOR</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Korea, Republic of</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">95</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">KWT</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Kuwait</td>
+<td class="gt_row gt_left" headers="Official_name">State of Kuwait</td>
+<td class="gt_row gt_right" headers="idx">96</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">LAO</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Lao People's Democratic Republic</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">97</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">LBN</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Lebanon</td>
+<td class="gt_row gt_left" headers="Official_name">Lebanese Republic</td>
+<td class="gt_row gt_right" headers="idx">98</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">LBR</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Liberia</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Liberia</td>
+<td class="gt_row gt_right" headers="idx">99</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">LBY</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Libya</td>
+<td class="gt_row gt_left" headers="Official_name">Libya</td>
+<td class="gt_row gt_right" headers="idx">100</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">LCA</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Saint Lucia</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">101</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">LKA</td>
+<td class="gt_row gt_left" headers="parent_location">South-East Asia</td>
+<td class="gt_row gt_left" headers="Name">Sri Lanka</td>
+<td class="gt_row gt_left" headers="Official_name">Democratic Socialist Republic of Sri Lanka</td>
+<td class="gt_row gt_right" headers="idx">102</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">LSO</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Lesotho</td>
+<td class="gt_row gt_left" headers="Official_name">Kingdom of Lesotho</td>
+<td class="gt_row gt_right" headers="idx">103</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">LTU</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Lithuania</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Lithuania</td>
+<td class="gt_row gt_right" headers="idx">104</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">LUX</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Luxembourg</td>
+<td class="gt_row gt_left" headers="Official_name">Grand Duchy of Luxembourg</td>
+<td class="gt_row gt_right" headers="idx">105</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">LVA</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Latvia</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Latvia</td>
+<td class="gt_row gt_right" headers="idx">106</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">MAR</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Morocco</td>
+<td class="gt_row gt_left" headers="Official_name">Kingdom of Morocco</td>
+<td class="gt_row gt_right" headers="idx">107</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">MCO</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Monaco</td>
+<td class="gt_row gt_left" headers="Official_name">Principality of Monaco</td>
+<td class="gt_row gt_right" headers="idx">108</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">MDA</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Moldova, Republic of</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Moldova</td>
+<td class="gt_row gt_right" headers="idx">109</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">MDG</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Madagascar</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Madagascar</td>
+<td class="gt_row gt_right" headers="idx">110</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">MDV</td>
+<td class="gt_row gt_left" headers="parent_location">South-East Asia</td>
+<td class="gt_row gt_left" headers="Name">Maldives</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Maldives</td>
+<td class="gt_row gt_right" headers="idx">111</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">MEX</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Mexico</td>
+<td class="gt_row gt_left" headers="Official_name">United Mexican States</td>
+<td class="gt_row gt_right" headers="idx">112</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">MHL</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Marshall Islands</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of the Marshall Islands</td>
+<td class="gt_row gt_right" headers="idx">113</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">MKD</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">North Macedonia</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of North Macedonia</td>
+<td class="gt_row gt_right" headers="idx">114</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">MLI</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Mali</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Mali</td>
+<td class="gt_row gt_right" headers="idx">115</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">MLT</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Malta</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Malta</td>
+<td class="gt_row gt_right" headers="idx">116</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">MMR</td>
+<td class="gt_row gt_left" headers="parent_location">South-East Asia</td>
+<td class="gt_row gt_left" headers="Name">Myanmar</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Myanmar</td>
+<td class="gt_row gt_right" headers="idx">117</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">MNG</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Mongolia</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">118</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">MOZ</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Mozambique</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Mozambique</td>
+<td class="gt_row gt_right" headers="idx">119</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">MRT</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Mauritania</td>
+<td class="gt_row gt_left" headers="Official_name">Islamic Republic of Mauritania</td>
+<td class="gt_row gt_right" headers="idx">120</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">MUS</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Mauritius</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Mauritius</td>
+<td class="gt_row gt_right" headers="idx">121</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">MWI</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Malawi</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Malawi</td>
+<td class="gt_row gt_right" headers="idx">122</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">MYS</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Malaysia</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">123</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">NAM</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Namibia</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Namibia</td>
+<td class="gt_row gt_right" headers="idx">124</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">NER</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Niger</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of the Niger</td>
+<td class="gt_row gt_right" headers="idx">125</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">NGA</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Nigeria</td>
+<td class="gt_row gt_left" headers="Official_name">Federal Republic of Nigeria</td>
+<td class="gt_row gt_right" headers="idx">126</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">NIC</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Nicaragua</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Nicaragua</td>
+<td class="gt_row gt_right" headers="idx">127</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">NIU</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Niue</td>
+<td class="gt_row gt_left" headers="Official_name">Niue</td>
+<td class="gt_row gt_right" headers="idx">128</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">NLD</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Netherlands</td>
+<td class="gt_row gt_left" headers="Official_name">Kingdom of the Netherlands</td>
+<td class="gt_row gt_right" headers="idx">129</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">NOR</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Norway</td>
+<td class="gt_row gt_left" headers="Official_name">Kingdom of Norway</td>
+<td class="gt_row gt_right" headers="idx">130</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">NPL</td>
+<td class="gt_row gt_left" headers="parent_location">South-East Asia</td>
+<td class="gt_row gt_left" headers="Name">Nepal</td>
+<td class="gt_row gt_left" headers="Official_name">Federal Democratic Republic of Nepal</td>
+<td class="gt_row gt_right" headers="idx">131</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">NRU</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Nauru</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Nauru</td>
+<td class="gt_row gt_right" headers="idx">132</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">NZL</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">New Zealand</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">133</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">OMN</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Oman</td>
+<td class="gt_row gt_left" headers="Official_name">Sultanate of Oman</td>
+<td class="gt_row gt_right" headers="idx">134</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">PAK</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Pakistan</td>
+<td class="gt_row gt_left" headers="Official_name">Islamic Republic of Pakistan</td>
+<td class="gt_row gt_right" headers="idx">135</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">PAN</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Panama</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Panama</td>
+<td class="gt_row gt_right" headers="idx">136</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">PER</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Peru</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Peru</td>
+<td class="gt_row gt_right" headers="idx">137</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">PHL</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Philippines</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of the Philippines</td>
+<td class="gt_row gt_right" headers="idx">138</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">PLW</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Palau</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Palau</td>
+<td class="gt_row gt_right" headers="idx">139</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">PNG</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Papua New Guinea</td>
+<td class="gt_row gt_left" headers="Official_name">Independent State of Papua New Guinea</td>
+<td class="gt_row gt_right" headers="idx">140</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">POL</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Poland</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Poland</td>
+<td class="gt_row gt_right" headers="idx">141</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">PRK</td>
+<td class="gt_row gt_left" headers="parent_location">South-East Asia</td>
+<td class="gt_row gt_left" headers="Name">Korea, Democratic People's Republic of</td>
+<td class="gt_row gt_left" headers="Official_name">Democratic People's Republic of Korea</td>
+<td class="gt_row gt_right" headers="idx">142</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">PRT</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Portugal</td>
+<td class="gt_row gt_left" headers="Official_name">Portuguese Republic</td>
+<td class="gt_row gt_right" headers="idx">143</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">PRY</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Paraguay</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Paraguay</td>
+<td class="gt_row gt_right" headers="idx">144</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">QAT</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Qatar</td>
+<td class="gt_row gt_left" headers="Official_name">State of Qatar</td>
+<td class="gt_row gt_right" headers="idx">145</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">ROU</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Romania</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">146</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">RUS</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Russian Federation</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">147</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">RWA</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Rwanda</td>
+<td class="gt_row gt_left" headers="Official_name">Rwandese Republic</td>
+<td class="gt_row gt_right" headers="idx">148</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">SAU</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Saudi Arabia</td>
+<td class="gt_row gt_left" headers="Official_name">Kingdom of Saudi Arabia</td>
+<td class="gt_row gt_right" headers="idx">149</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">SDN</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Sudan</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of the Sudan</td>
+<td class="gt_row gt_right" headers="idx">150</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">SEN</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Senegal</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Senegal</td>
+<td class="gt_row gt_right" headers="idx">151</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">SGP</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Singapore</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Singapore</td>
+<td class="gt_row gt_right" headers="idx">152</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">SLB</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Solomon Islands</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">153</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">SLE</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Sierra Leone</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Sierra Leone</td>
+<td class="gt_row gt_right" headers="idx">154</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">SLV</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">El Salvador</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of El Salvador</td>
+<td class="gt_row gt_right" headers="idx">155</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">SMR</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">San Marino</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of San Marino</td>
+<td class="gt_row gt_right" headers="idx">156</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">SOM</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Somalia</td>
+<td class="gt_row gt_left" headers="Official_name">Federal Republic of Somalia</td>
+<td class="gt_row gt_right" headers="idx">157</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">STP</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Sao Tome and Principe</td>
+<td class="gt_row gt_left" headers="Official_name">Democratic Republic of Sao Tome and Principe</td>
+<td class="gt_row gt_right" headers="idx">158</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">SUR</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Suriname</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Suriname</td>
+<td class="gt_row gt_right" headers="idx">159</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">SVK</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Slovakia</td>
+<td class="gt_row gt_left" headers="Official_name">Slovak Republic</td>
+<td class="gt_row gt_right" headers="idx">160</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">SVN</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Slovenia</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Slovenia</td>
+<td class="gt_row gt_right" headers="idx">161</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">SWE</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Sweden</td>
+<td class="gt_row gt_left" headers="Official_name">Kingdom of Sweden</td>
+<td class="gt_row gt_right" headers="idx">162</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">SWZ</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Eswatini</td>
+<td class="gt_row gt_left" headers="Official_name">Kingdom of Eswatini</td>
+<td class="gt_row gt_right" headers="idx">163</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">SYC</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Seychelles</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Seychelles</td>
+<td class="gt_row gt_right" headers="idx">164</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">SYR</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Syrian Arab Republic</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">165</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">TCD</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Chad</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Chad</td>
+<td class="gt_row gt_right" headers="idx">166</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">TGO</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Togo</td>
+<td class="gt_row gt_left" headers="Official_name">Togolese Republic</td>
+<td class="gt_row gt_right" headers="idx">167</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">THA</td>
+<td class="gt_row gt_left" headers="parent_location">South-East Asia</td>
+<td class="gt_row gt_left" headers="Name">Thailand</td>
+<td class="gt_row gt_left" headers="Official_name">Kingdom of Thailand</td>
+<td class="gt_row gt_right" headers="idx">168</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">TJK</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Tajikistan</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Tajikistan</td>
+<td class="gt_row gt_right" headers="idx">169</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">TKM</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Turkmenistan</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">170</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">TLS</td>
+<td class="gt_row gt_left" headers="parent_location">South-East Asia</td>
+<td class="gt_row gt_left" headers="Name">Timor-Leste</td>
+<td class="gt_row gt_left" headers="Official_name">Democratic Republic of Timor-Leste</td>
+<td class="gt_row gt_right" headers="idx">171</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">TON</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Tonga</td>
+<td class="gt_row gt_left" headers="Official_name">Kingdom of Tonga</td>
+<td class="gt_row gt_right" headers="idx">172</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">TTO</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Trinidad and Tobago</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Trinidad and Tobago</td>
+<td class="gt_row gt_right" headers="idx">173</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">TUN</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Tunisia</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Tunisia</td>
+<td class="gt_row gt_right" headers="idx">174</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">TUR</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Türkiye</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Türkiye</td>
+<td class="gt_row gt_right" headers="idx">175</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">TUV</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Tuvalu</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">176</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">TZA</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Tanzania, United Republic of</td>
+<td class="gt_row gt_left" headers="Official_name">United Republic of Tanzania</td>
+<td class="gt_row gt_right" headers="idx">177</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">UGA</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Uganda</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Uganda</td>
+<td class="gt_row gt_right" headers="idx">178</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">UKR</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Ukraine</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">179</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">URY</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Uruguay</td>
+<td class="gt_row gt_left" headers="Official_name">Eastern Republic of Uruguay</td>
+<td class="gt_row gt_right" headers="idx">180</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">USA</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">United States</td>
+<td class="gt_row gt_left" headers="Official_name">United States of America</td>
+<td class="gt_row gt_right" headers="idx">181</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">UZB</td>
+<td class="gt_row gt_left" headers="parent_location">Europe</td>
+<td class="gt_row gt_left" headers="Name">Uzbekistan</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Uzbekistan</td>
+<td class="gt_row gt_right" headers="idx">182</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">VCT</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Saint Vincent and the Grenadines</td>
+<td class="gt_row gt_left" headers="Official_name">—</td>
+<td class="gt_row gt_right" headers="idx">183</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">VEN</td>
+<td class="gt_row gt_left" headers="parent_location">Americas</td>
+<td class="gt_row gt_left" headers="Name">Venezuela, Bolivarian Republic of</td>
+<td class="gt_row gt_left" headers="Official_name">Bolivarian Republic of Venezuela</td>
+<td class="gt_row gt_right" headers="idx">184</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">VNM</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Viet Nam</td>
+<td class="gt_row gt_left" headers="Official_name">Socialist Republic of Viet Nam</td>
+<td class="gt_row gt_right" headers="idx">185</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">VUT</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Vanuatu</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Vanuatu</td>
+<td class="gt_row gt_right" headers="idx">186</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">WSM</td>
+<td class="gt_row gt_left" headers="parent_location">Western Pacific</td>
+<td class="gt_row gt_left" headers="Name">Samoa</td>
+<td class="gt_row gt_left" headers="Official_name">Independent State of Samoa</td>
+<td class="gt_row gt_right" headers="idx">187</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">YEM</td>
+<td class="gt_row gt_left" headers="parent_location">Eastern Mediterranean</td>
+<td class="gt_row gt_left" headers="Name">Yemen</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Yemen</td>
+<td class="gt_row gt_right" headers="idx">188</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">ZAF</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">South Africa</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of South Africa</td>
+<td class="gt_row gt_right" headers="idx">189</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="country_code">ZMB</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Zambia</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Zambia</td>
+<td class="gt_row gt_right" headers="idx">190</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">ZWE</td>
+<td class="gt_row gt_left" headers="parent_location">Africa</td>
+<td class="gt_row gt_left" headers="Name">Zimbabwe</td>
+<td class="gt_row gt_left" headers="Official_name">Republic of Zimbabwe</td>
+<td class="gt_row gt_right" headers="idx">191</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="other-indicators-of-interest" class="level2">
+<h2 class="anchored" data-anchor-id="other-indicators-of-interest">Other indicators of interest</h2>
+<p>Data available</p>
+<ul>
+<li>NCD_BMI_MEAN Mean BMI (kg/m²) (age-standardized estimate)</li>
+<li>NCD_BMI_30A Prevalence of obesity among adults, BMI ≥ 30 (age-standardized estimate) (%)</li>
+<li>NCD_HYP_PREVALENCE_A Prevalence of hypertension among adults aged 30-79 years, age-standardized</li>
+<li>WHS2_131 Age-standardized NCD mortality rate (per 100 000 population)</li>
+</ul>
+<p>Data not available</p>
+<ul>
+<li>WHS2_161 Age-standardized mortality rate by cause (per 100 000 population) - Cardiovascular</li>
+<li>WHS2_160 Age-standardized mortality rate by cause (per 100 000 population) - Cancer</li>
+</ul>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
