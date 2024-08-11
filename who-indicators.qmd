@@ -19,8 +19,13 @@ theme_set(theme_light() +
 ## Healthy life expectancy at birth (HALE)
 
 ```{r}
+#| label: fig-hale-3-countries
+#| fig-cap: "Comparing Fiji's Healthy life expectancy at birth (HALE) to France and USA"
+#| fig-height: 6
+#| fig-width: 8
+
 hale |>
-  filter(spatial_dim %in% c("FJI", "USA")) |>
+  filter(spatial_dim %in% c("FJI", "USA", "FRA")) |>
   ggplot() +
   geom_ribbon(aes(x = time_dim, ymin = low, ymax = high, fill = dim1),
               alpha = 0.3) +
@@ -30,6 +35,8 @@ hale |>
     title = "Fiji vs USA: Healthy life expectancy at birth (HALE)",
     x = NULL,
     y = "Age",
+    color = NULL,
+    fill = NULL,
     caption = "Daniel Moul. Source: WHO GHO"
   )
 
@@ -41,7 +48,7 @@ hale |>
 #| label: fig-hale-fiji-vs-wb-income-group
 #| fig-cap: "HALE: Fiji and World Bank income groups"
 #| fig-height: 6
-#| fig-width: 10
+#| fig-width: 8
 
 dta_for_plot <- hale |>
   filter(spatial_dim_type == "WORLDBANKINCOMEGROUP" | (spatial_dim_type == "COUNTRY" & spatial_dim == "FJI"),
@@ -176,6 +183,7 @@ diabetes_wide |>
   arrange(country_code) |>
   mutate(idx = row_number()) |>
   gt() |>
+  tab_header(md("**ISO 3166 three-letter country codes explained**")) |>
   tab_options(table.font.size = 10) |>
   sub_missing()
 
