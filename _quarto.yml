@@ -5,7 +5,7 @@ book:
   title: "Perspectives of Fiji from open data sets"
   author: "Daniel Moul"
   cover-image: "./images/Children-of-Nasauvakarua-village-fjijclimatehcangeportal.jpg"
-  date: "2024-06-29"
+  date: now
   page-footer: 
     center: "Copyright 2024 by [Daniel Moul](https://dmoul.github.io). License: [CC-BY 4.0](http://creativecommons.org/licenses/by/4.0/)"
     background: dark
@@ -20,9 +20,11 @@ book:
     - part: "Human dynamics"
       chapters:
         - "pocket-summary.qmd"
-        - "overseas-arrivals.qmd"
-        - "from-rbf.qmd"
         - "who-indicators.qmd"
+        - "overseas-arrivals.qmd"
+        # - "from-rbf.qmd"
+        - "trade.qmd"
+        - "cpi.qmd"
         - "notes.qmd"
 
 format:
