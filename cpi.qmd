@@ -1,0 +1,381 @@
+# Consumer prices
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+
+source(here::here("scripts/load-libraries.R"))
+
+# source(here::here("scripts/prepare-who-data.R"))
+
+theme_set(theme_light() +
+            theme(panel.grid.major = element_blank(),
+                  panel.grid.minor = element_blank(),
+                  plot.title = element_text(size = rel(2))))
+
+my_caption_rbf = "Daniel Moul. Source: Reserve Bank of Fiji"
+my_caption_fbos = "Daniel Moul. Source: Fiji Bureau of Statistics via Reserve Bank of Fiji"
+
+```
+
+Source: Reserve Bank of Fiji
+
+Consumer price index yearly 1991 - 2023 downloaded 2024-08-06 from 
+https://www.rbf.gov.fj/wp-content/uploads/2024/08/Copy-of-7.1-Consumer-Price-Index.xlsx
+
+
+## Consumer price index
+
+The Reserve Bank of Fiji makes available historical consumer price data going back to 1991, rebased in 2005, 2008, 2011, and 2014.  The CPI is based on the relative prices of a set of component categories weighted to reflect consumer spending. Each component's relative price is determined by a basket of products, the details of which are not available. The component categories changed between 2005 and 2008 (making comparisons between them difficult). Fortunately, only the weightings changed in subsequent rebases. Where year-to-year price changes were included in multiple rebases, I averaged them to calculate a single, simple, non-authoritative CPI for the entire period.
+
+```{r}
+#| label: prepare-CPI-data
+#| warning: false
+#| message: false
+
+cpi_2005_base_raw <- read_xlsx(here("data/raw/rbf/7.1-Consumer-Price-Index-fixed.xlsx"),
+                   range = "A3:U28") |>
+  clean_names() |>
+  remove_empty(which = c("rows", "cols"))
+
+cpi_2008_base_raw <- read_xlsx(here("data/raw/rbf/7.1-Consumer-Price-Index-fixed.xlsx"),
+                   range = "A33:U40") |>
+  clean_names() |>
+  remove_empty(which = c("rows", "cols"))
+
+cpi_2011_base_raw <- read_xlsx(here("data/raw/rbf/7.1-Consumer-Price-Index-fixed.xlsx"),
+                   range = "A45:U55") |>
+  clean_names() |>
+  remove_empty(which = c("rows", "cols"))
+
+cpi_2014_base_raw <- read_xlsx(here("data/raw/rbf/7.1-Consumer-Price-Index-fixed.xlsx"),
+                   range = "A60:U70") |>
+  clean_names() |>
+  remove_empty(which = c("rows", "cols"))
+
+cpi_merged <- bind_rows(
+  cpi_2005_base_raw |>
+    mutate(base = 2005),
+  cpi_2008_base_raw |>
+    mutate(base = 2008),
+  cpi_2011_base_raw |>
+    mutate(base = 2011),
+  cpi_2014_base_raw |>
+    mutate(base = 2014)
+)
+
+cpi_weights <-  bind_rows(
+  # cpi_2005_base_raw |>
+  #   mutate(base = 2005),
+  cpi_2008_base_raw |>
+    mutate(base = 2008),
+  cpi_2011_base_raw |>
+    mutate(base = 2011),
+  cpi_2014_base_raw |>
+    mutate(base = 2014)
+) |>
+  filter(period == "Weight") |>
+  remove_empty(which = "cols") |>
+  select(-period)
+
+cpi <- cpi_merged |>
+  select(period, year_on_year_percent_change, base) |>
+  filter(period != "Weight") |>
+  mutate(year = as.numeric(period)) |>
+  summarize(yty = mean(year_on_year_percent_change) / 100,
+            cpi = 0,
+         .by = year) #|>
+  # mutate(cpi = lag(cpi) * (1 + yty)) #lag(yty, default = 0)))
+
+# since lag() doesn't seem to get the whole vector at the beginning of the call, I cannot 
+# modify cpi while lagging it. So instead I use the following:
+for(i in 1:length(cpi$yty)) {
+   if(i == 1) {
+    cpi$cpi[i] <- 1
+  } else {
+    cpi$cpi[i] <- cpi$cpi[i - 1] * (1 + cpi$yty[i])
+  }
+}
+
+cpi_year_min <- min(cpi$year)
+cpi_year_max <- max(cpi$year)
+
+dta_for_cpi_weight_plot <- cpi_merged |>
+  filter(base != 2005,
+         period != "Weight") |>
+  distinct(base, period) |>
+  left_join(
+    cpi_weights,
+    by = "base"
+  ) |>
+  select(-all_items) |>
+  rename(communicaitons = communi_cations) |>
+  mutate(base = as.character(base),
+         period = as.numeric(period)) |>
+  pivot_longer(
+    cols = food_and_non_alcoholic_beverage:recreation_culture,
+    names_to = "metric",
+    values_to = "value"
+  )
+
+us_cpi <- read_xlsx(here("data/raw/rbf/us-cpi-historical.xlsx"),
+                   skip = 7) |>
+  clean_names() |>
+  mutate(cpi_base_1991 = cpi / cpi[year == 1991])
+
+```
+
+<br>
+
+```{r}
+#| label: fig-cpi
+#| fig-cap: "Fiji consumer price index"
+#| fig-height: 6
+#| fig-width: 8
+#| column: page-right
+#| warning: false
+#| message: false
+
+p1 <- cpi |>
+  ggplot(aes(year, yty)) +
+  geom_hline(yintercept = 0, lty = 2, linewidth = 0.15, alpa = 0.5) +
+  geom_line() +
+  geom_line(data = us_cpi |>
+              filter(year >= 1991),
+            aes(year, annual_pct_change),
+            color = "firebrick", linewidth = 0.2,
+            alpha = 0.75) +
+  annotate("text", x = 2002, y = -0.01, label = "US yty pct change",
+           hjust = 0, color = "firebrick", alpha = 0.75) +
+  scale_y_continuous(labels = label_percent()) +
+  labs(
+    subtitle = glue("Year to year change in consumer prices",
+                    "\nIn Fiji and US")
+  )
+
+p2 <- cpi |>
+  ggplot() +
+  geom_line(aes(year, cpi)) +
+  geom_line(data = us_cpi |>
+              filter(year >= 1991),
+            aes(year, cpi_base_1991),
+            color = "firebrick", linewidth = 0.2,
+            alpha = 0.75) +
+  annotate("text", x = 2011, y = 1.5, label = "US CPI",
+           hjust = 0, color = "firebrick", alpha = 0.75) +
+  labs(
+    subtitle = glue("Fiji prices doubled in ~20 years",
+                    "\nwhile US prices doubled in ~30 years",
+                    "\nCPI: {cpi_year_min} = 100"),
+    y = "Consumer price index"
+  )
+
+p1 + p2 +
+  plot_annotation(
+    title = "Consumer price changes in Fiji",
+    subtitle = glue("{cpi_year_min} to {cpi_year_max}. With US comparisons."),
+    caption = paste0(my_caption_rbf,
+                     " and Minneapolis Federal Reserve Bank")
+  )
+
+```
+
+<br>
+
+```{r}
+#| label: fig-cpi-weights
+#| fig-cap: "Fiji consumer price index weightings"
+#| fig-height: 6
+#| fig-width: 8
+#| column: page-right
+#| warning: false
+#| message: false
+
+dta_for_cpi_weight_plot |>
+  ggplot(aes(period, value, color = base)) +
+  geom_hline(yintercept = 0, lty = 2, linewidth = 0.15, alpa = 0.5) +
+  geom_line() +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  facet_wrap(~metric) +
+  theme(legend.position = "top") +
+  labs(
+    title = glue("Changes have been modest in the relative weightings",
+                 "\nof Fiji CPI components"),
+    x = NULL,
+    y = "Relative weighting",
+    caption = my_caption_rbf
+  )
+
+```
+
+<br>
+
+```{r}
+#| label: fig-cpi-component-price-changes
+#| fig-cap: "Fiji consumer price index component price changes"
+#| fig-height: 6
+#| fig-width: 10
+#| column: page-right
+#| warning: false
+#| message: false
+
+dta_for_plot <- cpi_merged |>
+  filter(base != 2005,
+         period != "Weight") |>
+  remove_empty(which = "cols") |>
+  rename(communicaitons = communi_cations) |>
+  select(-year_on_year_percent_change, -all_items) |>
+  relocate(base, .before = period) |>
+  mutate(period = as.numeric(period),
+         base = glue("base: {base}")) |>
+  pivot_longer(
+    cols = clothing_footwear:recreation_culture,
+    names_to = "metric",
+    values_to = "value"
+  )
+  
+dta_for_plot |>
+  ggplot(aes(period, value, color = metric, group = metric)) +
+  geom_hline(yintercept = 100, lty = 2, linewidth = 0.15, alpa = 0.5) +
+  geom_line() +
+  scale_x_continuous(breaks = c(2010, 2015, 2020, 2023)) +
+  facet_wrap(~base) +
+  guides(color = guide_legend(ncol = 3,
+                              override.aes = list(linewidth = 3))
+         ) +
+  theme(legend.position = "bottom") +
+  labs(
+    title = "The largest price changes were in alcohol, tobacco and narcotics",
+    subtitle = glue("Changes in prices of the components of Fiji CPI",
+                    "\nYear of base == 100"),
+    x = NULL,
+    y = NULL,
+    color = NULL,
+    caption = my_caption_rbf
+  )
+
+dta_for_plot |>
+  ggplot(aes(period, value, color = base, group = base)) +
+  geom_hline(yintercept = 100, lty = 2, linewidth = 0.15, alpa = 0.5) +
+  geom_line() +
+  scale_x_continuous(breaks = c(2010, 2015, 2020, 2023)) +
+  facet_wrap(~metric) +
+  guides(color = guide_legend(ncol = 3,
+                              override.aes = list(linewidth = 3))
+         ) +
+  theme(legend.position = "bottom") +
+  labs(
+    title = "Changes in prices of the components of Fiji CPI",
+    subtitle = "Year of base == 100",
+    x = NULL,
+    y = NULL,
+    color = NULL,
+    caption = my_caption_rbf
+  )
+
+dta_for_plot |>
+  ggplot(aes(period, value, color = base, group = base)) +
+  geom_hline(yintercept = 100, lty = 2, linewidth = 0.15, alpa = 0.5) +
+  geom_line() +
+  scale_x_continuous(breaks = c(2010, 2015, 2020, 2023)) +
+  facet_wrap(~metric, scales = "free_y") +
+  guides(color = guide_legend(ncol = 3,
+                              override.aes = list(linewidth = 3))
+         ) +
+  theme(legend.position = "bottom") +
+  labs(
+    title = glue("The most signficant changes (especially for the poor)", 
+                 "\nwere in the price of food and non-alcoholic beverages"),
+    subtitle = glue("Changes in prices of the components of Fiji CPI",
+                    "\nYear of base == 100"),
+    x = NULL,
+    y = NULL,
+    color = NULL,
+    caption = my_caption_rbf
+  )
+  
+```
+
+```{r}
+#| label: fig-cpi-component-price-changes-with-weights
+#| fig-cap: "Fiji consumer price index component changes with weightings"
+#| fig-height: 6
+#| fig-width: 10
+#| column: page-right
+#| warning: false
+#| message: false
+
+dta_for_plot <- cpi_merged |>
+  filter(base != 2005,
+         period != "Weight") |>
+  remove_empty(which = "cols") |>
+  rename(communicaitons = communi_cations) |>
+  select(-year_on_year_percent_change, -all_items) |>
+  relocate(base, .before = period) |>
+  mutate(period = as.numeric(period),
+         base = glue("base: {base}")) |>
+  pivot_longer(
+    cols = clothing_footwear:recreation_culture,
+    names_to = "metric",
+    values_to = "value"
+  ) |>
+  left_join(
+    dta_for_cpi_weight_plot |>
+      mutate(base = glue("base: {base}")) |>
+      rename(weight = value),
+    by = c("base", "period", "metric")
+  ) |>
+  mutate(weighted_value = weight * value,
+         metric = fct_reorder(metric, -weighted_value, min))
+
+dta_for_plot |>
+  ggplot(aes(period, weighted_value, color = base, group = base)) +
+  geom_hline(yintercept = 100, lty = 2, linewidth = 0.15, alpa = 0.5) +
+  geom_line() +
+  scale_x_continuous(breaks = c(2010, 2015, 2020, 2023)) +
+  facet_wrap(~metric) + #, scales = "free_y") +
+  guides(color = guide_legend(ncol = 3,
+                              override.aes = list(linewidth = 3))
+         ) +
+  theme(legend.position = "bottom") +
+  labs(
+    title = glue("The most signficant changes for consumers were in the price of", 
+                 "\nfood and non-alcoholic beverages"),
+    subtitle = glue("Changes in prices of the components of Fiji CPI.",
+                    "\nWeighted_value is weight * relative price."),
+    x = NULL,
+    y = "Weighted value",
+    color = NULL,
+    caption = my_caption_rbf
+  )
+
+dta_for_plot |>
+  ggplot(aes(period, weighted_value, color = base, group = base)) +
+  geom_hline(yintercept = 100, lty = 2, linewidth = 0.15, alpa = 0.5) +
+  geom_line() +
+  scale_x_continuous(breaks = c(2010, 2015, 2020, 2023)) +
+  facet_wrap(~metric, scales = "free_y") +
+  guides(color = guide_legend(ncol = 3,
+                              override.aes = list(linewidth = 3))
+         ) +
+  theme(legend.position = "bottom") +
+  labs(
+    title = glue("The most signficant changes for consumers were in the price of", 
+                 "\nfood and non-alcoholic beverages"),
+    subtitle = glue("Changes in prices of the components of Fiji CPI.",
+                    "\nWeighted_value is weight * relative price. Y axis scale varies."),
+    x = NULL,
+    y = "Weighted value",
+    color = NULL,
+    caption = my_caption_rbf
+  )
+```
+
+<br>
+
+## General Notes:	
+
+Disclaimer: Please refer to the Reserve Bank of Fiji Disclaimer available on our website:  https://www.rbf.gov.fj/disclaimer/
+
+<br>
