@@ -1,19 +1,21 @@
-# From RBF
+# From RBF (original)
 
 ```{r}
 #| label: setup
 #| message: false
 #| warning: false
-#| eval: false
 
 source(here::here("scripts/load-libraries.R"))
 
-source(here::here("scripts/prepare-who-data.R"))
+# source(here::here("scripts/prepare-who-data.R"))
 
 theme_set(theme_light() +
             theme(panel.grid.major = element_blank(),
                   panel.grid.minor = element_blank(),
                   plot.title = element_text(size = rel(2))))
+
+my_caption_rbf = "Daniel Moul. Source: Reserve Bank of Fiji"
+my_caption_fbos = "Daniel Moul. Source: Fiji Bureau of Statistics via Reserve Bank of Fiji"
 
 ```
 
@@ -45,3 +47,1416 @@ https://www.rbf.gov.fj/wp-content/uploads/2024/08/8.6-Personal-Remittances.xlsx
 
 Direction of Trade by Major Trading Partner Countries downloaded 2024-08-06 from
 https://www.rbf.gov.fj/wp-content/uploads/2024/08/8.4-Direction-of-Trade-by-Major-Trading-Partner.xlsx
+
+
+## Personal Remittances
+
+https://www.rbf.gov.fj/wp-content/uploads/2024/08/8.6-Personal-Remittances.xlsx
+
+```{r}
+#| label: prepare-remittance-data
+#| warning: false
+#| message: false
+
+remittances <- read_xlsx(here("data/raw/rbf/8.6-Personal-Remittances.xlsx"),
+                   sheet = "Data",
+                   range = "A5:J37") |>
+  clean_names() |>
+  remove_empty(which = c("rows", "cols")) |>
+  rename(
+    yr = category,
+    personal_xfer = personal_transfers1,
+    employee_compensation = compensation_of_employees2,
+    migrant_xfer = migrants_transfers3,
+    xfer_bank = commercial_banks,
+    xfer_fx_dealer = money_transfer_operators_fx_dealers,
+    xfer_mobile = mobile_network_operators_vodafone_digicel
+  ) |>
+  mutate(yr = parse_number(yr))
+
+remittances_yr_min <- min(remittances$yr)
+remittances_yr_max <- max(remittances$yr)
+
+```
+
+General Notes 
+
+* Personal transfers component consists of all current transfers in cash received by resident households  (Balance of Payments Manual, 6th Edition). 
+* Compensation of employees refers to the income of border, seasonal, and other short-term workers who work in an economy where they are not resident, and to the income of resident workers who are employed by a nonresident entity (Balance of Payments Manual, 6th Edition). 
+* Migrants transfers is capital transfers related to all the financial assets that migrants bring with them when they move to the host country, or when they finally return to their home country (Balance of Payments Manual, 5th Edition).
+* International remittances via Mobile Network Operators were officially included as part of personal remittances from March 2021 and data series has been backdated to 2015.
+* Data for the period Jan 2024 - March 2024 have been revised. 
+* Disclaimer: Please refer to the Reserve Bank of Fiji Disclaimer available on our website – www.rbf.gov.fj
+
+
+Questions
+
+* Is this data net flow, or absolute flow?
+* I would expect personal transfers to be into Fiji and migrant transfers to be out of Fiji
+
+<br>
+
+```{r}
+#| label: fig-remittances
+#| fig-cap: "Personal Remittances"
+#| fig-height: 6
+#| fig-width: 10
+
+p1 <- remittances |>
+  pivot_longer(cols = c(personal_xfer, employee_compensation, migrant_xfer),
+               names_to = "metric",
+               values_to = "value") |>
+  ggplot(aes(yr, value, color = metric)) +
+  geom_line() +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  # guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3),
+                              position = "inside")) +
+  expand_limits(y = 0) +
+  theme(legend.position.inside = c(0.25, 0.9)) +
+  labs(
+    subtitle = "Amount",
+    x = NULL,
+    y = "FJD ($M)",
+    color = NULL
+  )
+
+p2 <- remittances |>
+  select(yr, starts_with("xfer")) |>
+  pivot_longer(cols = starts_with("xfer"),
+               names_to = "metric",
+               values_to = "value") |>
+  filter(!is.na(value)) |>
+  ggplot(aes(yr, value, color = metric)) +
+  geom_line(na.rm = TRUE) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  # guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3),
+                              position = "inside")) +
+  expand_limits(y = 0) +
+  theme(legend.position.inside = c(0.2, 0.9)) +
+  labs(
+    subtitle = "Means of transfer",
+    x = NULL,
+    y = "FJD ($M)",
+    color = NULL
+  )
+
+p1 + p2 +
+  plot_annotation(
+    title = "Remittances to Fiji",
+    subtitle = glue("{remittances_yr_min} to {remittances_yr_max}"),
+    caption = my_caption_rbf
+  )
+
+
+```
+
+<br>
+
+## Hotel Statistics
+
+https://www.rbf.gov.fj/wp-content/uploads/2024/08/5.5-Hotel-Statistics.xlsx
+
+```{r}
+#| label: prepare-hotel-data
+#| warning: false
+#| message: false
+
+hotel <- read_xlsx(here("data/raw/rbf/5.5-Hotel-Statistics.xlsx"),
+                   sheet = "Table 5.5",
+                   range = "A2:J38") |>
+  clean_names() |>
+  remove_empty(which = c("rows", "cols")) |>
+  filter(row_number() > 2) |>
+  rename(
+    yr = period,
+    room_nights_available = room_nights,
+    room_nights_sold = x3,
+    room_nights_pct_occupied = x4,
+    guest_nights_overseas = guest_nights,
+    guest_nights_local = x6,
+    guest_nights_total = x7,
+    pct_turnover_to_earnings = hotel_turnover_to_gross_tourism_earnings
+  ) |>
+  mutate(yr = parse_number(yr),
+         across(everything(), as.numeric)) |>
+  # fix units
+  mutate(room_nights_available = 1000 * room_nights_available,
+         room_nights_sold = 1000 * room_nights_sold,
+         guest_nights_overseas = 1000 * guest_nights_overseas,
+         guest_nights_local = 1000 * guest_nights_local,
+         guest_nights_total = 1000 * guest_nights_total,
+         hotel_turnover = 1e6 * hotel_turnover,
+         gross_tourism_earnings = 1e6 * gross_tourism_earnings
+         )
+
+hotel_year_min <- min(hotel$yr)
+hotel_year_max <- max(hotel$yr)
+
+```
+
+<br>
+
+```{r}
+#| label: fig-hotel-rooms
+#| fig-cap: "Hotel rooms"
+#| fig-height: 6
+#| fig-width: 10
+
+dta_for_plot <- hotel |>
+  select(yr, starts_with("room")) |>
+  mutate(
+    pct_occupied = room_nights_pct_occupied / 100
+  )
+
+rooms_sold_unsold <- tribble(
+  ~x,   ~y,       ~label,
+  2010, 2500000, "Rooms unsold",
+  2010, 800000,  "Rooms sold"
+)
+
+p1 <- dta_for_plot |>
+  ggplot() +
+  geom_ribbon(aes(x = yr, ymin = room_nights_sold, ymax = room_nights_available),
+              fill = "firebrick", alpha = 0.15,
+              na.rm = TRUE) +
+  geom_line(aes(x = yr, y = room_nights_available),
+              color = "firebrick", alpha = 0.8, linewidth = 0.15,
+              na.rm = TRUE) +
+  geom_line(aes(x = yr, y = room_nights_sold),
+              color = "firebrick", alpha = 0.8, linewidth = 0.15,
+              na.rm = TRUE) +
+  geom_text(data = rooms_sold_unsold,
+            aes(x = x, y = y, label = label),
+            size = 3, hjust = 0) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02)),
+                     labels = label_number(scale_cut = cut_short_scale())) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  expand_limits(y = 0) +
+  labs(
+    subtitle = glue("Count"),
+    x = NULL,
+    y = NULL,
+    caption = my_caption_fbos,
+    color = NULL
+  )
+
+p2 <- dta_for_plot |>
+  ggplot() +
+  geom_line(aes(x = yr, y = pct_occupied),
+            linewidth = 0.5) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02)),
+                     labels = label_percent()) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  expand_limits(y = 0) +
+  labs(
+    subtitle = glue("Percent of room nights occupied"),
+    x = NULL,
+    y = NULL,
+    color = NULL
+  )
+
+p1 + p2 +
+  plot_annotation(
+    title = glue("Guest room nights in Fiji"),
+    subtitle = glue("{hotel_year_min} to {hotel_year_max}."),
+    caption = my_caption_fbos
+  )
+
+```
+
+<br>
+
+```{r}
+#| label: fig-guest-rooms
+#| fig-cap: "Guest rooms"
+#| fig-height: 6
+#| fig-width: 10
+
+dta_for_plot <- hotel |>
+  select(yr, guest_nights_local, guest_nights_overseas) |>
+  mutate(pct_local = round(guest_nights_local / (guest_nights_local + 
+                                                         guest_nights_overseas), digits = 2),
+         pct_local_y = guest_nights_local + guest_nights_overseas) |>
+  pivot_longer(cols = starts_with("guest"),
+               names_to = "metric",
+               values_to = "value") 
+
+p1 <- dta_for_plot |>
+  ggplot() +
+  geom_area(aes(x = yr, y = value, fill = metric), 
+            alpha = 0.25,
+              na.rm = TRUE) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02)),
+                     labels = label_number(scale_cut = cut_short_scale())) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3),
+                              position = "inside")) +
+  expand_limits(y = 0) +
+  theme(legend.position.inside = c(0.3, 0.8)) +
+  expand_limits(y = 0) +
+  labs(
+    subtitle = glue("TBD"),
+    x = NULL,
+    y = NULL,
+    caption = my_caption_fbos,
+    color = NULL
+  )
+
+p2 <- dta_for_plot |>
+  ggplot() +
+  geom_line(aes(x = yr, y = pct_local),
+            linewidth = 0.5) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02)),
+                     labels = label_percent()) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  expand_limits(y = 0) +
+  coord_cartesian(ylim = c(NA, 0.3)) +
+  labs(
+    subtitle = glue("Percent of guest rooms filled by locals"),
+    x = NULL,
+    y = NULL,
+    color = NULL
+  )
+
+p1 + p2 +
+  plot_annotation(
+    title = glue("An increasing percentage of rooms are booked by locals",
+                 "\neven as total guests nights has grown in Fiji"),
+    subtitle = glue("Including percent of guest nights local. {hotel_year_min} to {hotel_year_max}."),
+    caption = my_caption_fbos
+  )
+
+```
+
+<br>
+
+```{r}
+#| label: fig-tourism-earnings
+#| fig-cap: "Tourism earnings"
+#| fig-height: 6
+#| fig-width: 10
+
+dta_for_plot <- hotel |>
+  select(yr, hotel_turnover, gross_tourism_earnings, pct_turnover_to_earnings) |>
+  mutate(pct_turnover = round(pct_turnover_to_earnings) / 100,
+         pct_turnover_y = hotel_turnover) |>
+  pivot_longer(cols = c(hotel_turnover, gross_tourism_earnings),
+               names_to = "metric",
+               values_to = "value") 
+
+p1 <- dta_for_plot |>
+  ggplot() +
+  geom_area(aes(x = yr, y = value, fill = metric), 
+            alpha = 0.25,
+              na.rm = TRUE) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02)),
+                     labels = label_number(scale_cut = cut_short_scale())) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3),
+                              position = "inside")) +
+  expand_limits(y = 0) +
+  theme(legend.position.inside = c(0.3, 0.8)) +
+  labs(
+    subtitle = glue("Revenue"),
+    x = NULL,
+    y = NULL,
+    color = NULL
+  )
+
+p2 <- dta_for_plot |>
+  ggplot() +
+  geom_hline(yintercept = 1, lty = 2, linewidth = 0.15, alpha = 0.5) +
+  geom_line(aes(x = yr, y = pct_turnover),
+            linewidth = 0.5) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02)),
+                     labels = label_percent(scale = 1)) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  expand_limits(y = 0) +
+  coord_cartesian(ylim = c(NA, 1.25)) +
+  labs(
+    subtitle = glue("Hotel turnover as a percent of\ngross tourism earnings"),
+    x = NULL,
+    y = NULL,
+    color = NULL
+  )
+
+p1 + p2 +
+  plot_annotation(
+    title = glue("It would be hard to overstate the impact of COVID-19",
+                 "\non the tourism sector in Fiji. The borders were closed",
+                 "\nstarting in `2020 Q1 and ending in 2022 Q1."),
+    subtitle = glue("{hotel_year_min} to {hotel_year_max}."),
+    caption = my_caption_fbos
+  )
+
+```
+
+<br>
+
+## Direction of Trade by Major Trading Partner Countries 
+
+https://www.rbf.gov.fj/wp-content/uploads/2024/08/8.4-Direction-of-Trade-by-Major-Trading-Partner.xlsx
+
+```{r}
+#| label: prepare-trade-data
+#| warning: false
+#| message: false
+
+trade <- read_xlsx(here("data/raw/rbf/8.4-Direction-of-Trade-by-Major-Trading-Partner.xlsx"),
+                   sheet = "Sheet1",
+                   skip = 5) |>
+  clean_names() |>
+  remove_empty(which = c("rows", "cols")) |>
+  filter(row_number() > 1) |>
+  fill(country, .direction = "down") |>
+  mutate(country = case_match(
+    country,
+    "China, Peoples Republic"           ~ "China",
+    "China, Taiwan"                     ~ "Taiwan",
+    "Germany, Federal"                  ~ "Germany",
+    "Others & Other Asian Countries2/"  ~ "Others",
+    .default = country
+    ),
+    across(year:trade_deficit_surplus, as.numeric),
+    domestic_imports = imports - re_exports,
+    domestic_imports = if_else(domestic_imports >= 0,
+                               domestic_imports,
+                               NA_real_)
+    )
+
+trade_year_min <- min(trade$year)
+trade_year_max <- max(trade$year)
+
+dta_for_plot_all <- trade |>
+  filter(country != "TOTAL",
+         country != "Germany", # omit, since not enough trade to be interesting
+         !year %in% c(2020, 2021, 2022)) |>
+  pivot_longer(domestic_exports:domestic_imports,
+               names_to = "metric",
+               values_to = "value")
+
+```
+
+<br>
+
+```{r}
+#| label: fig-trade-overview
+#| fig-cap: "Fiji trade balance with other countries"
+#| fig-height: 8
+#| fig-width: 14
+#| column: page-right
+#| warning: false
+#| message: false
+
+dta_for_plot <- dta_for_plot_all
+
+dta_for_plot_labels <- dta_for_plot |>
+  filter(year == 2023) |>
+  group_by(metric) |>
+  slice_max(order_by = abs(value),
+            n = 3) |>
+  ungroup() |>
+  select(country, metric) |>
+  mutate(country_label = country)
+
+p1 <- dta_for_plot |>
+  left_join(
+    dta_for_plot_labels,
+    by = c("country", "metric")
+  ) |>
+  ggplot(aes(year, value, color = country, group = country)) +
+  geom_line(
+    linewidth = 0.5,
+    na.rm = TRUE,
+    show.legend = FALSE
+  ) +
+  geom_text_repel(aes(x = 2024, 
+                y = if_else(year == 2023,
+                            value,
+                            NA_real_), 
+                label = country_label),
+            size = 3, hjust = 0,
+            direction = "y",
+            na.rm = TRUE,
+            show.legend = FALSE) +
+  expand_limits(x = 2035) +
+  facet_wrap(~ metric) +
+  labs(
+    x = NULL,
+    y = "FJD ($M)",
+    caption = my_caption_fbos
+  )
+
+p2 <- dta_for_plot |>
+  left_join(
+    dta_for_plot_labels,
+    by = c("country", "metric")
+  ) |>
+  ggplot(aes(year, value, color = country, group = country)) +
+  geom_smooth(
+    linewidth = 0.5,
+    se = FALSE, method = 'loess', formula = 'y ~ x',
+    na.rm = TRUE,
+    show.legend = FALSE
+  ) +
+  geom_text_repel(aes(x = 2024, 
+                y = if_else(year == 2023,
+                            value,
+                            NA_real_), 
+                label = country_label),
+            size = 3, hjust = 0,
+            direction = "y",
+            na.rm = TRUE,
+            show.legend = FALSE) +
+  expand_limits(x = 2035) +
+  facet_wrap(~ metric) +
+  labs(
+    subtitle = "Smoothed lines",
+    x = NULL,
+    y = "FJD ($M)"
+  )
+
+p1 + p2 +
+  plot_annotation(
+    title = "Fiji balance of trade",
+    subtitle = glue("Top three countries in 2023 labeled for each metric.", 
+                    " {trade_year_min} to {trade_year_max}, excluding 2020-2022."),
+    caption = my_caption_fbos
+  )
+
+```
+
+<br>
+
+### Exports
+
+```{r}
+#| label: fig-trade-overview-exports
+#| fig-cap: "Fiji exports"
+#| fig-height: 8
+#| fig-width: 10
+#| column: page-right
+#| warning: false
+#| message: false
+
+dta_for_plot <- dta_for_plot_all |>
+  filter(metric %in% c("domestic_exports", "re_exports") ) 
+
+dta_for_plot_labels <- dta_for_plot |>
+  filter(year == 2023) |>
+  group_by(metric) |>
+  slice_max(order_by = abs(value),
+            n = 5) |>
+  ungroup() |>
+  select(country, metric) |>
+  mutate(country_label = country)
+
+p1 <- dta_for_plot |>
+  left_join(
+    dta_for_plot_labels,
+    by = c("country", "metric")
+  ) |>
+  ggplot(aes(year, value, color = country, group = country)) +
+  geom_line(
+    linewidth = 0.5,
+    na.rm = TRUE,
+    show.legend = FALSE
+  ) +
+  geom_text_repel(aes(x = 2024, 
+                y = if_else(year == 2023,
+                            value,
+                            NA_real_), 
+                label = country_label),
+            size = 3, hjust = 0,
+            direction = "y",
+            na.rm = TRUE,
+            show.legend = FALSE) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  expand_limits(x = 2030) +
+  facet_wrap(~ metric) +
+  labs(
+    x = NULL,
+    y = "FJD ($M)"
+  )
+
+p2 <- dta_for_plot |>
+  left_join(
+    dta_for_plot_labels,
+    by = c("country", "metric")
+  ) |>
+  ggplot(aes(year, value, color = country, group = country)) +
+  geom_smooth(
+    linewidth = 0.5,
+    se = FALSE, method = 'loess', formula = 'y ~ x',
+    na.rm = TRUE,
+    show.legend = FALSE
+  ) +
+  geom_text_repel(aes(x = 2024, 
+                y = if_else(year == 2023,
+                            value,
+                            NA_real_), 
+                label = country_label),
+            size = 3, hjust = 0,
+            direction = "y",
+            na.rm = TRUE,
+            show.legend = FALSE) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  expand_limits(x = 2030) +
+  facet_wrap(~ metric) +
+  coord_cartesian(ylim = c(0, NA)) +
+  labs(
+    subtitle = "Smoothed lines",
+    x = NULL,
+    y = "FJD ($M)"
+  )
+
+p1 / p2 +
+  plot_annotation(
+    title = "Fiji exports",
+    subtitle = glue("Top five countries in 2023 labeled for each metric.", 
+                    " {trade_year_min} to {trade_year_max}, excluding 2020-2022."),
+    caption = my_caption_fbos
+  )
+
+```
+
+<br>
+
+```{r}
+#| label: fig-trade-overview-exports-by-country
+#| fig-cap: "Fiji exports by country"
+#| fig-height: 10
+#| fig-width: 10
+#| column: page-right
+#| warning: false
+#| message: false
+
+dta_for_plot <- dta_for_plot_all |>
+  filter(metric %in% c("domestic_exports", "re_exports") ) |>
+  mutate(country_facet = fct_reorder(country, -value, sum))
+
+p1 <- dta_for_plot |>
+  left_join(
+    dta_for_plot_labels,
+    by = c("country", "metric")
+  ) |>
+  ggplot(aes(year, value, color = metric, group = metric)) +
+  geom_line(
+    linewidth = 0.5,
+    na.rm = TRUE,
+    show.legend = TRUE
+  ) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  facet_wrap(~ country_facet) +
+  theme(legend.position = "top") +
+  labs(
+    x = NULL,
+    y = "FJD ($M)"
+  )
+
+p2 <- dta_for_plot |>
+  ggplot(aes(year, value, color = metric, group = metric)) +
+  geom_smooth(
+    linewidth = 0.5,
+    se = FALSE, method = 'loess', formula = 'y ~ x',
+    na.rm = TRUE,
+    show.legend = FALSE
+  ) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  facet_wrap(~ country_facet) +
+  coord_cartesian(ylim = c(0, NA)) +
+  labs(
+    subtitle = "Smoothed lines",
+    x = NULL,
+    y = "FJD ($M)"
+  )
+
+p1 / p2 +
+  plot_annotation(
+    title = "Fiji exports",
+    subtitle = glue("Top five countries in 2023 labeled for each metric.", 
+                    " {trade_year_min} to {trade_year_max}, excluding 2020-2022.", 
+                    "\nFacets ordered by total exports over time period."),
+    caption = my_caption_fbos
+  )
+
+```
+
+<br>
+
+```{r}
+#| label: fig-trade-overview-exports-by-country-free-y
+#| fig-cap: "Fiji exports by country"
+#| fig-height: 10
+#| fig-width: 10
+#| column: page-right
+#| warning: false
+#| message: false
+
+dta_for_plot <- dta_for_plot_all |>
+  filter(metric %in% c("domestic_exports", "re_exports") ) |>
+  mutate(country_facet = fct_reorder(country, -value, sum))
+
+p1 <- dta_for_plot |>
+  left_join(
+    dta_for_plot_labels,
+    by = c("country", "metric")
+  ) |>
+  ggplot(aes(year, value, color = metric, group = metric)) +
+  geom_line(
+    linewidth = 0.5,
+    na.rm = TRUE,
+    show.legend = TRUE
+  ) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  facet_wrap(~ country_facet, scales = "free_y") +
+  theme(legend.position = "top") +
+  labs(
+    x = NULL,
+    y = "FJD ($M)"
+  )
+
+p2 <- dta_for_plot |>
+  ggplot(aes(year, value, color = metric, group = metric)) +
+  geom_smooth(
+    linewidth = 0.5,
+    se = FALSE, method = 'loess', formula = 'y ~ x',
+    na.rm = TRUE,
+    show.legend = FALSE
+  ) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  facet_wrap(~ country_facet, scales = "free_y") +
+  coord_cartesian(ylim = c(0, NA)) +
+  labs(
+    subtitle = "Smoothed lines",
+    x = NULL,
+    y = "FJD ($M)"
+  )
+
+p1 / p2 +
+  plot_annotation(
+    title = "Fiji exports",
+    subtitle = glue("Top five countries in 2023 labeled for each metric.", 
+                    " {trade_year_min} to {trade_year_max}, excluding 2020-2022.",
+                    "\nY axis scale varies. Facets ordered by total exports over time period."),
+    caption = my_caption_fbos
+  )
+
+```
+
+<br>
+
+### Imports
+
+```{r}
+#| label: fig-trade-overview-imports-by-country
+#| fig-cap: "Fiji imports by country"
+#| fig-height: 10
+#| fig-width: 10
+#| column: page-right
+#| warning: false
+#| message: false
+
+dta_for_plot <- dta_for_plot_all |>
+  filter(metric %in% c("domestic_imports", "imports") ) |>
+  mutate(country_facet = fct_reorder(country, -value, sum))
+
+p1 <- dta_for_plot |>
+  left_join(
+    dta_for_plot_labels,
+    by = c("country", "metric")
+  ) |>
+  ggplot(aes(year, value, color = metric, group = metric)) +
+  geom_line(
+    linewidth = 0.5,
+    na.rm = TRUE,
+    show.legend = TRUE
+  ) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  facet_wrap(~ country_facet) +
+  theme(legend.position = "top") +
+  labs(
+    x = NULL,
+    y = "FJD ($M)"
+  )
+
+p2 <- dta_for_plot |>
+  ggplot(aes(year, value, color = metric, group = metric)) +
+  geom_smooth(
+    linewidth = 0.5,
+    se = FALSE, method = 'loess', formula = 'y ~ x',
+    na.rm = TRUE,
+    show.legend = FALSE
+  ) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  facet_wrap(~ country_facet) +
+  coord_cartesian(ylim = c(0, NA)) +
+  labs(
+    subtitle = "Smoothed lines",
+    x = NULL,
+    y = "FJD ($M)"
+  )
+
+p1 / p2 +
+  plot_annotation(
+    title = "Fiji imports",
+    subtitle = glue("Top five countries in 2023 labeled for each metric.", 
+                    " {trade_year_min} to {trade_year_max}, excluding 2020-2022.",
+                    "\nFacets ordered by total imports over time period."),
+    caption = my_caption_fbos
+  )
+
+```
+
+<br>
+
+```{r}
+#| label: fig-trade-overview-imports-by-country-free-y
+#| fig-cap: "Fiji imports by country"
+#| fig-height: 10
+#| fig-width: 10
+#| column: page-right
+#| warning: false
+#| message: false
+
+dta_for_plot <- dta_for_plot_all |>
+  filter(metric %in% c("domestic_imports", "imports") ) |>
+  mutate(country_facet = fct_reorder(country, -value, sum))
+
+p1 <- dta_for_plot |>
+  left_join(
+    dta_for_plot_labels,
+    by = c("country", "metric")
+  ) |>
+  ggplot(aes(year, value, color = metric, group = metric)) +
+  geom_line(
+    linewidth = 0.5,
+    na.rm = TRUE,
+    show.legend = TRUE
+  ) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  expand_limits(y = 0) +
+  facet_wrap(~ country_facet, scales = "free_y") +
+  theme(legend.position = "top") +
+  labs(
+    x = NULL,
+    y = "FJD ($M)"
+  )
+
+p2 <- dta_for_plot |>
+  ggplot(aes(year, value, color = metric, group = metric)) +
+  geom_smooth(
+    linewidth = 0.5,
+    se = FALSE, method = 'loess', formula = 'y ~ x',
+    na.rm = TRUE,
+    show.legend = FALSE
+  ) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  expand_limits(y = 0) +
+  facet_wrap(~ country_facet, scales = "free_y") +
+  coord_cartesian(ylim = c(0, NA)) +
+  labs(
+    subtitle = "Smoothed lines",
+    x = NULL,
+    y = "FJD ($M)"
+  )
+
+p1 / p2 +
+  plot_annotation(
+    title = "Fiji imports",
+    subtitle = glue("Top five countries in 2023 labeled for each metric.", 
+                    " {trade_year_min} to {trade_year_max}, excluding 2020-2022.",
+                    "\nY axis scale varies. Facets ordered by total imports over time period."),
+    caption = my_caption_fbos
+  )
+
+```
+
+<br>
+
+### Balance of trade
+
+```{r}
+#| label: fig-trade-overview-balance
+#| fig-cap: "Fiji balance of trade"
+#| fig-height: 8
+#| fig-width: 8
+#| column: page-right
+
+dta_for_plot <- dta_for_plot_all |>
+  filter(metric %in% c("trade_deficit_surplus") ) 
+
+dta_for_plot_labels <- dta_for_plot |>
+  filter(year == 2023) |>
+  group_by(metric) |>
+  slice_max(order_by = abs(value),
+            n = 10) |>
+  ungroup() |>
+  select(country, metric) |>
+  mutate(country_label = country)
+
+p1 <- dta_for_plot |>
+  left_join(
+    dta_for_plot_labels,
+    by = c("country", "metric")
+  ) |>
+  ggplot(aes(year, value, color = country, group = country)) +
+  geom_hline(yintercept = 0, lty = 2, linewidth = 0.15, alpha = 0.5) +
+  geom_line(
+    linewidth = 0.5,
+    na.rm = TRUE,
+    show.legend = FALSE
+  ) +
+  geom_text_repel(aes(x = 2024, 
+                y = if_else(year == 2023,
+                            value,
+                            NA_real_), 
+                label = country_label),
+            size = 3, hjust = 0,
+            direction = "y",
+            na.rm = TRUE,
+            show.legend = FALSE) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  expand_limits(x = 2030) +
+  facet_wrap(~ metric) +
+  labs(
+    x = NULL,
+    y = "FJD ($M)"
+  )
+
+p2 <- dta_for_plot |>
+  left_join(
+    dta_for_plot_labels,
+    by = c("country", "metric")
+  ) |>
+  ggplot(aes(year, value, color = country, group = country)) +
+  geom_hline(yintercept = 0, lty = 2, linewidth = 0.15, alpha = 0.5) +
+  geom_smooth(
+    linewidth = 0.5,
+    se = FALSE, method = 'loess', formula = 'y ~ x',
+    na.rm = TRUE,
+    show.legend = FALSE
+  ) +
+  geom_text_repel(aes(x = 2024, 
+                y = if_else(year == 2023,
+                            value,
+                            NA_real_), 
+                label = country_label),
+            size = 3, hjust = 0,
+            direction = "y",
+            na.rm = TRUE,
+            show.legend = FALSE) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  expand_limits(x = 2030) +
+  facet_wrap(~ metric) +
+  labs(
+    subtitle = "Smoothed lines",
+    x = NULL,
+    y = "FJD ($M)"
+  )
+
+p1 / p2 +
+  plot_annotation(
+    title = "Fiji blance of trade",
+    subtitle = glue("Top ten countries in 2023 labeled.", 
+                    " {trade_year_min} to {trade_year_max}, excluding 2020-2022."),
+    caption = my_caption_fbos
+  )
+
+```
+
+<br>
+
+```{r}
+#| label: fig-trade-overview-balance-by-country
+#| fig-cap: "Fiji balance of trade by country"
+#| fig-height: 10
+#| fig-width: 10
+#| column: page-right
+
+dta_for_plot <- dta_for_plot_all |>
+  filter(metric %in% c("trade_deficit_surplus") ) |>
+  mutate(country_facet = fct_reorder(country, -value, sum))
+
+p1 <- dta_for_plot |>
+  left_join(
+    dta_for_plot_labels,
+    by = c("country", "metric")
+  ) |>
+  ggplot(aes(year, value, color = metric, group = metric)) +
+  geom_hline(yintercept = 0, lty = 2, linewidth = 0.15, alpha = 0.5) +
+  geom_line(
+    linewidth = 0.5,
+    na.rm = TRUE,
+    show.legend = FALSE
+  ) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  facet_wrap(~ country_facet) +
+  theme(legend.position = "top") +
+  labs(
+    x = NULL,
+    y = "FJD ($M)"
+  )
+
+p2 <- dta_for_plot |>
+  ggplot(aes(year, value, color = metric, group = metric)) +
+  geom_hline(yintercept = 0, lty = 2, linewidth = 0.15, alpha = 0.5) +
+  geom_smooth(
+    linewidth = 0.5,
+    se = FALSE, method = 'loess', formula = 'y ~ x',
+    na.rm = TRUE,
+    show.legend = FALSE
+  ) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  facet_wrap(~ country_facet) +
+  labs(
+    subtitle = "Smoothed lines",
+    x = NULL,
+    y = "FJD ($M)"
+  )
+
+p1 / p2 +
+  plot_annotation(
+    title = "Fiji balance of trade",
+    subtitle = glue("{trade_year_min} to {trade_year_max}, excluding 2020-2022.", 
+                    "\nFacets ordered by total balance over time period."),
+    caption = my_caption_fbos
+  )
+
+```
+
+<br>
+
+```{r}
+#| label: fig-trade-overview-balance-by-country-free-y
+#| fig-cap: "Fiji balance of trade by country"
+#| fig-height: 10
+#| fig-width: 10
+#| column: page-right
+
+dta_for_plot <- dta_for_plot_all |>
+  filter(metric %in% c("trade_deficit_surplus") ) |>
+  mutate(country_facet = fct_reorder(country, -abs(value), sum))
+
+p1 <- dta_for_plot |>
+  left_join(
+    dta_for_plot_labels,
+    by = c("country", "metric")
+  ) |>
+  ggplot(aes(year, value, color = metric, group = metric)) +
+  geom_hline(yintercept = 0, lty = 2, linewidth = 0.15, alpha = 0.5) +
+  geom_line(
+    linewidth = 0.5,
+    na.rm = TRUE,
+    show.legend = FALSE
+  ) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  facet_wrap(~ country_facet, scales = "free_y") +
+  theme(legend.position = "top") +
+  labs(
+    x = NULL,
+    y = "FJD ($M)"
+  )
+
+p2 <- dta_for_plot |>
+  ggplot(aes(year, value, color = metric, group = metric)) +
+  geom_hline(yintercept = 0, lty = 2, linewidth = 0.15, alpha = 0.5) +
+  geom_smooth(
+    linewidth = 0.5,
+    se = FALSE, method = 'loess', formula = 'y ~ x',
+    na.rm = TRUE,
+    show.legend = FALSE
+  ) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  scale_y_continuous(expand = expansion(mult = c(0.005, 0.02))) +
+  facet_wrap(~ country_facet, scales = "free_y") +
+  # coord_cartesian(ylim = c(0, NA)) +
+  labs(
+    subtitle = "Smoothed lines",
+    x = NULL,
+    y = "FJD ($M)"
+  )
+
+p1 / p2 +
+  plot_annotation(
+    title = "Fiji balance of trade",
+    subtitle = glue("Top five countries in 2023 labeled for each metric.", 
+                    " {trade_year_min} to {trade_year_max}, excluding 2020-2022.",
+                    "\nY axis scale varies. Facets ordered by total balance over time period."),
+    caption = my_caption_fbos
+  )
+
+```
+
+<br>
+
+## General Notes:	
+
+* Differences from previously published tables are due to revisions."
+*	Others includes France, Netherlands, Spain & Other Asian Countries (Indonesia, Korea, Malaysia, Thailand and Vietnam) from 2023 onwards."
+*	Data for the years 2015, 2018, 2019, 2021 & 2023 have been revised. 
+*	Data for the year 2023 is provisional. 
+
+* domestic exports,	re-exports, and total exports are F.O.B.
+* imports are C.I.F.
+* domestic imports are imports less re-exports
+* all amounts are nominal dollars FJD (not adjusted for inflation)
+
+## Consumer price index
+
+The Reserve Bank of Fiji makes available historical consumer price data going back to 1991, rebased in 2005, 2008, 2011, and 2014.  The CPI is based on the relative prices of a set of component categories weighted to reflect consumer spending. Each component's relative price is determined by a basket of products, the details of which are not available. The component categories changed between 2005 and 2008 (making comparisons between them difficult). Fortunately, only the weightings changed in subsequent rebases. Where year-to-year price changes were included in multiple rebases, I averaged them to calculate a single, simple, non-authoritative CPI for the entire period.
+
+```{r}
+#| label: prepare-CPI-data
+#| warning: false
+#| message: false
+
+cpi_2005_base_raw <- read_xlsx(here("data/raw/rbf/7.1-Consumer-Price-Index-fixed.xlsx"),
+                   range = "A3:U28") |>
+  clean_names() |>
+  remove_empty(which = c("rows", "cols"))
+
+cpi_2008_base_raw <- read_xlsx(here("data/raw/rbf/7.1-Consumer-Price-Index-fixed.xlsx"),
+                   range = "A33:U40") |>
+  clean_names() |>
+  remove_empty(which = c("rows", "cols"))
+
+cpi_2011_base_raw <- read_xlsx(here("data/raw/rbf/7.1-Consumer-Price-Index-fixed.xlsx"),
+                   range = "A45:U55") |>
+  clean_names() |>
+  remove_empty(which = c("rows", "cols"))
+
+cpi_2014_base_raw <- read_xlsx(here("data/raw/rbf/7.1-Consumer-Price-Index-fixed.xlsx"),
+                   range = "A60:U70") |>
+  clean_names() |>
+  remove_empty(which = c("rows", "cols"))
+
+cpi_merged <- bind_rows(
+  cpi_2005_base_raw |>
+    mutate(base = 2005),
+  cpi_2008_base_raw |>
+    mutate(base = 2008),
+  cpi_2011_base_raw |>
+    mutate(base = 2011),
+  cpi_2014_base_raw |>
+    mutate(base = 2014)
+)
+
+cpi_weights <-  bind_rows(
+  # cpi_2005_base_raw |>
+  #   mutate(base = 2005),
+  cpi_2008_base_raw |>
+    mutate(base = 2008),
+  cpi_2011_base_raw |>
+    mutate(base = 2011),
+  cpi_2014_base_raw |>
+    mutate(base = 2014)
+) |>
+  filter(period == "Weight") |>
+  remove_empty(which = "cols") |>
+  select(-period)
+
+cpi <- cpi_merged |>
+  select(period, year_on_year_percent_change, base) |>
+  filter(period != "Weight") |>
+  mutate(year = as.numeric(period)) |>
+  summarize(yty = mean(year_on_year_percent_change) / 100,
+            cpi = 0,
+         .by = year) #|>
+  # mutate(cpi = lag(cpi) * (1 + yty)) #lag(yty, default = 0)))
+
+# since lag() doesn't seem to get the whole vector at the beginning of the call, I cannot 
+# modify cpi while lagging it. So instead I use the following:
+for(i in 1:length(cpi$yty)) {
+   if(i == 1) {
+    cpi$cpi[i] <- 1
+  } else {
+    cpi$cpi[i] <- cpi$cpi[i - 1] * (1 + cpi$yty[i])
+  }
+}
+
+cpi_year_min <- min(cpi$year)
+cpi_year_max <- max(cpi$year)
+
+dta_for_cpi_weight_plot <- cpi_merged |>
+  filter(base != 2005,
+         period != "Weight") |>
+  distinct(base, period) |>
+  left_join(
+    cpi_weights,
+    by = "base"
+  ) |>
+  select(-all_items) |>
+  rename(communicaitons = communi_cations) |>
+  mutate(base = as.character(base),
+         period = as.numeric(period)) |>
+  pivot_longer(
+    cols = food_and_non_alcoholic_beverage:recreation_culture,
+    names_to = "metric",
+    values_to = "value"
+  )
+
+us_cpi <- read_xlsx(here("data/raw/rbf/us-cpi-historical.xlsx"),
+                   skip = 7) |>
+  clean_names() |>
+  mutate(cpi_base_1991 = cpi / cpi[year == 1991])
+
+```
+
+<br>
+
+```{r}
+#| label: fig-cpi
+#| fig-cap: "Fiji consumer price index"
+#| fig-height: 6
+#| fig-width: 8
+#| column: page-right
+#| warning: false
+#| message: false
+
+p1 <- cpi |>
+  ggplot(aes(year, yty)) +
+  geom_hline(yintercept = 0, lty = 2, linewidth = 0.15, alpa = 0.5) +
+  geom_line() +
+  geom_line(data = us_cpi |>
+              filter(year >= 1991),
+            aes(year, annual_pct_change),
+            color = "firebrick", linewidth = 0.2,
+            alpha = 0.75) +
+  annotate("text", x = 2002, y = -0.01, label = "US yty pct change",
+           hjust = 0, color = "firebrick", alpha = 0.75) +
+  scale_y_continuous(labels = label_percent()) +
+  labs(
+    subtitle = glue("Year to year change in consumer prices",
+                    "\nIn Fiji and US")
+  )
+
+p2 <- cpi |>
+  ggplot() +
+  geom_line(aes(year, cpi)) +
+  geom_line(data = us_cpi |>
+              filter(year >= 1991),
+            aes(year, cpi_base_1991),
+            color = "firebrick", linewidth = 0.2,
+            alpha = 0.75) +
+  annotate("text", x = 2011, y = 1.5, label = "US CPI",
+           hjust = 0, color = "firebrick", alpha = 0.75) +
+  labs(
+    subtitle = glue("Fiji prices doubled in ~20 years",
+                    "\nwhile US prices doubled in ~30 years",
+                    "\nCPI: {cpi_year_min} = 100"),
+    y = "Consumer price index"
+  )
+
+p1 + p2 +
+  plot_annotation(
+    title = "Consumer price changes in Fiji",
+    subtitle = glue("{cpi_year_min} to {cpi_year_max}. With US comparisons."),
+    caption = paste0(my_caption_rbf,
+                     " and Minneapolis Federal Reserve Bank")
+  )
+
+```
+
+<br>
+
+```{r}
+#| label: fig-cpi-weights
+#| fig-cap: "Fiji consumer price index weightings"
+#| fig-height: 6
+#| fig-width: 8
+#| column: page-right
+#| warning: false
+#| message: false
+
+dta_for_cpi_weight_plot |>
+  ggplot(aes(period, value, color = base)) +
+  geom_hline(yintercept = 0, lty = 2, linewidth = 0.15, alpa = 0.5) +
+  geom_line() +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  facet_wrap(~metric) +
+  theme(legend.position = "top") +
+  labs(
+    title = glue("Changes have been modest in the relative weightings",
+                 "\nof Fiji CPI components"),
+    x = NULL,
+    y = "Relative weighting",
+    caption = my_caption_rbf
+  )
+
+```
+
+<br>
+
+```{r}
+#| label: fig-cpi-component-price-changes
+#| fig-cap: "Fiji consumer price index component price changes"
+#| fig-height: 6
+#| fig-width: 10
+#| column: page-right
+#| warning: false
+#| message: false
+
+dta_for_plot <- cpi_merged |>
+  filter(base != 2005,
+         period != "Weight") |>
+  remove_empty(which = "cols") |>
+  rename(communicaitons = communi_cations) |>
+  select(-year_on_year_percent_change, -all_items) |>
+  relocate(base, .before = period) |>
+  mutate(period = as.numeric(period),
+         base = glue("base: {base}")) |>
+  pivot_longer(
+    cols = clothing_footwear:recreation_culture,
+    names_to = "metric",
+    values_to = "value"
+  )
+  
+dta_for_plot |>
+  ggplot(aes(period, value, color = metric, group = metric)) +
+  geom_hline(yintercept = 100, lty = 2, linewidth = 0.15, alpa = 0.5) +
+  geom_line() +
+  scale_x_continuous(breaks = c(2010, 2015, 2020, 2023)) +
+  facet_wrap(~base) +
+  guides(color = guide_legend(ncol = 3,
+                              override.aes = list(linewidth = 3))
+         ) +
+  theme(legend.position = "bottom") +
+  labs(
+    title = "The largest price changes were in alcohol, tobacco and narcotics",
+    subtitle = glue("Changes in prices of the components of Fiji CPI",
+                    "\nYear of base == 100"),
+    x = NULL,
+    y = NULL,
+    color = NULL,
+    caption = my_caption_rbf
+  )
+
+dta_for_plot |>
+  ggplot(aes(period, value, color = base, group = base)) +
+  geom_hline(yintercept = 100, lty = 2, linewidth = 0.15, alpa = 0.5) +
+  geom_line() +
+  scale_x_continuous(breaks = c(2010, 2015, 2020, 2023)) +
+  facet_wrap(~metric) +
+  guides(color = guide_legend(ncol = 3,
+                              override.aes = list(linewidth = 3))
+         ) +
+  theme(legend.position = "bottom") +
+  labs(
+    title = "Changes in prices of the components of Fiji CPI",
+    subtitle = "Year of base == 100",
+    x = NULL,
+    y = NULL,
+    color = NULL,
+    caption = my_caption_rbf
+  )
+
+dta_for_plot |>
+  ggplot(aes(period, value, color = base, group = base)) +
+  geom_hline(yintercept = 100, lty = 2, linewidth = 0.15, alpa = 0.5) +
+  geom_line() +
+  scale_x_continuous(breaks = c(2010, 2015, 2020, 2023)) +
+  facet_wrap(~metric, scales = "free_y") +
+  guides(color = guide_legend(ncol = 3,
+                              override.aes = list(linewidth = 3))
+         ) +
+  theme(legend.position = "bottom") +
+  labs(
+    title = glue("The most signficant changes (especially for the poor)", 
+                 "\nwere in the price of food and non-alcoholic beverages"),
+    subtitle = glue("Changes in prices of the components of Fiji CPI",
+                    "\nYear of base == 100"),
+    x = NULL,
+    y = NULL,
+    color = NULL,
+    caption = my_caption_rbf
+  )
+  
+```
+
+```{r}
+#| label: fig-cpi-component-price-changes-with-weights
+#| fig-cap: "Fiji consumer price index component changes with weightings"
+#| fig-height: 6
+#| fig-width: 10
+#| column: page-right
+#| warning: false
+#| message: false
+
+dta_for_plot <- cpi_merged |>
+  filter(base != 2005,
+         period != "Weight") |>
+  remove_empty(which = "cols") |>
+  rename(communicaitons = communi_cations) |>
+  select(-year_on_year_percent_change, -all_items) |>
+  relocate(base, .before = period) |>
+  mutate(period = as.numeric(period),
+         base = glue("base: {base}")) |>
+  pivot_longer(
+    cols = clothing_footwear:recreation_culture,
+    names_to = "metric",
+    values_to = "value"
+  ) |>
+  left_join(
+    dta_for_cpi_weight_plot |>
+      mutate(base = glue("base: {base}")) |>
+      rename(weight = value),
+    by = c("base", "period", "metric")
+  ) |>
+  mutate(weighted_value = weight * value,
+         metric = fct_reorder(metric, -weighted_value, min))
+
+dta_for_plot |>
+  ggplot(aes(period, weighted_value, color = base, group = base)) +
+  geom_hline(yintercept = 100, lty = 2, linewidth = 0.15, alpa = 0.5) +
+  geom_line() +
+  scale_x_continuous(breaks = c(2010, 2015, 2020, 2023)) +
+  facet_wrap(~metric) + #, scales = "free_y") +
+  guides(color = guide_legend(ncol = 3,
+                              override.aes = list(linewidth = 3))
+         ) +
+  theme(legend.position = "bottom") +
+  labs(
+    title = glue("The most signficant changes for consumers were in the price of", 
+                 "\nfood and non-alcoholic beverages"),
+    subtitle = glue("Changes in prices of the components of Fiji CPI.",
+                    "\nWeighted_value is weight * relative price."),
+    x = NULL,
+    y = "Weighted value",
+    color = NULL,
+    caption = my_caption_rbf
+  )
+
+dta_for_plot |>
+  ggplot(aes(period, weighted_value, color = base, group = base)) +
+  geom_hline(yintercept = 100, lty = 2, linewidth = 0.15, alpa = 0.5) +
+  geom_line() +
+  scale_x_continuous(breaks = c(2010, 2015, 2020, 2023)) +
+  facet_wrap(~metric, scales = "free_y") +
+  guides(color = guide_legend(ncol = 3,
+                              override.aes = list(linewidth = 3))
+         ) +
+  theme(legend.position = "bottom") +
+  labs(
+    title = glue("The most signficant changes for consumers were in the price of", 
+                 "\nfood and non-alcoholic beverages"),
+    subtitle = glue("Changes in prices of the components of Fiji CPI.",
+                    "\nWeighted_value is weight * relative price. Y axis scale varies."),
+    x = NULL,
+    y = "Weighted value",
+    color = NULL,
+    caption = my_caption_rbf
+  )
+```
+
