@@ -8,10 +8,13 @@ The Republic of Fiji is an independent country straddling the international date
 
 The articles about Fiji at [Britannica.com](https://www.britannica.com/place/Fiji-republic-Pacific-Ocean), [CIA Factbook 2023](https://www.cia.gov/the-world-factbook/about/archives/2023/countries/fiji/#people-and-society) and [Wikipedia](https://en.wikipedia.org/wiki/Fiji) offer useful summaries that I won't repeat here. Similarly, another source of interest (not used here) is this Fiji-specific fact sheet published by the Fiji Bureau of Statistics: [Fact Sheet - preliminary findings of the Fiji Multiple Indicator Cluster Survey 2021 (MICS)](https://www.statsfiji.gov.fj/images/documents/Fiji_MICS_2021/Fiji_MICS_2021_Fact_Sheet_-_Preliminary_Report.pdf).
 
+## License
+
+This text is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) meaning you can share and adapt its content as long as you provide attribution. The source code that generated this text is licensed under the MIT License and is available at <https://github.com/dmoul/fiji-perspectives>.
 
 ## Acknowledgements
 
-I'm grateful to the organizations and individuals who made data available:
+I'm grateful to the organizations and individuals who made data available. For links to sources see @sec-notes-and-sources.
 
 * Pacific Community (SPC) and the Pacific Data Hub, where the data was prepared in each country's Bureau of Statistics, the UN, or international NGO.
 * Fiji Bureau of Statistics
@@ -22,7 +25,7 @@ I'm grateful to the organizations and individuals who made data available:
 * UN Global Reef Distribution project
 * Reserve Bank of Fiji
 * World Bank
-* European Central Bank
+* Federal Reserve Bank of Minneapolis
 
 I'm also grateful to those in the R ecosystem who produce and maintain high-quality open source tools for data analysis and visualization, write tutorials, publish examples, and answer questions in forums that help countless people (like me!) who come along later. I used [RStudio](https://posit.co/download/rstudio-desktop/) with the following packages published on [CRAN](https://cran.r-project.org).
 
