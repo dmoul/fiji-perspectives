@@ -4,7 +4,7 @@ As part of preparing for a recent trip to Fiji, I looked to see what open data i
 
 In the following pages I sketch from open data a small number of the characteristics of Fiji, natural and human-centered, and put them in context with other countries, including Pacific Island countries and territories (PICTs). This sketch will not capture the fullness of life in Fiji in the people, the land, or the sea. You have to go yourself to experience it.
 
-The Republic of Fiji is an independent country straddling the international date line and located mostly between 16° and 18° South. It's a 3-to-3.5 hour flight from Nadi, the primary international airport, to Auckland, New Zealand. Fiji is among the largest and most economically developed PICTs. Most of the non-governmental organizations serving the South Pacific seem to have their primary local headquarters in Fiji (they were my customers when I was general manager of South Seas Computing (Fiji) Ltd. in the nineties).
+The Republic of Fiji is an independent country straddling the international date line and located mostly between 16° and 18° South. It's a 3-to-3.5 hour flight from Nadi, the primary international airport, to Auckland, New Zealand. Fiji Airways offers direct flights from Los Angeles and San Francisco that last more than 10 hours. Fiji is among the largest and most economically developed PICTs. Most of the non-governmental organizations serving the South Pacific seem to have their primary regional office in Fiji (they were my customers when I was general manager of South Seas Computing (Fiji) Ltd. in the nineties).
 
 The articles about Fiji at [Britannica.com](https://www.britannica.com/place/Fiji-republic-Pacific-Ocean), [CIA Factbook 2023](https://www.cia.gov/the-world-factbook/about/archives/2023/countries/fiji/#people-and-society) and [Wikipedia](https://en.wikipedia.org/wiki/Fiji) offer useful summaries that I won't repeat here. Similarly, another source of interest (not used here) is this Fiji-specific fact sheet published by the Fiji Bureau of Statistics: [Fact Sheet - preliminary findings of the Fiji Multiple Indicator Cluster Survey 2021 (MICS)](https://www.statsfiji.gov.fj/images/documents/Fiji_MICS_2021/Fiji_MICS_2021_Fact_Sheet_-_Preliminary_Report.pdf).
 
@@ -27,7 +27,7 @@ I'm grateful to the organizations and individuals who made data available:
 I'm also grateful to those in the R ecosystem who produce and maintain high-quality open source tools for data analysis and visualization, write tutorials, publish examples, and answer questions in forums that help countless people (like me!) who come along later. I used [RStudio](https://posit.co/download/rstudio-desktop/) with the following packages published on [CRAN](https://cran.r-project.org).
 
 * Tidyverse plus tidyverse-adjacent: patchwork, ggrepel, ggridges, scales, units, janitor, glue, here, gt
-* GIS: sf, terra, tidyterra, rnaturalearth, osmdata
+* GIS: sf, terra, tidyterra, rnaturalearth, osmdata, ISOcodes
 
 -- Daniel Moul
 
