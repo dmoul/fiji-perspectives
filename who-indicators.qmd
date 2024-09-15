@@ -21,7 +21,7 @@ The World Health Organization tracks many health indicators at the country and r
 
 ## Healthy life expectancy at birth (HALE)
 
-Healthy life expectancy at birth is the "average number of years that a person can expect to live in “full health” from birth."^[<https://data.who.int/indicators/i/48D9B0C/C64284D> ].
+Healthy life expectancy at birth is the "average number of years that a person can expect to live in 'full health' from birth."^[<https://data.who.int/indicators/i/48D9B0C/C64284D> ].
 
 There are some common patterns across countries
 
@@ -126,7 +126,7 @@ hale |>
 
 ## Non-communicable disease (NDC) mortality rate
 
-Non-communicable diseases (NDC) are chronic diseases, many with behavioral factors. The WHO publishes a useful overview [here](https://www.who.int/news-room/fact-sheets/detail/noncommunicable-diseases).
+Non-communicable diseases (NDC) are chronic diseases, and many have behavioral factors. The WHO publishes a useful overview [here](https://www.who.int/news-room/fact-sheets/detail/noncommunicable-diseases).
 
 ```{r}
 #| label: prepare-ncd-mortality-data
@@ -319,8 +319,8 @@ p2 <- dta_for_plot |>
 
 p1 + p2 +
   plot_annotation(
-    title = glue("During this period Fiji started out lowering NDC mortality at a rate similar to",
-                 "\nWorld Bank high income group, then around 2004 the rate of improvement slowed markedly (panel B)."),
+    title = glue("During this period Fiji started out lowering NDC mortality at a rate similar to World Bank high income group (panel A)",
+                 "\nthen around 2004 the rate of improvement slowed markedly (panel B)."),
     subtitle = "Both sexes",
     caption = "Daniel Moul. Source: WHO GHO"
   ) +
@@ -330,7 +330,7 @@ p1 + p2 +
 
 <br>
 
-The NDC rate for males in Fiji has been the most stubborn (@fig-ncd-mortality-3-countries).
+The NCD rate for males in Fiji has been the most stubborn (@fig-ncd-mortality-3-countries).
 
 ```{r}
 #| label: fig-ncd-mortality-3-countries
@@ -578,7 +578,7 @@ obesity_wide <- obesity_long |>
 
 <br>
 
-At the regional level the western Pacific experiences the worst obesity rates, and the widest range of obesity rates (@fig-obesity-region).
+At the regional level the western Pacific experiences the worst obesity rates and the widest range of obesity rates (@fig-obesity-region).
 
 ```{r}
 #| label: fig-obesity-region
@@ -720,8 +720,7 @@ p1 <- dta_for_plot |>
   geom_line(aes(x = time_dim, y = numeric_value, color = spatial_dim),
             show.legend = FALSE) +
   scale_x_continuous(expand = expansion(mult = c(0, 0))) +
-  scale_y_continuous(#labels = label_percent(),
-                     expand = expansion(mult = c(0, 0.02))) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.02))) +
   expand_limits(y = 0) +
   labs(
     subtitle = "A: Rate",
@@ -750,7 +749,7 @@ p2 <- dta_for_plot |>
 p1 + p2 +
   plot_annotation(
     title = glue("Adult obesity in Fiji has grown more slowly than any World Bank income groups (panel B)",
-                 "\nalbeit from a higher starting percentage (panel A)"),
+                 "\nalbeit from a higher starting rate (panel A)"),
     subtitle = "Both sexes",
     caption = "Daniel Moul. Source: WHO GHO"
   ) +
@@ -777,7 +776,7 @@ bmi_obesity |>
   expand_limits(y = 0) +
   facet_wrap(~spatial_dim) +
   labs(
-    title = "Adult obseity: Fiji, France, USA",
+    title = "Adult obesity: Fiji, France, USA",
     x = NULL,
     y = "Adult obseity",
     color = NULL,
@@ -789,7 +788,7 @@ bmi_obesity |>
 
 <br>
 
-## Mean BMI (kg/m²)
+## Mean BMI
 
 The age-adjusted mean BMI provides a similar picture.
 
@@ -818,7 +817,7 @@ bmi_mean_wide <- bmi_mean_long |>
 
 <br>
 
-At the regional level ...
+At the regional level (@fig-bmi-mean-region) the distribution of mean BMI is consistent with the distribution of adult obesity (@fig-obesity-region).
 
 ```{r}
 #| label: fig-bmi-mean-region
@@ -826,19 +825,19 @@ At the regional level ...
 #| fig-height: 6
 #| fig-width: 10
 
-dta_for_plot <- obesity_long |>
+dta_for_plot <- bmi_mean_long |>
   filter(spatial_dim_type == "COUNTRY",
          sex_value == "SEX_BTSX",
          time_dim == 2016)
 
 dta_for_plot_labels <- tribble(
   ~parent_location,          ~x,     ~y,
-  "Africa",                  12,    0.065,
-  "Americas",                33,    0.055,
-  "Eastern Mediterranean",   42,    0.028,
-  "Europe",                  18.5,  0.085,
-  "South-East Asia",         10,    0.1,
-  "Western Pacific",         50,    0.016,
+  "Africa",                  24.25,    0.27,
+  "Americas",                28,    0.40,
+  "Eastern Mediterranean",   26.75,    0.19,
+  "Europe",                  27.5,    0.55,
+  "South-East Asia",         21.5,  0.33,
+  "Western Pacific",         29,    0.11,
 )
 
 ecdf_fun <- ecdf(
@@ -884,10 +883,11 @@ p1 <- dta_for_plot |>
   ggplot() +
   geom_density(aes(x = numeric_value, color = parent_location),
                linewidth = 0.6, alpha = 0.8,
+               na.rm = TRUE,
                show.legend = FALSE) +
   geom_text(data = dta_for_plot_labels,
             aes(x, y, label = parent_location, color = parent_location),
-            hjust = 0, nudge_x = 1, size = 4,
+            hjust = 0, nudge_x = 0, size = 4,
             show.legend = FALSE) +
   scale_x_continuous(expand = expansion(mult = c(0, 0))) +
   scale_y_continuous(labels = label_number(suffix = "%"),
@@ -904,15 +904,16 @@ p2 <- dta_for_plot |>
   stat_ecdf(aes(x = numeric_value, color = parent_location),
             linewidth = 0.6, alpha = 0.8,
             pad = FALSE,
+               na.rm = TRUE,
             show.legend = FALSE) +
   annotate("point", x = fiji_value, y = fiji_percentile) +
-  annotate("label", x = fiji_value + 3, y = fiji_percentile, label = "Republic of Fiji",
+  annotate("label", x = fiji_value + 0.5, y = fiji_percentile, label = "Republic of Fiji",
             hjust = 0, size = 4) +
   annotate("point", x = usa_value, y = usa_percentile) +
-  annotate("label", x = usa_value + 3, y = usa_percentile, label = "USA",
+  annotate("label", x = usa_value + 0.5, y = usa_percentile, label = "USA",
             hjust = 0, size = 4) +
   annotate("point", x = fra_value, y = fra_percentile) +
-  annotate("label", x = fra_value + 3, y = fra_percentile, label = "France",
+  annotate("label", x = fra_value + 0.5, y = fra_percentile, label = "France",
             hjust = 0, size = 4) +
   scale_x_continuous(expand = expansion(mult = c(0, 0))) +
   scale_y_continuous(labels = label_percent(),
@@ -935,8 +936,6 @@ p1 + p2 +
   )
 
 ```
-
-TODO: Does @fig-bmi-mean-region make sense compared to adult obesity (@fig-obesity-region)
 
 <br>
 
@@ -998,7 +997,7 @@ p1 + p2 +
 
 <br>
 
-While the France and the USA have reduced the rate of mean BMI growth, the rate is still increasing in Fiji.
+While France and the USA have reduced the rate of mean BMI growth, the rate is still increasing in Fiji.
 
 ```{r}
 #| label: fig-bmi-mean-3-countries
@@ -1006,14 +1005,14 @@ While the France and the USA have reduced the rate of mean BMI growth, the rate 
 #| fig-height: 6
 #| fig-width: 8
 
-bmi_obesity |>
+bmi_mean |>
   filter(spatial_dim %in% c("FJI", "USA", "FRA")) |>
   ggplot() +
   geom_line(aes(x = time_dim, y = numeric_value, color = dim1)) +
   scale_x_continuous(expand = expansion(mult = c(0, 0))) +
   scale_y_continuous(expand = expansion(mult = c(0.002, 0.02))) +
   guides(color = guide_legend(override.aes = list(linewidth = 3))) + 
-  expand_limits(y = 0) +
+  expand_limits(y = 22) +
   facet_wrap(~spatial_dim) +
   labs(
     title = "Age adjusted mean BMI: Fiji, France, USA",
@@ -1025,7 +1024,5 @@ bmi_obesity |>
   )
 
 ```
-
-TODO: Does @fig-bmi-mean-3-countries make sense compared to adult obesity (@fig-obesity-region)
 
 <br>
