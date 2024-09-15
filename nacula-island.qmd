@@ -1,0 +1,62 @@
+# Nacula island
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+
+source(here::here("scripts/load-libraries.R"))
+
+```
+
+I stayed at Blue Lagoon Resort on Nacula island. I took the photo in Figure @fig-nacula-spine from the spine of the island looking east. The tree in the foreground is a [pandanus](https://en.wikipedia.org/wiki/Pandanus); the leaves are used throughout the South Pacific to make mats. The high point is about 260 m (860 ft). The hills are mostly covered in dry grasses during August.
+
+```{r}
+#| label: fig-nacula-spine
+#| fig-cap: "From Nacula Island spine looking east with pandanus tree in the foreground. Photo by Daniel Moul."
+
+knitr::include_graphics(here("images/IMG_2047-nacula-spine.jpg"))
+
+```
+
+<br>
+
+As shown in @fig-fiji-reefs-yasawas-nacula, Nacula is surrounded by a fringing reef. Seeing a reef from above the water doesn't do it justice (@fig-nacula-fringing-reef).
+
+```{r}
+#| label: fig-nacula-fringing-reef
+#| fig-cap: "Fringing reef: Nacula island, looking west"
+
+knitr::include_graphics("images/IMG_2057-nacula-fringing-reef.jpg")
+
+```
+
+<br>
+
+There is a gap in the reef right at the beach of Blue Lagoon Resort and Orsman Bay Resort (@fig-nacula-looking-over-blue-lagoon-resort). The snorkeling along the reef near shore was unusually good!
+
+```{r}
+#| label: fig-nacula-looking-over-blue-lagoon-resort
+#| fig-cap: "Looking over Blue Lagoon Resort, Nacula Island from the hills behind it. Photo by Daniel Moul."
+
+knitr::include_graphics("images/IMG_1903-looking-over-blue-lagoon-resort.jpg")
+
+```
+
+<br>
+
+There were relaxing sunsets most evenings (@fig-nacula-relaxing-sunsets). Did you know that the sun seems to set faster near the equator?
+
+```{r}
+#| label: fig-nacula-relaxing-sunsets
+#| fig-cap: "Sunset from the beach at Blue Lagoon Resort, Nacula Island. Photo by Daniel Moul."
+
+knitr::include_graphics("images/IMG_2089-nacula-sunset.jpg")
+
+```
+
+<br>
+
+I haven't mentioned the very good facilities, food, and service. That doesn't really fit here. See the many TripAdvisor reviews for details.
+
+<br>
