@@ -333,7 +333,7 @@ ggplot() +
 
 <br>
 
-The drop-of is more visible in the color scheme used by the Open Sea Map:
+The drop-off is more visible in the color scheme used by the Open Sea Map:
 
 ```{r}
 #| label: fig-yasawa-western-viti-levu-depths
@@ -365,7 +365,7 @@ Marine charts represent this information differently:
 
 ```{r}
 #| label: fig-marine-chart-nz
-#| fig-cap: "Western Fiji including the Yasawa islands^[Western Fiji including the Yasawa islands Land Information NZ July 2020 NZ 14638 Fiji to Kermadec Islands including Tongatapu INT number 638 Scale 1 to 1500000 TODO: add link here ]"
+#| fig-cap: "Western Fiji including the Yasawa islands^[Western Fiji including the Yasawa islands Land Information NZ July 2020 NZ 14638 Fiji to Kermadec Islands including Tongatapu INT number 638 Scale 1:1500000 <https://data.linz.govt.nz/layer/51355-chart-nz-14638-fiji-to-kermadec-islands-including-tongatapu/> ]"
 #| fig-width: 10
 #| column: page-right
 

@@ -9,7 +9,7 @@ source(here::here("scripts/load-libraries.R"))
 
 ```
 
-I stayed at Blue Lagoon Resort on Nacula island. I took the photo in Figure @fig-nacula-spine from the spine of the island looking east. The tree in the foreground is a [pandanus](https://en.wikipedia.org/wiki/Pandanus); the leaves are used throughout the South Pacific to make mats. The high point is about 260 m (860 ft). The hills are mostly covered in dry grasses during August.
+I stayed at Blue Lagoon Resort on Nacula island. I took the photo in @fig-nacula-spine from the spine of the island looking east. The tree in the foreground is a [pandanus](https://en.wikipedia.org/wiki/Pandanus); the leaves are used throughout the South Pacific to make mats. The highest point is about 260 m (860 ft). The hills are mostly covered in dry grasses during August.
 
 ```{r}
 #| label: fig-nacula-spine
