@@ -1,21 +1,21 @@
-# Notes and sources
+# Notes and sources {#sec-notes-and-sources}
 
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
 
-## Pocket summary statistics
+source(here::here("scripts/load-libraries.R"))
 
-Data source: <https://pacificdata.org/data/dataset/overseas-visitor-arrivals-df-overseas-visitors> downloaded 2024-06-12.
+source(here::here("scripts/prepare-who-data.R"))
 
-
-## Visitor arrivals
-
-Data source: <https://pacificdata.org/data/dataset/overseas-visitor-arrivals-df-overseas-visitors> downloaded 2024-06-16.
-
+```
 
 ## Map basics
 
 ### OSM and OSM
 
-[OpenStreetMap](https://www.openstreetmap.org/) data is (C) OpenStreetMap Contributors.
+[OpenStreetMap](https://www.openstreetmap.org/) data is (c) OpenStreetMap Contributors.
 
 [OpenSeaMap](https://map.openseamap.org) ([description](https://map.openseamap.org/legend.php?lang=en&page=help-website)) uses data from OpenStreetMap and other sources.
 
@@ -67,6 +67,16 @@ Plots of a number of island nations: <https://coralreefwatch.noaa.gov/product/vs
 Description for Daily 5km Regional Virtual Stations, Time Series Data, and Graphs (Updated June 8, 2020) <https://coralreefwatch.noaa.gov/product/vs/description.php#ascii>
 
 
+## Pocket summary statistics
+
+Data source: <https://pacificdata.org/data/dataset/overseas-visitor-arrivals-df-overseas-visitors> downloaded 2024-06-12.
+
+
+## Visitor arrivals
+
+Data source: <https://pacificdata.org/data/dataset/overseas-visitor-arrivals-df-overseas-visitors> downloaded 2024-06-16. See also RBF data.
+
+
 ## StatsFiji
 
 <https://www.statsfiji.gov.fj>
@@ -85,15 +95,31 @@ Specifically: <http://fijiclimatechangeportal.gov.fj/wp-content/uploads/2021/01/
 
 ## Reserve Bank of Fiji
 
-TODO: Add here
+A useful ready-to-read summary can be found at <https://www.rbf.gov.fj/category/chart-book/>.
+
+RBF-supplied data sets used in this report:
+
+* Direction of Trade by Major Trading Partner Countries downloaded 2024-08-06 from 
+<https://www.rbf.gov.fj/wp-content/uploads/2024/08/8.4-Direction-of-Trade-by-Major-Trading-Partner.xlsx>
+
+* Consumer price index yearly 1991 - 2023 downloaded 2024-08-06 from
+<https://www.rbf.gov.fj/wp-content/uploads/2024/08/Copy-of-7.1-Consumer-Price-Index.xlsx>
+
+* Tourism revenue downloaded 2024-08-06 from 
+<https://www.rbf.gov.fj/wp-content/uploads/2024/08/5.5-Hotel-Statistics.xlsx>
+
+
+## US historical consumer price index
+
+The Federal Reserve Bank of Minneapolis offers historical CPI data at <https://www.minneapolisfed.org/about-us/monetary-policy/inflation-calculator/consumer-price-index-1800->.
 
 
 ## World Health Organization
 
-TODO: Add here
+The WHO Global Health Observatory is available at <https://www.who.int/data/gho>. The available health indicators and data dimensions are enumerated at <https://ghoapi.azureedge.net/api/Indicator> and <https://ghoapi.azureedge.net/api/Dimension>.
 
 
-## Not used
+## Sources not used
 
 I looked at the following but for various reasons decided not to include them. I offer links here in case someone wishes to explore them.
 
@@ -116,5 +142,27 @@ Dataset description: "This is a subset of Sustainable Development Goals (all) Co
 The data portal <https://population.un.org/dataportal/> looks interesting, however it was too slow and/or didn't return data in some cases.
 
 Referenced from <https://database.earth/population/fiji>
+
+<br>
+
+## ISO country codes {#sec-iso-country-codes}
+
+@fig-diabetes uses these three-letter country codes.
+
+```{r}
+#| label: tbl-iso-country-codes
+
+diabetes_wide |>
+  left_join(ISO_3166_1,
+            by = join_by(spatial_dim == Alpha_3)
+  ) |>
+  select(country_code = spatial_dim, Name,  Official_name, region = parent_location, rank_val) |>
+  arrange(country_code) |>
+  gt() |>
+  tab_header(md("**ISO 3166 three-letter country codes explained**")) |>
+  tab_options(table.font.size = 10) |>
+  sub_missing()
+
+```
 
 <br>
