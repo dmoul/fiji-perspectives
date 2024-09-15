@@ -7,8 +7,6 @@
 
 source(here::here("scripts/load-libraries.R"))
 
-# source(here::here("scripts/prepare-who-data.R"))
-
 theme_set(theme_light() +
             theme(panel.grid.major = element_blank(),
                   panel.grid.minor = element_blank(),
