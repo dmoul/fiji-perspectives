@@ -99,7 +99,24 @@ if(!file.exists(fname)) {
   
 }
 
-## Other indicators of interest:
+diabetes_long <- diabetes |>
+  pivot_longer(cols = dim1,
+               #names_to = "sex",
+               values_to = "sex_value")
+
+diabetes_wide <- diabetes_long |>
+  pivot_wider(#cols = dim1,
+    names_from = sex_value,
+    values_from = numeric_value) |>
+  mutate(rank_val = rank(SEX_BTSX, ties.method = "max"),
+         spatial_dim_label = glue("{spatial_dim}: {rank_val}"),
+         spatial_dim_label = fct_reorder(spatial_dim_label, rank_val)) |>
+  mutate(pct_SEX_MLE = SEX_MLE / 1e5,
+         pct_SEX_FMLE = SEX_FMLE / 1e5,
+         pct_SEX_BTSX = SEX_BTSX / 1e5,)
+
+# TODO: why only 2004 data?
+
 
 ###### NCD_BMI_MEAN
 
