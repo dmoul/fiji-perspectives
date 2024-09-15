@@ -19,17 +19,7 @@ my_caption_fbos = "Daniel Moul. Source: Fiji Bureau of Statistics via Reserve Ba
 
 ```
 
-Source: Reserve Bank of Fiji
-
-Note: pre-processed version: https://www.rbf.gov.fj/category/chart-book/
-
-Direction of Trade by Major Trading Partner Countries downloaded 2024-08-06 from
-https://www.rbf.gov.fj/wp-content/uploads/2024/08/8.4-Direction-of-Trade-by-Major-Trading-Partner.xlsx
-
-TODO: Consumer price index yearly 1991 - 2023 downloaded 2024-08-06 from 
-https://www.rbf.gov.fj/wp-content/uploads/2024/08/Copy-of-7.1-Consumer-Price-Index.xlsx
-
-SKIP (only goes through 2011): Wages and Salary Earnings downloaded 2024-08-06 from https://www.rbf.gov.fj/wp-content/uploads/2020/03/7.2-Wages-and-Salary-Earnings.xlsx
+The [Reserve Bank of Fiji](https://www.rbf.gov.fj) provides the data used in this chapter.
 
 ```{r}
 #| label: prepare-trade-data
