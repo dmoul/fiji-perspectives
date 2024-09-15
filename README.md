@@ -19,9 +19,12 @@ I'm grateful to the organizations and individuals who made data available:
 * Open Street Map and Open Sea Map
 * New Zealand Land Information portal
 * UN Global Reef Distribution project
+* Reserve Bank of Fiji
+* World Bank
+* Federal Reserve Bank of Minneapolis
 
 I'm also grateful to those in the R ecosystem who produce and maintain high-quality open source tools for data analysis and visualization, write tutorials, publish examples, and answer questions in forums that help countless people (like me!) who come along later. I used [RStudio](https://posit.co/download/rstudio-desktop/) with the following packages published on [CRAN](https://cran.r-project.org).
 
 * Tidyverse plus tidyverse-adjacent: patchwork, ggrepel, ggridges, scales, units, janitor, glue, here, gt
-* GIS: sf, terra, tidyterra, rnaturalearth, osmdata
+* GIS: sf, terra, tidyterra, rnaturalearth, osmdata, ISOcodes
 
