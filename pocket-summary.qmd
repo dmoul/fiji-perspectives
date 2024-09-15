@@ -103,6 +103,16 @@ d_pop_and_density |>
 
 <br>
 
+```{r}
+#| label: fig-in-traffic-near-usp
+#| fig-cap: "Urban life: waiting at a traffic light near the University of the South Pacific, Suva, Fiji. Photo by Daniel Moul."
+
+knitr::include_graphics(here("images/IMG_1818-in-traffic-near-usp-cropped.png"))
+
+```
+
+<br>
+
 @fig-pop above visualizes the data in this table:
 
 ```{r}
@@ -162,9 +172,9 @@ d_rates |>
   expand_limits(x = 5, y = 5) +
   labs(
     title = "Fiji's birth rate is in the middle of the PICT pack",
-    subtitle = glue("Crude birth and death d_rates per 1000 population. 2000-2023.",
-                    "\nDashed line is equal birth and death rate",
-                    "\nDeath d_rates likely skewed by significant out migration"),
+    subtitle = glue("Crude birth and death rates per 1000 population. 2000-2023.",
+                    "\nDeath rates likely skewed by significant out migration",
+                    "\nDashed line is equal birth and death rate"),
     x = "Birth rate",
     y = "Death rate",
     caption = my_caption
@@ -422,7 +432,7 @@ d_export_import_latest_year |>
   expand_limits(x = 1e6, y = 1e6) +
   labs(
     title = "Fiji is among the top 3 PICTs for exports and imports",
-    subtitle = glue("Exports and Imports (USD). 2023.",
+    subtitle = glue("Exports and imports (USD) in 2023.",
                     "\nDashed line is equal export and import value"),
     
     x = "Exports (log10 scale)",
@@ -533,7 +543,6 @@ p2 <- d_export_import_all_years |>
     y = "Imports $M (log10 scale)"
   )
 
-#p1 + 
 p2 +
   plot_annotation(
     title = "Imports by exports (millions USD)",
@@ -614,7 +623,7 @@ d_export_import_all_years |>
 
 ## Available metrics
 
-The pocket summary includes metrics not explored above. I list them all below, in case you wish to dig into them yourself:
+The pocket summary includes metrics I did not explore here. I list them all below, in case you wish to dig into them yourself:
 
 ```{r}
 d_pocket |>
