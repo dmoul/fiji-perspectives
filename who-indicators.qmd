@@ -16,14 +16,14 @@ theme_set(theme_light() +
 
 ```
 
-The World Health Organization tracks many health indicators at the country and region level and makes the data available at the [Global Health Observatory](https://www.who.int/data/gho). Below I look at healthy life expectancy and some of the most significant non-communicable diseases (NCDs).
+The World Health Organization tracks many health indicators at the country and region level and makes the data available at the [Global Health Observatory](https://www.who.int/data/gho). Below I look at healthy life expectancy and some aspects of non-communicable diseases (NCDs), which disproportionally affect the people of Fiji.
 
 
 ## Healthy life expectancy at birth (HALE)
 
 Healthy life expectancy at birth is the "average number of years that a person can expect to live in “full health” from birth."^[<https://data.who.int/indicators/i/48D9B0C/C64284D> ].
 
-There are some common patterns
+There are some common patterns across countries
 
 1. Women have a longer HALE than men in most countries.
 
@@ -32,32 +32,6 @@ There are some common patterns
 3. "Worldwide, healthy life expectancy at birth (years) has improved by 3.57 years from 58.3 years in 2000 to 61.9 years in 2021."^[ibid.]. 
 
 Unfortunately Fiji did not experience the same level of improvements. These patterns are visible in @fig-hale-3-countries, which compares Fiji, France and USA.
-
-```{r}
-#| label: fig-hale-3-countries
-#| fig-cap: "Comparing Fiji's Healthy life expectancy at birth (HALE) to France and USA"
-#| fig-height: 6
-#| fig-width: 8
-
-hale |>
-  filter(spatial_dim %in% c("FJI", "USA", "FRA")) |>
-  ggplot() +
-  geom_ribbon(aes(x = time_dim, ymin = low, ymax = high, fill = dim1),
-              alpha = 0.3) +
-  geom_line(aes(x = time_dim, y = numeric_value, color = dim1)) +
-  facet_wrap(~spatial_dim) +
-  labs(
-    title = "Healthy life expectancy at birth: Fiji, France, USA",
-    x = NULL,
-    y = "Age",
-    color = NULL,
-    fill = NULL,
-    caption = "Daniel Moul. Source: WHO GHO"
-  )
-
-```
-
-<br>
 
 Fiji is in the upper middle income group as defined by the World Bank (WB_UMI: GNI per capita USD 4,516 TO 14,005 in 2023).^[World Bank Country and Lending Groups <https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups> ] In 2000, Fiji was already a lagging HALE outlier, and while the upper middle income group improved over two decades, Fiji's HALE remained essentially unchanged, making the gap even larger (@fig-hale-fiji-vs-wb-income-group).
 
@@ -122,14 +96,42 @@ p1 + p2 +
 
 <br>
 
+On average, women in France have about ten more years of healthy life compared to women in Fiji (@fig-hale-3-countries).
+
+```{r}
+#| label: fig-hale-3-countries
+#| fig-cap: "Comparing Fiji's Healthy life expectancy at birth (HALE) to France and USA"
+#| fig-height: 6
+#| fig-width: 8
+
+hale |>
+  filter(spatial_dim %in% c("FJI", "USA", "FRA")) |>
+  ggplot() +
+  geom_ribbon(aes(x = time_dim, ymin = low, ymax = high, fill = dim1),
+              alpha = 0.3) +
+  geom_line(aes(x = time_dim, y = numeric_value, color = dim1)) +
+  facet_wrap(~spatial_dim) +
+  labs(
+    title = "Healthy life expectancy at birth: Fiji, France, USA",
+    x = NULL,
+    y = "Age",
+    color = NULL,
+    fill = NULL,
+    caption = "Daniel Moul. Source: WHO GHO"
+  )
+
+```
+
+<br>
+
 ## Non-communicable disease (NDC) mortality rate
 
-WHS2_131 Age-standardized NCD mortality rate (per 100 000 population)
-
-TODO: remove text above
+Non-communicable diseases (NDC) are chronic diseases, many with behavioral factors. The WHO publishes a useful overview [here](https://www.who.int/news-room/fact-sheets/detail/noncommunicable-diseases).
 
 ```{r}
 #| label: prepare-ncd-mortality-data
+
+# WHS2_131 Age-standardized NCD mortality rate (per 100 000 population)
 
 ncd_long <- ncd_mortality |>
   pivot_longer(cols = dim1,
@@ -328,9 +330,11 @@ p1 + p2 +
 
 <br>
 
+The NDC rate for males in Fiji has been the most stubborn (@fig-ncd-mortality-3-countries).
+
 ```{r}
 #| label: fig-ncd-mortality-3-countries
-#| fig-cap: "Comparing Fiji's Healthy life expectancy at birth (HALE) to France and USA"
+#| fig-cap: "Comparing Fiji's NDC mortality rate to France and USA"
 #| fig-height: 6
 #| fig-width: 8
 
@@ -340,6 +344,7 @@ ncd_mortality |>
   geom_line(aes(x = time_dim, y = numeric_value, color = dim1)) +
   scale_x_continuous(expand = expansion(mult = c(0, 0))) +
   scale_y_continuous(expand = expansion(mult = c(0.002, 0))) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) + 
   expand_limits(y = 0) +
   facet_wrap(~spatial_dim) +
   labs(
@@ -359,6 +364,7 @@ ncd_mortality |>
 
 ```{r}
 #| label: prepare-diabetes-data
+#| eval: false
 
 # Age-standardized death rates, diabetes mellitus, per 100,000
 
@@ -386,7 +392,7 @@ diabetes_wide <- diabetes_long |>
 
 The following uses 2004 data, which was the latest year available in the GHO data (at least, it's the latest I could find).
 
-At the regional level, Africa is the only region in which the bulk of the countries are suffering a higher rate, while the Americas have the widest range and the worst rates world-wide (@fig-diabetes-region).
+At the regional level, Africa is the only region in which the bulk of the countries are suffering a higher rate than the western Pacific (@fig-diabetes-region panel A), while the Americas have the widest range and the worst rates world-wide (panel B).
 
 ```{r}
 #| label: fig-diabetes-region
@@ -503,7 +509,7 @@ p1 + p2 +
 
 <br>
 
-Fiji ranked 112 out of 191 countries (59th percentile) in death from diabetes (@fig-diabetes). 
+Fiji ranked 112 out of 191 countries (59th percentile) in death from diabetes (@fig-diabetes). The three-letter country codes used below are detailed in @sec-iso-country-codes.
 
 ```{r}
 #| label: fig-diabetes
@@ -528,7 +534,6 @@ diabetes_wide |>
   geom_point(aes(y = spatial_dim_label, x = SEX_FMLE, color = parent_location),
             size = 3, alpha = 0.8, shape = "F",
             show.legend = FALSE) +
-  # scale_x_continuous(expand = expansion(mult = c(0, 0))) +
   facet_wrap(~parent_location, scales = "free_y") +
   theme(panel.grid.major.x = element_line(linewidth = 0.03)) +
   labs(
@@ -544,30 +549,14 @@ diabetes_wide |>
 
 <br>
 
-The following three-letter country codes are used in @fig-diabetes above.
-
-```{r}
-diabetes_wide |>
-  left_join(ISO_3166_1,
-            by = join_by(spatial_dim == Alpha_3)
-  ) |>
-  select(country_code = spatial_dim, Name,  Official_name, region = parent_location, rank_val) |>
-  arrange(country_code) |>
-  gt() |>
-  tab_header(md("**ISO 3166 three-letter country codes explained**")) |>
-  tab_options(table.font.size = 10) |>
-  sub_missing()
-
-```
-
-<br>
-
 ## Prevalence of obesity among adults
 
-NCD_BMI_30A Prevalence of obesity among adults, BMI &GreaterEqual; 30 (age-standardized estimate) (%)
+The Body Mass Index^[<https://www.cdc.gov/bmi/about/index.html> ], despite it deficiencies, is a useful indicator for comparing population health. A BMI of 30 and above is defined as obese.
 
 ```{r}
 #| label: prepare-obesity-data
+
+# NCD_BMI_30A Prevalence of obesity among adults, BMI &GreaterEqual; 30 (age-standardized estimate) (%)
 
 obesity_long <- bmi_obesity |>
   pivot_longer(cols = dim1,
@@ -589,7 +578,7 @@ obesity_wide <- obesity_long |>
 
 <br>
 
-At the regional level ...
+At the regional level the western Pacific experiences the worst obesity rates, and the widest range of obesity rates (@fig-obesity-region).
 
 ```{r}
 #| label: fig-obesity-region
@@ -666,7 +655,7 @@ p1 <- dta_for_plot |>
     expand = expansion(mult = c(0.002, 0))) +
   theme(panel.grid.major.x = element_line(linewidth = 0.03)) +
   labs(
-    subtitle = "Density",
+    subtitle = "A: Density",
     x = "Percent of adult population",
     y = NULL
   )
@@ -693,7 +682,7 @@ p2 <- dta_for_plot |>
   guides(color = guide_legend(override.aes = list(linewidth = 3))) +
   theme(panel.grid.major.x = element_line(linewidth = 0.03)) +
   labs(
-    subtitle = "Cumulative Distribution",
+    subtitle = "B: Cumulative Distribution",
     x = "Percent of adult population",
     y = "Percent of all countries in region"
     
@@ -728,8 +717,6 @@ dta_for_plot <- bmi_obesity |>
 
 p1 <- dta_for_plot |>
   ggplot() +
-  # geom_ribbon(aes(x = time_dim, ymin = low, ymax = high, fill = spatial_dim),
-  #             alpha = 0.3) +
   geom_line(aes(x = time_dim, y = numeric_value, color = spatial_dim),
             show.legend = FALSE) +
   scale_x_continuous(expand = expansion(mult = c(0, 0))) +
@@ -737,6 +724,7 @@ p1 <- dta_for_plot |>
                      expand = expansion(mult = c(0, 0.02))) +
   expand_limits(y = 0) +
   labs(
+    subtitle = "A: Rate",
     x = NULL,
     y = "Rate",
     color = "Fiji and WB\nincome group",
@@ -745,8 +733,6 @@ p1 <- dta_for_plot |>
 
 p2 <- dta_for_plot |>
   ggplot() +
-  # geom_ribbon(aes(x = time_dim, ymin = low_norm, ymax = high_norm, fill = spatial_dim),
-  #             alpha = 0.3) +
   geom_line(aes(x = time_dim, y = numeric_value_norm, color = spatial_dim)) +
   scale_x_continuous(expand = expansion(mult = c(0, 0))) +
   scale_y_continuous(labels = label_percent(),
@@ -754,7 +740,7 @@ p2 <- dta_for_plot |>
   guides(color = guide_legend(override.aes = list(linewidth = 3))) +
   expand_limits(y = 0) +
   labs(
-    subtitle = "Year 1990 = 100%",
+    subtitle = "B: Year 1990 = 100%",
     x = NULL,
     y = "Relative change",
     color = "Fiji and WB\nincome group",
@@ -763,8 +749,8 @@ p2 <- dta_for_plot |>
 
 p1 + p2 +
   plot_annotation(
-    title = glue("Adult obesity in Fiji has grown more slowly than any World Bank income groups",
-                 "\nalbeit from a higher starting percentage"),
+    title = glue("Adult obesity in Fiji has grown more slowly than any World Bank income groups (panel B)",
+                 "\nalbeit from a higher starting percentage (panel A)"),
     subtitle = "Both sexes",
     caption = "Daniel Moul. Source: WHO GHO"
   ) +
@@ -787,10 +773,11 @@ bmi_obesity |>
   scale_x_continuous(expand = expansion(mult = c(0, 0))) +
   scale_y_continuous(labels = label_number(suffix = "%"),
                      expand = expansion(mult = c(0.002, 0.02))) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) + 
   expand_limits(y = 0) +
   facet_wrap(~spatial_dim) +
   labs(
-    title = "Fiji, France, USA: Adult obseity",
+    title = "Adult obseity: Fiji, France, USA",
     x = NULL,
     y = "Adult obseity",
     color = NULL,
@@ -804,7 +791,7 @@ bmi_obesity |>
 
 ## Mean BMI (kg/m²)
 
-NCD_BMI_MEAN Mean BMI (kg/m²) (age-standardized estimate)
+The age-adjusted mean BMI provides a similar picture.
 
 ```{r}
 #| label: prepare-mean-bmi-data
@@ -902,14 +889,13 @@ p1 <- dta_for_plot |>
             aes(x, y, label = parent_location, color = parent_location),
             hjust = 0, nudge_x = 1, size = 4,
             show.legend = FALSE) +
-  scale_x_continuous(labels = label_number(suffix = "%"),
-                     expand = expansion(mult = c(0, 0))) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
   scale_y_continuous(labels = label_number(suffix = "%"),
     expand = expansion(mult = c(0.002, 0))) +
   theme(panel.grid.major.x = element_line(linewidth = 0.03)) +
   labs(
     subtitle = "A: Density",
-    x = "Percent of population",
+    x = "Mean BMI",
     y = NULL
   )
 
@@ -928,8 +914,7 @@ p2 <- dta_for_plot |>
   annotate("point", x = fra_value, y = fra_percentile) +
   annotate("label", x = fra_value + 3, y = fra_percentile, label = "France",
             hjust = 0, size = 4) +
-  scale_x_continuous(labels = label_number(suffix = "%"),
-                     expand = expansion(mult = c(0, 0))) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
   scale_y_continuous(labels = label_percent(),
                      expand = expansion(mult = c(0.002, 0))) +
   expand_limits(y = 0) +
@@ -937,7 +922,7 @@ p2 <- dta_for_plot |>
   theme(panel.grid.major.x = element_line(linewidth = 0.03)) +
   labs(
     subtitle = "B: Cumulative Distribution",
-    x = "Percent of population",
+    x = "Mean BMI",
     y = "Percent of all countries in region"
   )
 
@@ -1013,6 +998,8 @@ p1 + p2 +
 
 <br>
 
+While the France and the USA have reduced the rate of mean BMI growth, the rate is still increasing in Fiji.
+
 ```{r}
 #| label: fig-bmi-mean-3-countries
 #| fig-cap: "Comparing Fiji's mean BMI to France and USA"
@@ -1022,16 +1009,14 @@ p1 + p2 +
 bmi_obesity |>
   filter(spatial_dim %in% c("FJI", "USA", "FRA")) |>
   ggplot() +
-  # geom_ribbon(aes(x = time_dim, ymin = low, ymax = high, fill = dim1),
-  #             alpha = 0.3) +
   geom_line(aes(x = time_dim, y = numeric_value, color = dim1)) +
   scale_x_continuous(expand = expansion(mult = c(0, 0))) +
-  scale_y_continuous(#labels = label_number(suffix = "%"),
-                     expand = expansion(mult = c(0.002, 0.02))) +
+  scale_y_continuous(expand = expansion(mult = c(0.002, 0.02))) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) + 
   expand_limits(y = 0) +
   facet_wrap(~spatial_dim) +
   labs(
-    title = "Fiji, France, USA: Age adjusted mean BMI",
+    title = "Age adjusted mean BMI: Fiji, France, USA",
     x = NULL,
     y = "Mean BMI",
     color = NULL,
