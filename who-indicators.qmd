@@ -16,6 +16,9 @@ theme_set(theme_light() +
 
 ```
 
+The World Health Organization tracks many health indicators at the country and region level and makes the data available at the [Global Health Observatory](https://www.who.int/data/gho). Below I look at healthy life expectancy and some of the most significant non-communicable diseases (NCDs).
+
+
 ## Healthy life expectancy at birth (HALE)
 
 Healthy life expectancy at birth is the "average number of years that a person can expect to live in “full health” from birth."^[<https://data.who.int/indicators/i/48D9B0C/C64284D> ].
@@ -26,11 +29,9 @@ There are some common patterns
 
 2. The COVID-19 pandemic reduced HALE for most countries and both sexes.
 
-3. "Worldwide, healthy life expectancy at birth (years) has improved by ▲ 3.57 years from 58.3 years in 2000 to 61.9 years in 2021."^[ibid.]. 
+3. "Worldwide, healthy life expectancy at birth (years) has improved by 3.57 years from 58.3 years in 2000 to 61.9 years in 2021."^[ibid.]. 
 
-Unfortunately Fiji did not experience the same level of improvements.
-
-These patterns are visible in @fig-hale-3-countries, which compares Fiji, France and USA.
+Unfortunately Fiji did not experience the same level of improvements. These patterns are visible in @fig-hale-3-countries, which compares Fiji, France and USA.
 
 ```{r}
 #| label: fig-hale-3-countries
@@ -46,7 +47,7 @@ hale |>
   geom_line(aes(x = time_dim, y = numeric_value, color = dim1)) +
   facet_wrap(~spatial_dim) +
   labs(
-    title = "Fiji, France, USA: Healthy life expectancy at birth (HALE)",
+    title = "Healthy life expectancy at birth: Fiji, France, USA",
     x = NULL,
     y = "Age",
     color = NULL,
@@ -58,7 +59,7 @@ hale |>
 
 <br>
 
-Fiji is in the World Bank upper middle income group (WB_UMI: GNI per capita USD 4,516 TO 14,005 in 2023).^[World Bank Country and Lending Groups <https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups> ] In 2000, Fiji was already a lagging HALE outlier, and while the upper middle income group improved over two decades, Fiji's HALE remained essentially unchanged, making the gap even larger (@fig-hale-fiji-vs-wb-income-group).
+Fiji is in the upper middle income group as defined by the World Bank (WB_UMI: GNI per capita USD 4,516 TO 14,005 in 2023).^[World Bank Country and Lending Groups <https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups> ] In 2000, Fiji was already a lagging HALE outlier, and while the upper middle income group improved over two decades, Fiji's HALE remained essentially unchanged, making the gap even larger (@fig-hale-fiji-vs-wb-income-group).
 
 ```{r}
 #| label: fig-hale-fiji-vs-wb-income-group
@@ -81,16 +82,12 @@ p1 <- dta_for_plot |>
               alpha = 0.3) +
   geom_line(aes(x = time_dim, y = numeric_value, color = spatial_dim)) +
   scale_x_continuous(expand = expansion(mult = c(0, 0))) +
-  # facet_wrap(~spatial_dim) +
   labs(
-    # title = glue("Fiji has not been improving in 'healthy life expectancy at birth' (HALE)",
-    #              "\ncompared to World Bank income groups"),
     subtitle = "A: Fiji is an outlier in the UMI group",
     x = NULL,
     y = "Age",
     color = "Fiji and WB\nincome group",
     fill = "Fiji and WB\nincome group",
-    # caption = "Daniel Moul. Source: WHO GHO"
   )
 
 p2 <- dta_for_plot |>
@@ -100,7 +97,6 @@ p2 <- dta_for_plot |>
   geom_line(aes(x = time_dim, y = numeric_value_norm, color = spatial_dim)) +
   scale_x_continuous(expand = expansion(mult = c(0, 0))) +
   scale_y_continuous(labels = label_percent()) +
-  # facet_wrap(~spatial_dim) +
   labs(
     subtitle = "B: Relative to year 2000 = 100%",
     x = NULL,
@@ -111,260 +107,37 @@ p2 <- dta_for_plot |>
 
 p1 + p2 +
   plot_annotation(
-    title = glue("Fiji has not been improving in 'healthy life expectancy at birth' (HALE)",
-                 "\ncompared to World Bank income groups"),
+    title = glue("Fiji has not been improving in healthy life expectancy at birth (HALE)",
+                 "\nat a rate similar to any of the World Bank income groups"),
     subtitle = "Both sexes",
     caption = "Daniel Moul. Source: WHO GHO"
   ) +
   plot_layout(guides = "collect")
 
-```
+# TODO: Possibly plot other WB_UMI countries together with Fiji
 
-<br>
-
-TODO: Plot other WB_UMI countries together with Fiji
-
-TODO: Plot other PICTs together with Fiji
-
-## Diabetes
-
-```{r}
-#| label: prepare-diabetes-data
-
-# Age-standardized death rates, diabetes mellitus, per 100,000
-
-diabetes_long <- diabetes |>
-  pivot_longer(cols = dim1,
-               #names_to = "sex",
-               values_to = "sex_value")
-
-diabetes_wide <- diabetes_long |>
-  pivot_wider(#cols = dim1,
-               names_from = sex_value,
-               values_from = numeric_value) |>
-  mutate(rank_val = rank(SEX_BTSX, ties.method = "max"),
-         spatial_dim_label = glue("{spatial_dim}: {rank_val}"),
-         spatial_dim_label = fct_reorder(spatial_dim_label, rank_val)) |>
-  mutate(pct_SEX_MLE = SEX_MLE / 1e5,
-         pct_SEX_FMLE = SEX_FMLE / 1e5,
-         pct_SEX_BTSX = SEX_BTSX / 1e5,)
-
-# why only 2004 data?
-
-```
-
-```{r}
-#| label: fig-diabetes
-#| fig-cap: "Diabetes 2004"
-#| fig-height: 16
-#| fig-width: 10
-
-rank_min <- min(diabetes_wide$rank_val)
-rank_max <- max(diabetes_wide$rank_val)
-
-diabetes_wide |>
-  ggplot() +
-  geom_errorbarh(aes(y = spatial_dim_label, xmin = SEX_MLE, , xmax = SEX_FMLE, color = parent_location),
-            linewidth = 0.1, height = 0, alpha = 0.8,
-            show.legend = FALSE) +
-  geom_point(aes(y = spatial_dim_label, x = SEX_BTSX, color = parent_location),
-            size = 1, alpha = 0.8,
-            show.legend = FALSE) +
-  geom_point(aes(y = spatial_dim_label, x = SEX_MLE, color = parent_location),
-            size = 3, alpha = 0.8, shape = "M",
-            show.legend = FALSE) +
-  geom_point(aes(y = spatial_dim_label, x = SEX_FMLE, color = parent_location),
-            size = 3, alpha = 0.8, shape = "F",
-            show.legend = FALSE) +
-  # scale_x_continuous(expand = expansion(mult = c(0, 0))) +
-  facet_wrap(~parent_location, scales = "free_y") +
-  theme(panel.grid.major.x = element_line(linewidth = 0.03)) +
-  labs(
-    title = glue("Age-standardized death rates, diabetes mellitus, per 100,000 people (2004)"),
-    subtitle = glue("With country rank lowest (1) to highest ({rank_max}) death rate",
-                    "\nShowing M, F, and both sexes (the later with a point)"),
-    x = NULL,
-    y = NULL,
-    caption = "Daniel Moul. Source: WHO GHO"
-  )
+# TODO: Possibly plot other PICTs together with Fiji
 
 ```
 
 <br>
 
-```{r}
-#| label: fig-diabetes-region
-#| fig-cap: "Diabetes 2004 by region"
-#| fig-height: 6
-#| fig-width: 10
+## Non-communicable disease (NDC) mortality rate
 
-# rank_min <- min(diabetes_wide$rank_val)
-# rank_max <- max(diabetes_wide$rank_val)
+WHS2_131 Age-standardized NCD mortality rate (per 100 000 population)
 
-dta_for_plot_labels <- tribble(
-  ~parent_location,          ~x,    ~y,
-  "Africa",                  65,   0.027,
-  "Americas",                90,   0.007,
-  "Eastern Mediterranean",   30,   0.023,
-  "Europe",                  15,   0.065,
-  "South-East Asia",         36,   0.05,
-  "Western Pacific",         58,   0.015,
-)
-
-dta_for_plot <- diabetes_long |>
-  filter(sex_value == "SEX_BTSX")
-
-ecdf_fun <- ecdf(
-  dta_for_plot |>
-  filter(parent_location == "Western Pacific") |>
-  pull(numeric_value)
-  )
-
-fiji_value <- dta_for_plot |>
-    filter(spatial_dim == "FJI") |>
-    pull(numeric_value)
-
-fiji_percentile <- ecdf_fun(fiji_value)
-
-ecdf_fun_americas <- ecdf(
-  dta_for_plot |>
-    filter(parent_location == "Americas") |>
-    pull(numeric_value)
-)
-
-usa_value <- dta_for_plot |>
-    filter(spatial_dim == "USA") |>
-    pull(numeric_value)
-
-usa_percentile <- ecdf_fun_americas(usa_value)
-
-ecdf_fun_europe <- ecdf(
-  dta_for_plot |>
-    filter(parent_location == "Europe") |>
-    pull(numeric_value)
-)
-
-fra_value <- dta_for_plot |>
-    filter(parent_location == "Europe",
-           spatial_dim == "FRA") |>
-    pull(numeric_value)
-
-fra_percentile <- ecdf_fun_europe(fra_value)
-
-p1 <- diabetes_long |>
-  ggplot() +
-   geom_density(aes(x = numeric_value, color = parent_location),
-            linewidth = 0.6, alpha = 0.8,
-            show.legend = FALSE) +
-  geom_text(data = dta_for_plot_labels,
-            aes(x, y, label = parent_location, color = parent_location),
-            hjust = 0, nudge_x = 1, size = 4, 
-            show.legend = FALSE) +
-  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
-  scale_y_continuous(#labels = label_percent(),
-                     expand = expansion(mult = c(0.002, 0))) +
-  theme(panel.grid.major.x = element_line(linewidth = 0.03)) +
-  labs(
-    subtitle = "Density",
-    x = "People per 100K",
-    y = NULL,
-    # caption = "Daniel Moul. Source: WHO GHO"
-  )
-
-p2 <- diabetes_long |>
-  ggplot() +
-  stat_ecdf(aes(x = numeric_value, color = parent_location),
-            linewidth = 0.6, alpha = 0.8,
-            pad = FALSE,
-            show.legend = FALSE) +
-  annotate("point", x = fiji_value, y = fiji_percentile) +
-  annotate("label", x = fiji_value + 5, y = fiji_percentile, label = "Republic of Fiji",
-            hjust = 0, size = 4) +
-  annotate("point", x = usa_value, y = usa_percentile) +
-  annotate("label", x = usa_value + 3, y = usa_percentile, label = "USA",
-            hjust = 0, size = 4) +
-  annotate("point", x = fra_value, y = fra_percentile) +
-  annotate("label", x = fra_value + 3, y = fra_percentile, label = "France",
-            hjust = 0, size = 4) +
-  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
-  scale_y_continuous(labels = label_percent(),
-                     expand = expansion(mult = c(0.002, 0))) +
-  # facet_wrap(~parent_location, scales = "free_y") +
-  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
-  theme(panel.grid.major.x = element_line(linewidth = 0.03)) +
-  labs(
-    subtitle = "Cumulative Distribution",
-    x = "People per 100K",
-    y = "Percent of all countries in region"
-    
-  )
-
-p1 + p2 +
-  plot_annotation(
-    title = glue("Age-standardized death rates, diabetes mellitus, per 100,000 people (2004)"),
-    subtitle = glue("Both sexes, country distribution, by region"),
-    caption = glue("Daniel Moul. Source: WHO GHO",
-                   "\n(not weighted by population)")
-  )
-
-```
-
-TODO: Why isn't the USA point on the Americas line?
-
-<br>
-
-##
-
-```{r}
-diabetes_wide |>
-  left_join(ISO_3166_1,
-            by = join_by(spatial_dim == Alpha_3)
-  ) |>
-  select(country_code = spatial_dim, Name,  Official_name, region = parent_location, rank_val) |>
-  arrange(country_code) |>
-  gt() |>
-  tab_header(md("**ISO 3166 three-letter country codes explained**")) |>
-  tab_options(table.font.size = 10) |>
-  sub_missing()
-
-```
-
-<br>
-
-## Other indicators of interest
-
-Data available
-
-* NCD_BMI_MEAN Mean BMI (kg/m²) (age-standardized estimate)
-* NCD_BMI_30A Prevalence of obesity among adults, BMI &GreaterEqual; 30 (age-standardized estimate) (%)
-* NCD_HYP_PREVALENCE_A Prevalence of hypertension among adults aged 30-79 years, age-standardized
-* DONE: WHS2_131 Age-standardized NCD mortality rate  (per 100 000 population)
-
-Data not available
-
-* WHS2_161 Age-standardized mortality rate by cause (per 100 000 population) - Cardiovascular
-* WHS2_160 Age-standardized mortality rate by cause (per 100 000 population) - Cancer
-
-<br>
-
-TODO: Add more visualizations here. Should any plots be functions instead?
-
-## WHS2_131 Age-standardized NCD mortality rate (per 100 000 population)
+TODO: remove text above
 
 ```{r}
 #| label: prepare-ncd-mortality-data
 
-# Age-standardized death rates, diabetes mellitus, per 100,000
-
 ncd_long <- ncd_mortality |>
   pivot_longer(cols = dim1,
-               #names_to = "sex",
                values_to = "sex_value")
 
 ncd_wide <- ncd_long |>
-  pivot_wider(#cols = dim1,
-               names_from = sex_value,
-               values_from = numeric_value) |>
+  pivot_wider(names_from = sex_value,
+              values_from = numeric_value) |>
   mutate(rank_val = rank(SEX_BTSX, ties.method = "max"),
          spatial_dim_label = glue("{spatial_dim}: {rank_val}"),
          spatial_dim_label = fct_reorder(spatial_dim_label, rank_val)) |>
@@ -376,98 +149,7 @@ ncd_wide <- ncd_long |>
 
 <br>
 
-```{r}
-#| label: fig-ncd-mortality-3-countries
-#| fig-cap: "Comparing Fiji's Healthy life expectancy at birth (HALE) to France and USA"
-#| fig-height: 6
-#| fig-width: 8
-
-ncd_mortality |>
-  filter(spatial_dim %in% c("FJI", "USA", "FRA")) |>
-  ggplot() +
-  # geom_ribbon(aes(x = time_dim, ymin = low, ymax = high, fill = dim1),
-  #             alpha = 0.3) +
-  geom_line(aes(x = time_dim, y = numeric_value, color = dim1)) +
-  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
-  scale_y_continuous(#labels = label_percent(),
-                     expand = expansion(mult = c(0.002, 0))) +
-  expand_limits(y = 0) +
-  facet_wrap(~spatial_dim) +
-  labs(
-    title = "Fiji, France, USA: non-communicable disease mortality rates per 100,000 people",
-    x = NULL,
-    # y = "Age",
-    color = NULL,
-    fill = NULL,
-    caption = "Daniel Moul. Source: WHO GHO"
-  )
-
-```
-
-<br>
-
-```{r}
-#| label: fig-ncd-fiji-vs-wb-income-group
-#| fig-cap: "Non-communicable disease mortality rates: Fiji and World Bank income groups"
-#| fig-height: 6
-#| fig-width: 10
-
-dta_for_plot <- ncd_mortality |>
-  filter(spatial_dim_type == "WORLDBANKINCOMEGROUP" | (spatial_dim_type == "COUNTRY" & spatial_dim == "FJI"),
-         dim1 == "SEX_BTSX") |>
-  mutate(spatial_dim = factor(spatial_dim, levels = c("WB_LI", "WB_LMI", "WB_UMI", "WB_HI", "FJI"))) |>
-  mutate(numeric_value_norm = numeric_value / numeric_value[time_dim == 2000],
-         low_norm = low / low[time_dim == 2000],
-         high_norm = high / high[time_dim == 2000],
-         .by = spatial_dim)
-
-p1 <- dta_for_plot |>
-  ggplot() +
-  # geom_ribbon(aes(x = time_dim, ymin = low, ymax = high, fill = spatial_dim),
-  #             alpha = 0.3) +
-  geom_line(aes(x = time_dim, y = numeric_value, color = spatial_dim),
-            show.legend = FALSE) +
-  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
-  scale_y_continuous(#labels = label_percent(),
-                     expand = expansion(mult = c(0, 0.02))) +
-  expand_limits(y = 0) +
-  labs(
-    x = NULL,
-    y = "Rate",
-    color = "Fiji and WB\nincome group",
-    fill = "Fiji and WB\nincome group"
-  )
-
-p2 <- dta_for_plot |>
-  ggplot() +
-  # geom_ribbon(aes(x = time_dim, ymin = low_norm, ymax = high_norm, fill = spatial_dim),
-  #             alpha = 0.3) +
-  geom_line(aes(x = time_dim, y = numeric_value_norm, color = spatial_dim)) +
-  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
-  scale_y_continuous(labels = label_percent(),
-                     expand = expansion(mult = c(0, 0.02))) +
-  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
-  expand_limits(y = 0) +
-  labs(
-    subtitle = "Year 2000 = 100%",
-    x = NULL,
-    y = "Relative improvement",
-    color = "Fiji and WB\nincome group",
-    fill = "Fiji and WB\nincome group"
-  )
-
-p1 + p2 +
-  plot_annotation(
-    title = glue("Fiji has been lowering NDC mortality at a rate similar to",
-                 "\nWorld Bank lower and lower-middle income groups"),
-    subtitle = "Both sexes",
-    caption = "Daniel Moul. Source: WHO GHO"
-  ) +
-  plot_layout(guides = "collect")
-
-```
-
-<br>
+At the regional level (@fig-ncd-region), the western Pacific suffers the worst NCD mortality rates (panel A), and Fiji has one of the highest rates (panel B).
 
 ```{r}
 #| label: fig-ncd-region
@@ -543,10 +225,9 @@ p1 <- dta_for_plot |>
     expand = expansion(mult = c(0.002, 0))) +
   theme(panel.grid.major.x = element_line(linewidth = 0.03)) +
   labs(
-    subtitle = "Density",
+    subtitle = "A: Density",
     x = "People per 100K",
-    y = NULL,
-    # caption = "Daniel Moul. Source: WHO GHO"
+    y = NULL
   )
 
 p2 <- dta_for_plot |>
@@ -567,11 +248,10 @@ p2 <- dta_for_plot |>
   scale_x_continuous(expand = expansion(mult = c(0, 0))) +
   scale_y_continuous(labels = label_percent(),
                      expand = expansion(mult = c(0.002, 0))) +
-  # facet_wrap(~parent_location, scales = "free_y") +
   guides(color = guide_legend(override.aes = list(linewidth = 3))) +
   theme(panel.grid.major.x = element_line(linewidth = 0.03)) +
   labs(
-    subtitle = "Cumulative Distribution",
+    subtitle = "B: Cumulative Distribution",
     x = "People per 100K",
     y = "Percent of all countries in region"
     
@@ -589,14 +269,305 @@ p1 + p2 +
 
 <br>
 
+```{r}
+#| label: fig-ncd-fiji-vs-wb-income-group
+#| fig-cap: "Non-communicable disease mortality rates: Fiji and World Bank income groups"
+#| fig-height: 6
+#| fig-width: 10
+
+dta_for_plot <- ncd_mortality |>
+  filter(spatial_dim_type == "WORLDBANKINCOMEGROUP" | (spatial_dim_type == "COUNTRY" & spatial_dim == "FJI"),
+         dim1 == "SEX_BTSX") |>
+  mutate(spatial_dim = factor(spatial_dim, levels = c("WB_LI", "WB_LMI", "WB_UMI", "WB_HI", "FJI"))) |>
+  mutate(numeric_value_norm = numeric_value / numeric_value[time_dim == 2000],
+         low_norm = low / low[time_dim == 2000],
+         high_norm = high / high[time_dim == 2000],
+         .by = spatial_dim)
+
+p1 <- dta_for_plot |>
+  ggplot() +
+  geom_line(aes(x = time_dim, y = numeric_value, color = spatial_dim),
+            show.legend = FALSE) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.02))) +
+  expand_limits(y = 0) +
+  labs(
+    subtitle = "A: Rate",
+    x = NULL,
+    y = "Rate",
+    color = "Fiji and WB\nincome group",
+    fill = "Fiji and WB\nincome group"
+  )
+
+p2 <- dta_for_plot |>
+  ggplot() +
+  geom_line(aes(x = time_dim, y = numeric_value_norm, color = spatial_dim)) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
+  scale_y_continuous(labels = label_percent(),
+                     expand = expansion(mult = c(0, 0.02))) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  expand_limits(y = 0) +
+  labs(
+    subtitle = "B: Year 2000 = 100%",
+    x = NULL,
+    y = "Relative improvement",
+    color = "Fiji and WB\nincome group",
+    fill = "Fiji and WB\nincome group"
+  )
+
+p1 + p2 +
+  plot_annotation(
+    title = glue("During this period Fiji started out lowering NDC mortality at a rate similar to",
+                 "\nWorld Bank high income group, then around 2004 the rate of improvement slowed markedly (panel B)."),
+    subtitle = "Both sexes",
+    caption = "Daniel Moul. Source: WHO GHO"
+  ) +
+  plot_layout(guides = "collect")
+
+```
+
+<br>
+
+```{r}
+#| label: fig-ncd-mortality-3-countries
+#| fig-cap: "Comparing Fiji's Healthy life expectancy at birth (HALE) to France and USA"
+#| fig-height: 6
+#| fig-width: 8
+
+ncd_mortality |>
+  filter(spatial_dim %in% c("FJI", "USA", "FRA")) |>
+  ggplot() +
+  geom_line(aes(x = time_dim, y = numeric_value, color = dim1)) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
+  scale_y_continuous(expand = expansion(mult = c(0.002, 0))) +
+  expand_limits(y = 0) +
+  facet_wrap(~spatial_dim) +
+  labs(
+    title = "NCS mortality rates per 100,000 people: Fiji, France, USA",
+    x = NULL,
+    # y = "Age",
+    color = NULL,
+    fill = NULL,
+    caption = "Daniel Moul. Source: WHO GHO"
+  )
+
+```
+
+<br>
+
+## Diabetes
+
+```{r}
+#| label: prepare-diabetes-data
+
+# Age-standardized death rates, diabetes mellitus, per 100,000
+
+diabetes_long <- diabetes |>
+  pivot_longer(cols = dim1,
+               #names_to = "sex",
+               values_to = "sex_value")
+
+diabetes_wide <- diabetes_long |>
+  pivot_wider(#cols = dim1,
+               names_from = sex_value,
+               values_from = numeric_value) |>
+  mutate(rank_val = rank(SEX_BTSX, ties.method = "max"),
+         spatial_dim_label = glue("{spatial_dim}: {rank_val}"),
+         spatial_dim_label = fct_reorder(spatial_dim_label, rank_val)) |>
+  mutate(pct_SEX_MLE = SEX_MLE / 1e5,
+         pct_SEX_FMLE = SEX_FMLE / 1e5,
+         pct_SEX_BTSX = SEX_BTSX / 1e5,)
+
+# TODO: why only 2004 data?
+
+```
+
+<br>
+
+The following uses 2004 data, which was the latest year available in the GHO data (at least, it's the latest I could find).
+
+At the regional level, Africa is the only region in which the bulk of the countries are suffering a higher rate, while the Americas have the widest range and the worst rates world-wide (@fig-diabetes-region).
+
+```{r}
+#| label: fig-diabetes-region
+#| fig-cap: "Diabetes 2004 by region"
+#| fig-height: 6
+#| fig-width: 10
+
+dta_for_plot_labels <- tribble(
+  ~parent_location,          ~x,    ~y,
+  "Africa",                  65,   0.027,
+  "Americas",                90,   0.007,
+  "Eastern Mediterranean",   30,   0.023,
+  "Europe",                  15,   0.065,
+  "South-East Asia",         36,   0.05,
+  "Western Pacific",         58,   0.015,
+)
+
+dta_for_plot <- diabetes_long |>
+  filter(sex_value == "SEX_BTSX")
+
+ecdf_fun <- ecdf(
+  dta_for_plot |>
+  filter(parent_location == "Western Pacific") |>
+  pull(numeric_value)
+  )
+
+fiji_value <- dta_for_plot |>
+    filter(spatial_dim == "FJI") |>
+    pull(numeric_value)
+
+fiji_percentile <- ecdf_fun(fiji_value)
+
+ecdf_fun_americas <- ecdf(
+  dta_for_plot |>
+    filter(parent_location == "Americas") |>
+    pull(numeric_value)
+)
+
+usa_value <- dta_for_plot |>
+    filter(spatial_dim == "USA") |>
+    pull(numeric_value)
+
+usa_percentile <- ecdf_fun_americas(usa_value)
+
+ecdf_fun_europe <- ecdf(
+  dta_for_plot |>
+    filter(parent_location == "Europe") |>
+    pull(numeric_value)
+)
+
+fra_value <- dta_for_plot |>
+    filter(parent_location == "Europe",
+           spatial_dim == "FRA") |>
+    pull(numeric_value)
+
+fra_percentile <- ecdf_fun_europe(fra_value)
+
+p1 <- diabetes_long |>
+  ggplot() +
+   geom_density(aes(x = numeric_value, color = parent_location),
+            linewidth = 0.6, alpha = 0.8,
+            show.legend = FALSE) +
+  geom_text(data = dta_for_plot_labels,
+            aes(x, y, label = parent_location, color = parent_location),
+            hjust = 0, nudge_x = 1, size = 4, 
+            show.legend = FALSE) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
+  scale_y_continuous(expand = expansion(mult = c(0.002, 0))) +
+  theme(panel.grid.major.x = element_line(linewidth = 0.03)) +
+  labs(
+    subtitle = "A: Density",
+    x = "People per 100K",
+    y = NULL
+  )
+
+p2 <- diabetes_long |>
+  ggplot() +
+  stat_ecdf(aes(x = numeric_value, color = parent_location),
+            linewidth = 0.6, alpha = 0.8,
+            pad = FALSE,
+            show.legend = FALSE) +
+  annotate("point", x = fiji_value, y = fiji_percentile) +
+  annotate("label", x = fiji_value + 5, y = fiji_percentile, label = "Republic of Fiji",
+            hjust = 0, size = 4) +
+  annotate("point", x = usa_value, y = usa_percentile) +
+  annotate("label", x = usa_value + 3, y = usa_percentile, label = "USA",
+            hjust = 0, size = 4) +
+  annotate("point", x = fra_value, y = fra_percentile) +
+  annotate("label", x = fra_value + 3, y = fra_percentile, label = "France",
+            hjust = 0, size = 4) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
+  scale_y_continuous(labels = label_percent(),
+                     expand = expansion(mult = c(0.002, 0))) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  theme(panel.grid.major.x = element_line(linewidth = 0.03)) +
+  labs(
+    subtitle = "B: Cumulative Distribution",
+    x = "People per 100K",
+    y = "Percent of all countries in region"
+    
+  )
+
+p1 + p2 +
+  plot_annotation(
+    title = glue("Age-standardized death rates, diabetes mellitus, per 100,000 people (2004)"),
+    subtitle = glue("Both sexes, country distribution, by region"),
+    caption = glue("Daniel Moul. Source: WHO GHO",
+                   "\n(not weighted by population)")
+  )
+
+# TODO: Why isn't the USA point actually on the Americas line?
+
+```
+
+<br>
+
+Fiji ranked 112 out of 191 countries (59th percentile) in death from diabetes (@fig-diabetes). 
+
+```{r}
+#| label: fig-diabetes
+#| fig-cap: "Diabetes 2004"
+#| fig-height: 16
+#| fig-width: 10
+
+rank_min <- min(diabetes_wide$rank_val)
+rank_max <- max(diabetes_wide$rank_val)
+
+diabetes_wide |>
+  ggplot() +
+  geom_errorbarh(aes(y = spatial_dim_label, xmin = SEX_MLE, , xmax = SEX_FMLE, color = parent_location),
+            linewidth = 0.1, height = 0, alpha = 0.8,
+            show.legend = FALSE) +
+  geom_point(aes(y = spatial_dim_label, x = SEX_BTSX, color = parent_location),
+            size = 1, alpha = 0.8,
+            show.legend = FALSE) +
+  geom_point(aes(y = spatial_dim_label, x = SEX_MLE, color = parent_location),
+            size = 3, alpha = 0.8, shape = "M",
+            show.legend = FALSE) +
+  geom_point(aes(y = spatial_dim_label, x = SEX_FMLE, color = parent_location),
+            size = 3, alpha = 0.8, shape = "F",
+            show.legend = FALSE) +
+  # scale_x_continuous(expand = expansion(mult = c(0, 0))) +
+  facet_wrap(~parent_location, scales = "free_y") +
+  theme(panel.grid.major.x = element_line(linewidth = 0.03)) +
+  labs(
+    title = glue("Age-standardized death rates, diabetes mellitus, per 100,000 people (2004)"),
+    subtitle = glue("With country rank lowest (1) to highest ({rank_max}) death rate",
+                    "\nShowing M, F, and both sexes (the later with a point)"),
+    x = NULL,
+    y = NULL,
+    caption = "Daniel Moul. Source: WHO GHO"
+  )
+
+```
+
+<br>
+
+The following three-letter country codes are used in @fig-diabetes above.
+
+```{r}
+diabetes_wide |>
+  left_join(ISO_3166_1,
+            by = join_by(spatial_dim == Alpha_3)
+  ) |>
+  select(country_code = spatial_dim, Name,  Official_name, region = parent_location, rank_val) |>
+  arrange(country_code) |>
+  gt() |>
+  tab_header(md("**ISO 3166 three-letter country codes explained**")) |>
+  tab_options(table.font.size = 10) |>
+  sub_missing()
+
+```
+
+<br>
+
 ## Prevalence of obesity among adults
 
 NCD_BMI_30A Prevalence of obesity among adults, BMI &GreaterEqual; 30 (age-standardized estimate) (%)
 
 ```{r}
 #| label: prepare-obesity-data
-
-# Age-standardized death rates, diabetes mellitus, per 100,000
 
 obesity_long <- bmi_obesity |>
   pivot_longer(cols = dim1,
@@ -618,98 +589,7 @@ obesity_wide <- obesity_long |>
 
 <br>
 
-```{r}
-#| label: fig-obesity-3-countries
-#| fig-cap: "Comparing Fiji's adult obesity to France and USA"
-#| fig-height: 6
-#| fig-width: 8
-
-bmi_obesity |>
-  filter(spatial_dim %in% c("FJI", "USA", "FRA")) |>
-  ggplot() +
-  # geom_ribbon(aes(x = time_dim, ymin = low, ymax = high, fill = dim1),
-  #             alpha = 0.3) +
-  geom_line(aes(x = time_dim, y = numeric_value, color = dim1)) +
-  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
-  scale_y_continuous(labels = label_number(suffix = "%"),
-                     expand = expansion(mult = c(0.002, 0.02))) +
-  expand_limits(y = 0) +
-  facet_wrap(~spatial_dim) +
-  labs(
-    title = "Fiji, France, USA: Adult obseity",
-    x = NULL,
-    y = "Adult obseity",
-    color = NULL,
-    fill = NULL,
-    caption = "Daniel Moul. Source: WHO GHO"
-  )
-
-```
-
-<br>
-
-```{r}
-#| label: fig-obesity-fiji-vs-wb-income-group
-#| fig-cap: "Adult obesity: Fiji and World Bank income groups"
-#| fig-height: 6
-#| fig-width: 10
-
-dta_for_plot <- bmi_obesity |>
-  filter(spatial_dim_type == "WORLDBANKINCOMEGROUP" | (spatial_dim_type == "COUNTRY" & spatial_dim == "FJI"),
-         dim1 == "SEX_BTSX") |>
-  mutate(spatial_dim = factor(spatial_dim, levels = c("WB_LI", "WB_LMI", "WB_UMI", "WB_HI", "FJI"))) |>
-  mutate(numeric_value_norm = numeric_value / numeric_value[time_dim == 1990],
-         low_norm = low / low[time_dim == 1990],
-         high_norm = high / high[time_dim == 1990],
-         .by = spatial_dim)
-
-p1 <- dta_for_plot |>
-  ggplot() +
-  # geom_ribbon(aes(x = time_dim, ymin = low, ymax = high, fill = spatial_dim),
-  #             alpha = 0.3) +
-  geom_line(aes(x = time_dim, y = numeric_value, color = spatial_dim),
-            show.legend = FALSE) +
-  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
-  scale_y_continuous(#labels = label_percent(),
-                     expand = expansion(mult = c(0, 0.02))) +
-  expand_limits(y = 0) +
-  labs(
-    x = NULL,
-    y = "Rate",
-    color = "Fiji and WB\nincome group",
-    fill = "Fiji and WB\nincome group"
-  )
-
-p2 <- dta_for_plot |>
-  ggplot() +
-  # geom_ribbon(aes(x = time_dim, ymin = low_norm, ymax = high_norm, fill = spatial_dim),
-  #             alpha = 0.3) +
-  geom_line(aes(x = time_dim, y = numeric_value_norm, color = spatial_dim)) +
-  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
-  scale_y_continuous(labels = label_percent(),
-                     expand = expansion(mult = c(0, 0.02))) +
-  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
-  expand_limits(y = 0) +
-  labs(
-    subtitle = "Year 1990 = 100%",
-    x = NULL,
-    y = "Relative change",
-    color = "Fiji and WB\nincome group",
-    fill = "Fiji and WB\nincome group"
-  )
-
-p1 + p2 +
-  plot_annotation(
-    title = glue("Adult obesity in Fiji has grown more slowly than any World Bank income groups",
-                 "\nalbeit from a higher starting percentage"),
-    subtitle = "Both sexes",
-    caption = "Daniel Moul. Source: WHO GHO"
-  ) +
-  plot_layout(guides = "collect")
-
-```
-
-<br>
+At the regional level ...
 
 ```{r}
 #| label: fig-obesity-region
@@ -831,80 +711,19 @@ p1 + p2 +
 
 <br>
 
-## Mean BMI (kg/m²)
-
-NCD_BMI_MEAN Mean BMI (kg/m²) (age-standardized estimate)
-
 ```{r}
-#| label: prepare-mean-bmi-data
-
-# NCD_BMI_MEAN Mean BMI (kg/m²) (age-standardized estimate)
-
-bmi_mean_long <- bmi_mean |>
-  pivot_longer(cols = dim1,
-               #names_to = "sex",
-               values_to = "sex_value")
-
-bmi_mean_wide <- bmi_mean_long |>
-  pivot_wider(#cols = dim1,
-               names_from = sex_value,
-               values_from = numeric_value) |>
-  mutate(rank_val = rank(SEX_BTSX, ties.method = "max"),
-         spatial_dim_label = glue("{spatial_dim}: {rank_val}"),
-         spatial_dim_label = fct_reorder(spatial_dim_label, rank_val)) |>
-  mutate(pct_SEX_MLE = SEX_MLE / 1e5,
-         pct_SEX_FMLE = SEX_FMLE / 1e5,
-         pct_SEX_BTSX = SEX_BTSX / 1e5,)
-
-```
-
-<br>
-
-```{r}
-#| label: fig-bmi-mean-3-countries
-#| fig-cap: "Comparing Fiji's mean BMI to France and USA"
-#| fig-height: 6
-#| fig-width: 8
-
-bmi_obesity |>
-  filter(spatial_dim %in% c("FJI", "USA", "FRA")) |>
-  ggplot() +
-  # geom_ribbon(aes(x = time_dim, ymin = low, ymax = high, fill = dim1),
-  #             alpha = 0.3) +
-  geom_line(aes(x = time_dim, y = numeric_value, color = dim1)) +
-  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
-  scale_y_continuous(#labels = label_number(suffix = "%"),
-                     expand = expansion(mult = c(0.002, 0.02))) +
-  expand_limits(y = 0) +
-  facet_wrap(~spatial_dim) +
-  labs(
-    title = "Fiji, France, USA: Age adjusted mean BMI",
-    x = NULL,
-    y = "Mean BMI",
-    color = NULL,
-    fill = NULL,
-    caption = "Daniel Moul. Source: WHO GHO"
-  )
-
-```
-
-TODO: Does @fig-bmi-mean-3-countries make sense compared to adult obesity (@fig-obesity-region)
-
-<br>
-
-```{r}
-#| label: fig-bmi-mean-fiji-vs-wb-income-group
-#| fig-cap: "Mean MBI: Fiji and World Bank income groups"
+#| label: fig-obesity-fiji-vs-wb-income-group
+#| fig-cap: "Adult obesity: Fiji and World Bank income groups"
 #| fig-height: 6
 #| fig-width: 10
 
-dta_for_plot <- bmi_mean |>
+dta_for_plot <- bmi_obesity |>
   filter(spatial_dim_type == "WORLDBANKINCOMEGROUP" | (spatial_dim_type == "COUNTRY" & spatial_dim == "FJI"),
          dim1 == "SEX_BTSX") |>
   mutate(spatial_dim = factor(spatial_dim, levels = c("WB_LI", "WB_LMI", "WB_UMI", "WB_HI", "FJI"))) |>
-  mutate(numeric_value_norm = numeric_value / numeric_value[time_dim == 1975],
-         low_norm = low / low[time_dim == 1975],
-         high_norm = high / high[time_dim == 1975],
+  mutate(numeric_value_norm = numeric_value / numeric_value[time_dim == 1990],
+         low_norm = low / low[time_dim == 1990],
+         high_norm = high / high[time_dim == 1990],
          .by = spatial_dim)
 
 p1 <- dta_for_plot |>
@@ -935,17 +754,17 @@ p2 <- dta_for_plot |>
   guides(color = guide_legend(override.aes = list(linewidth = 3))) +
   expand_limits(y = 0) +
   labs(
-    subtitle = "Year 1975 = 100%",
+    subtitle = "Year 1990 = 100%",
     x = NULL,
-    y = "Relative improvement",
+    y = "Relative change",
     color = "Fiji and WB\nincome group",
     fill = "Fiji and WB\nincome group"
   )
 
 p1 + p2 +
   plot_annotation(
-    title = glue("Mean BMI in Fiji has grown even faster",
-                 " than World Bank lower and lower middle income groups"),
+    title = glue("Adult obesity in Fiji has grown more slowly than any World Bank income groups",
+                 "\nalbeit from a higher starting percentage"),
     subtitle = "Both sexes",
     caption = "Daniel Moul. Source: WHO GHO"
   ) +
@@ -954,6 +773,65 @@ p1 + p2 +
 ```
 
 <br>
+
+```{r}
+#| label: fig-obesity-3-countries
+#| fig-cap: "Comparing Fiji's adult obesity to France and USA"
+#| fig-height: 6
+#| fig-width: 8
+
+bmi_obesity |>
+  filter(spatial_dim %in% c("FJI", "USA", "FRA")) |>
+  ggplot() +
+  geom_line(aes(x = time_dim, y = numeric_value, color = dim1)) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
+  scale_y_continuous(labels = label_number(suffix = "%"),
+                     expand = expansion(mult = c(0.002, 0.02))) +
+  expand_limits(y = 0) +
+  facet_wrap(~spatial_dim) +
+  labs(
+    title = "Fiji, France, USA: Adult obseity",
+    x = NULL,
+    y = "Adult obseity",
+    color = NULL,
+    fill = NULL,
+    caption = "Daniel Moul. Source: WHO GHO"
+  )
+
+```
+
+<br>
+
+## Mean BMI (kg/m²)
+
+NCD_BMI_MEAN Mean BMI (kg/m²) (age-standardized estimate)
+
+```{r}
+#| label: prepare-mean-bmi-data
+
+# NCD_BMI_MEAN Mean BMI (kg/m²) (age-standardized estimate)
+
+bmi_mean_long <- bmi_mean |>
+  pivot_longer(cols = dim1,
+               #names_to = "sex",
+               values_to = "sex_value")
+
+bmi_mean_wide <- bmi_mean_long |>
+  pivot_wider(#cols = dim1,
+               names_from = sex_value,
+               values_from = numeric_value) |>
+  mutate(rank_val = rank(SEX_BTSX, ties.method = "max"),
+         spatial_dim_label = glue("{spatial_dim}: {rank_val}"),
+         spatial_dim_label = fct_reorder(spatial_dim_label, rank_val)) |>
+  mutate(pct_SEX_MLE = SEX_MLE / 1e5,
+         pct_SEX_FMLE = SEX_FMLE / 1e5,
+         pct_SEX_BTSX = SEX_BTSX / 1e5,)
+
+```
+
+<br>
+
+At the regional level ...
 
 ```{r}
 #| label: fig-bmi-mean-region
@@ -1030,7 +908,7 @@ p1 <- dta_for_plot |>
     expand = expansion(mult = c(0.002, 0))) +
   theme(panel.grid.major.x = element_line(linewidth = 0.03)) +
   labs(
-    subtitle = "Density",
+    subtitle = "A: Density",
     x = "Percent of population",
     y = NULL
   )
@@ -1058,7 +936,7 @@ p2 <- dta_for_plot |>
   guides(color = guide_legend(override.aes = list(linewidth = 3))) +
   theme(panel.grid.major.x = element_line(linewidth = 0.03)) +
   labs(
-    subtitle = "Cumulative Distribution",
+    subtitle = "B: Cumulative Distribution",
     x = "Percent of population",
     y = "Percent of all countries in region"
   )
@@ -1074,5 +952,95 @@ p1 + p2 +
 ```
 
 TODO: Does @fig-bmi-mean-region make sense compared to adult obesity (@fig-obesity-region)
+
+<br>
+
+```{r}
+#| label: fig-bmi-mean-fiji-vs-wb-income-group
+#| fig-cap: "Mean MBI: Fiji and World Bank income groups"
+#| fig-height: 6
+#| fig-width: 10
+
+dta_for_plot <- bmi_mean |>
+  filter(spatial_dim_type == "WORLDBANKINCOMEGROUP" | (spatial_dim_type == "COUNTRY" & spatial_dim == "FJI"),
+         dim1 == "SEX_BTSX") |>
+  mutate(spatial_dim = factor(spatial_dim, levels = c("WB_LI", "WB_LMI", "WB_UMI", "WB_HI", "FJI"))) |>
+  mutate(numeric_value_norm = numeric_value / numeric_value[time_dim == 1975],
+         low_norm = low / low[time_dim == 1975],
+         high_norm = high / high[time_dim == 1975],
+         .by = spatial_dim)
+
+p1 <- dta_for_plot |>
+  ggplot() +
+  geom_line(aes(x = time_dim, y = numeric_value, color = spatial_dim),
+            show.legend = FALSE) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.02))) +
+  expand_limits(y = 0) +
+  labs(
+    x = NULL,
+    y = "Rate",
+    color = "Fiji and WB\nincome group",
+    fill = "Fiji and WB\nincome group"
+  )
+
+p2 <- dta_for_plot |>
+  ggplot() +
+  geom_line(aes(x = time_dim, y = numeric_value_norm, color = spatial_dim)) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
+  scale_y_continuous(labels = label_percent(),
+                     expand = expansion(mult = c(0, 0.02))) +
+  guides(color = guide_legend(override.aes = list(linewidth = 3))) +
+  expand_limits(y = 0) +
+  labs(
+    subtitle = "Year 1975 = 100%",
+    x = NULL,
+    y = "Relative improvement",
+    color = "Fiji and WB\nincome group",
+    fill = "Fiji and WB\nincome group"
+  )
+
+p1 + p2 +
+  plot_annotation(
+    title = glue("Mean BMI in Fiji has grown even faster",
+                 " than World Bank lower and lower middle income groups"),
+    subtitle = "Both sexes",
+    caption = "Daniel Moul. Source: WHO GHO"
+  ) +
+  plot_layout(guides = "collect")
+
+```
+
+<br>
+
+```{r}
+#| label: fig-bmi-mean-3-countries
+#| fig-cap: "Comparing Fiji's mean BMI to France and USA"
+#| fig-height: 6
+#| fig-width: 8
+
+bmi_obesity |>
+  filter(spatial_dim %in% c("FJI", "USA", "FRA")) |>
+  ggplot() +
+  # geom_ribbon(aes(x = time_dim, ymin = low, ymax = high, fill = dim1),
+  #             alpha = 0.3) +
+  geom_line(aes(x = time_dim, y = numeric_value, color = dim1)) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0))) +
+  scale_y_continuous(#labels = label_number(suffix = "%"),
+                     expand = expansion(mult = c(0.002, 0.02))) +
+  expand_limits(y = 0) +
+  facet_wrap(~spatial_dim) +
+  labs(
+    title = "Fiji, France, USA: Age adjusted mean BMI",
+    x = NULL,
+    y = "Mean BMI",
+    color = NULL,
+    fill = NULL,
+    caption = "Daniel Moul. Source: WHO GHO"
+  )
+
+```
+
+TODO: Does @fig-bmi-mean-3-countries make sense compared to adult obesity (@fig-obesity-region)
 
 <br>
