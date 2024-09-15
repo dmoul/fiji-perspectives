@@ -19,6 +19,7 @@ I'm grateful to the organizations and individuals who made data available:
 * Open Street Map and Open Sea Map
 * New Zealand Land Information portal
 * UN Global Reef Distribution project
+* World Health Organization
 * Reserve Bank of Fiji
 * World Bank
 * Federal Reserve Bank of Minneapolis
