@@ -173,6 +173,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Coral bleaching watch</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./nacula-island.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Nacula island</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -187,37 +193,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./pocket-summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Pocket summary comparisons among PICTs</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Pocket summary comparisons among PICTs</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./who-indicators.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">WHO indicators</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">WHO indicators</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./overseas-arrivals.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Overseas arrivals, tourism revenue, and hotel nights</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Overseas arrivals, tourism revenue, and hotel nights</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./trade.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exports, Imports and Balance of Trade</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Exports, Imports and Balance of Trade</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./cpi.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Consumer prices</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Consumer prices</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Notes and sources</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Notes and sources</span></span></a>
   </div>
 </li>
       </ul>
@@ -297,17 +303,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>dta_for_plot <span class="sc">|&gt;</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> islands<span class="sc">$</span>osm_multipolygons,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"brown"</span>, <span class="at">fill =</span> <span class="st">"brown"</span>, <span class="at">linewidth =</span> <span class="fl">0.001</span>, <span class="at">alpha =</span> plot_alpha) <span class="sc">+</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"darkgrey"</span>, <span class="at">fill =</span> <span class="st">"darkgrey"</span>, <span class="at">linewidth =</span> <span class="fl">0.001</span>) <span class="sc">+</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> islands<span class="sc">$</span>osm_polygons,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"brown"</span>, <span class="at">fill =</span> <span class="st">"brown"</span>, <span class="at">size =</span> <span class="fl">0.001</span>, <span class="at">alpha =</span> plot_alpha) <span class="sc">+</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> coastline<span class="sc">$</span>osm_polygons,</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"brown"</span>, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">linewidth =</span> <span class="fl">0.001</span>, <span class="at">alpha =</span> plot_alpha) <span class="sc">+</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">fill =</span> <span class="st">"goldenrod"</span>, <span class="at">color =</span> <span class="st">"goldenrod"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">xlim =</span> my_bbox_fj[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)], <span class="co"># min &amp; max of x values</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>           <span class="at">ylim =</span> my_bbox_fj[<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>)]) <span class="sc">+</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"darkgrey"</span>, <span class="at">fill =</span> <span class="st">"darkgrey"</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="fl">0.001</span>) <span class="sc">+</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> coastline<span class="sc">$</span>osm_polygons,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"darkgrey"</span>, <span class="at">fill =</span> <span class="st">"darkgrey"</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="fl">0.001</span>) <span class="sc">+</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">fill =</span> <span class="st">"firebrick"</span>, <span class="at">color =</span> <span class="st">"firebrick"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>))) <span class="sc">+</span></span>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>))) <span class="sc">+</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="fu">alpha</span>(<span class="st">"lightblue"</span>, <span class="fl">0.15</span>))) <span class="sc">+</span> <span class="co"># "#0000CD33")) +</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="fu">alpha</span>(<span class="st">"lightblue"</span>, <span class="fl">0.15</span>))) <span class="sc">+</span></span>
 <span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Reefs in most of Fiji"</span>,</span>
 <span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Fiji west of 180°"</span>,</span>
@@ -401,23 +407,23 @@ Figure&nbsp;2.2: Top sources of global reef data
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_options</span>(<span class="at">table.font.size =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="atzkcmwcbd" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#atzkcmwcbd table {
+<div id="dgfvumkaba" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dgfvumkaba table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#atzkcmwcbd thead, #atzkcmwcbd tbody, #atzkcmwcbd tfoot, #atzkcmwcbd tr, #atzkcmwcbd td, #atzkcmwcbd th {
+#dgfvumkaba thead, #dgfvumkaba tbody, #dgfvumkaba tfoot, #dgfvumkaba tr, #dgfvumkaba td, #dgfvumkaba th {
   border-style: none;
 }
 
-#atzkcmwcbd p {
+#dgfvumkaba p {
   margin: 0;
   padding: 0;
 }
 
-#atzkcmwcbd .gt_table {
+#dgfvumkaba .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -443,12 +449,12 @@ Figure&nbsp;2.2: Top sources of global reef data
   border-left-color: #D3D3D3;
 }
 
-#atzkcmwcbd .gt_caption {
+#dgfvumkaba .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#atzkcmwcbd .gt_title {
+#dgfvumkaba .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -460,7 +466,7 @@ Figure&nbsp;2.2: Top sources of global reef data
   border-bottom-width: 0;
 }
 
-#atzkcmwcbd .gt_subtitle {
+#dgfvumkaba .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -472,7 +478,7 @@ Figure&nbsp;2.2: Top sources of global reef data
   border-top-width: 0;
 }
 
-#atzkcmwcbd .gt_heading {
+#dgfvumkaba .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -484,13 +490,13 @@ Figure&nbsp;2.2: Top sources of global reef data
   border-right-color: #D3D3D3;
 }
 
-#atzkcmwcbd .gt_bottom_border {
+#dgfvumkaba .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#atzkcmwcbd .gt_col_headings {
+#dgfvumkaba .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -505,7 +511,7 @@ Figure&nbsp;2.2: Top sources of global reef data
   border-right-color: #D3D3D3;
 }
 
-#atzkcmwcbd .gt_col_heading {
+#dgfvumkaba .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -525,7 +531,7 @@ Figure&nbsp;2.2: Top sources of global reef data
   overflow-x: hidden;
 }
 
-#atzkcmwcbd .gt_column_spanner_outer {
+#dgfvumkaba .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -537,15 +543,15 @@ Figure&nbsp;2.2: Top sources of global reef data
   padding-right: 4px;
 }
 
-#atzkcmwcbd .gt_column_spanner_outer:first-child {
+#dgfvumkaba .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#atzkcmwcbd .gt_column_spanner_outer:last-child {
+#dgfvumkaba .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#atzkcmwcbd .gt_column_spanner {
+#dgfvumkaba .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -557,11 +563,11 @@ Figure&nbsp;2.2: Top sources of global reef data
   width: 100%;
 }
 
-#atzkcmwcbd .gt_spanner_row {
+#dgfvumkaba .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#atzkcmwcbd .gt_group_heading {
+#dgfvumkaba .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -587,7 +593,7 @@ Figure&nbsp;2.2: Top sources of global reef data
   text-align: left;
 }
 
-#atzkcmwcbd .gt_empty_group_heading {
+#dgfvumkaba .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -602,15 +608,15 @@ Figure&nbsp;2.2: Top sources of global reef data
   vertical-align: middle;
 }
 
-#atzkcmwcbd .gt_from_md > :first-child {
+#dgfvumkaba .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#atzkcmwcbd .gt_from_md > :last-child {
+#dgfvumkaba .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#atzkcmwcbd .gt_row {
+#dgfvumkaba .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -629,7 +635,7 @@ Figure&nbsp;2.2: Top sources of global reef data
   overflow-x: hidden;
 }
 
-#atzkcmwcbd .gt_stub {
+#dgfvumkaba .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -642,7 +648,7 @@ Figure&nbsp;2.2: Top sources of global reef data
   padding-right: 5px;
 }
 
-#atzkcmwcbd .gt_stub_row_group {
+#dgfvumkaba .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -656,15 +662,15 @@ Figure&nbsp;2.2: Top sources of global reef data
   vertical-align: top;
 }
 
-#atzkcmwcbd .gt_row_group_first td {
+#dgfvumkaba .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#atzkcmwcbd .gt_row_group_first th {
+#dgfvumkaba .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#atzkcmwcbd .gt_summary_row {
+#dgfvumkaba .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -674,16 +680,16 @@ Figure&nbsp;2.2: Top sources of global reef data
   padding-right: 5px;
 }
 
-#atzkcmwcbd .gt_first_summary_row {
+#dgfvumkaba .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#atzkcmwcbd .gt_first_summary_row.thick {
+#dgfvumkaba .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#atzkcmwcbd .gt_last_summary_row {
+#dgfvumkaba .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -693,7 +699,7 @@ Figure&nbsp;2.2: Top sources of global reef data
   border-bottom-color: #D3D3D3;
 }
 
-#atzkcmwcbd .gt_grand_summary_row {
+#dgfvumkaba .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -703,7 +709,7 @@ Figure&nbsp;2.2: Top sources of global reef data
   padding-right: 5px;
 }
 
-#atzkcmwcbd .gt_first_grand_summary_row {
+#dgfvumkaba .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -713,7 +719,7 @@ Figure&nbsp;2.2: Top sources of global reef data
   border-top-color: #D3D3D3;
 }
 
-#atzkcmwcbd .gt_last_grand_summary_row_top {
+#dgfvumkaba .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -723,11 +729,11 @@ Figure&nbsp;2.2: Top sources of global reef data
   border-bottom-color: #D3D3D3;
 }
 
-#atzkcmwcbd .gt_striped {
+#dgfvumkaba .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#atzkcmwcbd .gt_table_body {
+#dgfvumkaba .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -736,7 +742,7 @@ Figure&nbsp;2.2: Top sources of global reef data
   border-bottom-color: #D3D3D3;
 }
 
-#atzkcmwcbd .gt_footnotes {
+#dgfvumkaba .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -750,7 +756,7 @@ Figure&nbsp;2.2: Top sources of global reef data
   border-right-color: #D3D3D3;
 }
 
-#atzkcmwcbd .gt_footnote {
+#dgfvumkaba .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -759,7 +765,7 @@ Figure&nbsp;2.2: Top sources of global reef data
   padding-right: 5px;
 }
 
-#atzkcmwcbd .gt_sourcenotes {
+#dgfvumkaba .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -773,7 +779,7 @@ Figure&nbsp;2.2: Top sources of global reef data
   border-right-color: #D3D3D3;
 }
 
-#atzkcmwcbd .gt_sourcenote {
+#dgfvumkaba .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -781,72 +787,72 @@ Figure&nbsp;2.2: Top sources of global reef data
   padding-right: 5px;
 }
 
-#atzkcmwcbd .gt_left {
+#dgfvumkaba .gt_left {
   text-align: left;
 }
 
-#atzkcmwcbd .gt_center {
+#dgfvumkaba .gt_center {
   text-align: center;
 }
 
-#atzkcmwcbd .gt_right {
+#dgfvumkaba .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#atzkcmwcbd .gt_font_normal {
+#dgfvumkaba .gt_font_normal {
   font-weight: normal;
 }
 
-#atzkcmwcbd .gt_font_bold {
+#dgfvumkaba .gt_font_bold {
   font-weight: bold;
 }
 
-#atzkcmwcbd .gt_font_italic {
+#dgfvumkaba .gt_font_italic {
   font-style: italic;
 }
 
-#atzkcmwcbd .gt_super {
+#dgfvumkaba .gt_super {
   font-size: 65%;
 }
 
-#atzkcmwcbd .gt_footnote_marks {
+#dgfvumkaba .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#atzkcmwcbd .gt_asterisk {
+#dgfvumkaba .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#atzkcmwcbd .gt_indent_1 {
+#dgfvumkaba .gt_indent_1 {
   text-indent: 5px;
 }
 
-#atzkcmwcbd .gt_indent_2 {
+#dgfvumkaba .gt_indent_2 {
   text-indent: 10px;
 }
 
-#atzkcmwcbd .gt_indent_3 {
+#dgfvumkaba .gt_indent_3 {
   text-indent: 15px;
 }
 
-#atzkcmwcbd .gt_indent_4 {
+#dgfvumkaba .gt_indent_4 {
   text-indent: 20px;
 }
 
-#atzkcmwcbd .gt_indent_5 {
+#dgfvumkaba .gt_indent_5 {
   text-indent: 25px;
 }
 
-#atzkcmwcbd .katex-display {
+#dgfvumkaba .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#atzkcmwcbd div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#dgfvumkaba div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -942,24 +948,21 @@ Figure&nbsp;2.2: Top sources of global reef data
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"darkgrey"</span>,</span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="fl">0.001</span>) <span class="sc">+</span></span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> coastline_yasawas<span class="sc">$</span>osm_polygons,</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"darkgrey"</span>, </span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">fill =</span> <span class="st">"darkgrey"</span>,</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="fl">0.001</span>) <span class="sc">+</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> islands_yasawas<span class="sc">$</span>osm_polygons,</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"darkgrey"</span>, </span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">fill =</span> <span class="st">"darkgrey"</span>,</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="fl">0.001</span>) <span class="sc">+</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">fill =</span> <span class="st">"firebrick"</span>, <span class="at">color =</span> <span class="st">"firebrick"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>))) <span class="sc">+</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>))) <span class="sc">+</span></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="fu">alpha</span>(<span class="st">"lightblue"</span>, <span class="fl">0.15</span>))) <span class="sc">+</span> <span class="co"># "#0000CD33")) +</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Fiji reefs in the Yasawas and Mamanucas"</span>,</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> my_caption</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"darkgrey"</span>, <span class="at">fill =</span> <span class="st">"darkgrey"</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="fl">0.001</span>) <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> islands_yasawas<span class="sc">$</span>osm_polygons,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"darkgrey"</span>, <span class="at">fill =</span> <span class="st">"darkgrey"</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="fl">0.001</span>) <span class="sc">+</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">fill =</span> <span class="st">"firebrick"</span>, <span class="at">color =</span> <span class="st">"firebrick"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>))) <span class="sc">+</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>))) <span class="sc">+</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="fu">alpha</span>(<span class="st">"lightblue"</span>, <span class="fl">0.15</span>))) <span class="sc">+</span> <span class="co"># "#0000CD33")) +</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Fiji reefs in the Yasawas and Mamanucas"</span>,</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> my_caption</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display page-columns page-full">
 <div id="fig-fiji-reefs-yasawas" class="quarto-figure quarto-figure-center quarto-float anchored page-columns page-full">
