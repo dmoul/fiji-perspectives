@@ -86,7 +86,7 @@ Data source: <https://pacificdata.org/data/dataset/overseas-visitor-arrivals-df-
 
 ## Fiji Ocean Policy 2020-2030
 
-Citation: Fiji Ministry of Economy. (2021). Republic of Fiji National Ocean Policy 2020-2030. Suva, Fiji: Ministry of Economy. 70 p.
+Fiji Ministry of Economy. (2021). Republic of Fiji National Ocean Policy 2020-2030. Suva, Fiji: Ministry of Economy. 70 p.
 
 Available from <https://fijiclimatechangeportal.gov.fj/ppss/republic-of-fiji-national-ocean-policy-2020-2030/>
 
@@ -97,7 +97,9 @@ Specifically: <http://fijiclimatechangeportal.gov.fj/wp-content/uploads/2021/01/
 
 A useful ready-to-read summary can be found at <https://www.rbf.gov.fj/category/chart-book/>.
 
-RBF-supplied data sets used in this report:
+RBF's National Summary Data Page: <https://www.rbf.gov.fj/statistics/nsdp/>
+
+Data sets used in this report:
 
 * Direction of Trade by Major Trading Partner Countries downloaded 2024-08-06 from 
 <https://www.rbf.gov.fj/wp-content/uploads/2024/08/8.4-Direction-of-Trade-by-Major-Trading-Partner.xlsx>
@@ -108,6 +110,11 @@ RBF-supplied data sets used in this report:
 * Tourism revenue downloaded 2024-08-06 from 
 <https://www.rbf.gov.fj/wp-content/uploads/2024/08/5.5-Hotel-Statistics.xlsx>
 
+The RBF data download web pages include the following:
+
+> Disclaimer: Please refer to the Reserve Bank of Fiji Disclaimer available on our website:  <https://www.rbf.gov.fj/disclaimer/>
+
+<br>
 
 ## US historical consumer price index
 
